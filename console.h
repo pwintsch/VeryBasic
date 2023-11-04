@@ -3,4 +3,5 @@
 class Console {
 public:
   void print(const std::string& str);
+  void clear();
 };

@@ -10,7 +10,7 @@
                 "-g",
                 "${workspaceFolder}/*.cpp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${workspaceFolder}/verybasic"
             ],
             "options": {
                 "cwd": "${fileDirname}"
