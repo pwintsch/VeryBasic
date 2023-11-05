@@ -43,7 +43,9 @@ public:
   void SetInkStd(); 
   void WriteFString(const char* format, ... );
   void WriteFStringLn(const char* format, ... );
-  void Write(char *sTxt);
-  void WriteLn(char *sTxt);
+  void Write(const char *sTxt);
+  void WriteLn(const char *sTxt);
+  void GetConsoleInput (char *sParam, int iNoOfChar);
+  bool GetYNConfirmation(char *sQuestion);
   ~Console();
 };

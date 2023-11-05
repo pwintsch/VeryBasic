@@ -328,9 +328,8 @@ void Console::print(const std::string& str) {
 }
 
 void Console::clear() {
-  ClearScreen();
+  ResetScreen();
 }
-
 
 int Console::get_height() {
   return height;
@@ -339,7 +338,6 @@ int Console::get_height() {
 int Console::get_width() {
   return width;
 }
-
 
 void Console::Beep() {
   char sBeep[2]="\a";
@@ -392,13 +390,82 @@ void Console::WriteFStringLn(const char* format, ... ) {
 	PrintLn (sStr);
 }
 
-void Console::Write(char *sTxt) {
-	Print(sTxt);
+void Console::Write(const char *sTxt) {
+  char sStr[255];
+  strncpy(sStr,sTxt,255);  
+	Print(sStr);
 }
 
-void Console::WriteLn(char *sTxt) {
-	PrintLn(sTxt);
+void Console::WriteLn(const char *sTxt) {
+  char sStr[255];
+  strncpy(sStr,sTxt,255);  
+	PrintLn(sStr);
 }
+
+
+
+void Console::GetConsoleInput (char *sParam, int iNoOfChar) {
+char *sIn=NULL;
+int iY;
+int iX;
+char sPromptStr[5]="> ";
+char sEmptyStr[5]="";
+
+	WriteLn (sEmptyStr);
+	Write(sPromptStr);
+	GetCursorPosition (&iY, &iX);
+//	fgets(sIn, iNoOfChar, stdin);
+	int i=0;
+	int iHistoryPos=giConsoleHistoryLen;
+	if (gsConsoleStr[0] != '\0') {
+		if (sIn!=NULL) free (sIn);
+		sIn=strdup (gsConsoleStr);
+		strcpy (gsConsoleStr,"");
+	}
+	do {
+		SetCursorPosition (iY, iX);
+		i=GetStr(&sIn,END_STRING,1,0);
+		if (i==ARROW_UP && iHistoryPos>0) {
+			if (sIn!=NULL)  free(sIn);
+			sIn= strdup(gsConsoleHistory[iHistoryPos-1]);
+			if (iHistoryPos>0) iHistoryPos--;
+		}
+		if (i==ARROW_DOWN && iHistoryPos<giConsoleHistoryLen) {
+			if (sIn!=NULL)  free(sIn);
+			sIn=strdup(gsConsoleHistory[iHistoryPos]);
+			if (iHistoryPos<giConsoleHistoryLen) iHistoryPos++;
+		}
+	} while (!(i=='\r' || i==CTRL_KEY('c')));
+
+	if (giConsoleHistoryLen<CONSOLE_LENGTH) {
+		gsConsoleHistory[giConsoleHistoryLen]=strdup(sIn);
+		giConsoleHistoryLen++;
+	} else {
+		for (int j=1;j<giConsoleHistoryLen;j++) gsConsoleHistory[j-1]=gsConsoleHistory[j];
+		if (gsConsoleHistory[giConsoleHistoryLen-1]!=NULL) free(gsConsoleHistory[giConsoleHistoryLen-1]);
+		gsConsoleHistory[giConsoleHistoryLen-1]=strdup(sIn);
+	}
+	WriteLn(sEmptyStr);
+	strcpy(sParam, sIn);
+	if (sIn!=NULL) free (sIn);
+}
+
+
+bool Console::GetYNConfirmation(char *sQuestion) {
+char sEmptyStr[5]="";
+	WriteFString ("%s ? (Y/n)", sQuestion);
+	char *tmpS=NULL;
+	GetStr(&tmpS,0,0,1);
+	if ((tmpS[0]=='Y') || (tmpS[0]=='y')) {
+		free(tmpS);
+		WriteLn(sEmptyStr);
+		return true;
+	}
+	free(tmpS);
+	WriteLn(sEmptyStr);
+	return false;
+}
+
 
 
 Console::~Console() {
