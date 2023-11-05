@@ -9,6 +9,8 @@
 struct termios orig_termios;
 
 
+// Functions in C to deal with the terminal directly which can not be wrapped in a class
+
 void SetCursor (int row, int column) {
 char terminalStr[20];
 int escapeCodeLength=0;
@@ -60,7 +62,8 @@ void EnableRawMode() {
   if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) die("tcsetattr");
 }
 
-int GetCursor (int *rows, int *cols) {
+
+int GetCursorPosition (int *rows, int *cols) {
   char buf[32];
   unsigned int i = 0;
   if (write(STDOUT_FILENO, "\x1b[6n", 4) != 4) return -1;
@@ -74,6 +77,76 @@ int GetCursor (int *rows, int *cols) {
   if (sscanf(&buf[2], "%d;%d", rows, cols) != 2) return -1;
   return 0;
 } 
+
+
+
+
+int ReadKeyPress() {
+  int nread;
+  char c;
+  while ((nread = read(STDIN_FILENO, &c, 1)) != 1) {
+    if (nread == -1 && errno != EAGAIN) die("read");
+  }
+
+
+  if (c == '\x1b') {
+    char seq[3];
+    if (read(STDIN_FILENO, &seq[0], 1) != 1) return '\x1b';
+    if (read(STDIN_FILENO, &seq[1], 1) != 1) {
+      switch (seq[0]) {
+            case 'b': return OPT_LEFT;
+            case 'f': return OPT_RIGHT;
+            default: return '\x1b';
+      }
+    }
+    if (seq[0] == '[') {
+      if (seq[1] >= '0' && seq[1] <= '9') {
+        if (read(STDIN_FILENO, &seq[2], 1) != 1) return '\x1b';
+        if (seq[2] == '~') {
+          switch (seq[1]) {
+            case '1': return HOME_KEY;
+            case '3': return DEL_KEY;
+            case '4': return END_KEY;
+            case '5': return PAGE_UP;
+            case '6': return PAGE_DOWN;
+            case '7': return HOME_KEY;
+            case '8': return END_KEY;
+          }
+        }
+      } else {
+        switch (seq[1]) {
+          case 'A': return ARROW_UP;
+          case 'B': return ARROW_DOWN;
+          case 'C': return ARROW_RIGHT;
+          case 'D': return ARROW_LEFT;
+          case 'H': return HOME_KEY;
+          case 'F': return END_KEY;
+        }
+      }
+    } else if (seq[0] == 'O') {
+      switch (seq[1]) {
+        case 'H': return HOME_KEY;
+        case 'F': return END_KEY;
+      }
+    }
+    return '\x1b';
+  } else {
+    return c;
+  }
+}
+
+
+char CheckKeyPress() {
+  int nread;
+  char c;
+  nread = read(STDIN_FILENO, &c, 1);
+  if (nread == -1 && errno != EAGAIN) die("read");
+  if (nread==0) c='\0';
+  return c;
+}
+
+
+
 
 
 Console::Console() {
