@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <string>
+#include <string.h>
 #include "console.h"
 
 #define MAX_STRING_LENGTH 255
