@@ -404,7 +404,8 @@ void Console::WriteLn(const char *sTxt) {
 
 
 
-void Console::GetConsoleInput (char *sParam, int iNoOfChar) {
+void Console::GetConsoleInput (std::string &sInput, int iNoOfChar) {
+
 char *sIn=NULL;
 int iY;
 int iX;
@@ -414,7 +415,6 @@ char sEmptyStr[5]="";
 	WriteLn (sEmptyStr);
 	Write(sPromptStr);
 	GetCursorPosition (&iY, &iX);
-//	fgets(sIn, iNoOfChar, stdin);
 	int i=0;
 	int iHistoryPos=giConsoleHistoryLen;
 	if (gsConsoleStr[0] != '\0') {
@@ -446,7 +446,8 @@ char sEmptyStr[5]="";
 		gsConsoleHistory[giConsoleHistoryLen-1]=strdup(sIn);
 	}
 	WriteLn(sEmptyStr);
-	strcpy(sParam, sIn);
+	// strcpy(sParam, sIn);
+  sInput=sIn;
 	if (sIn!=NULL) free (sIn);
 }
 

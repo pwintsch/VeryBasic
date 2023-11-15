@@ -1,3 +1,6 @@
+#ifndef CONSOLE_H_
+#define CONSOLE_H_
+
 #include <string>
 #include <termios.h>
 
@@ -45,7 +48,9 @@ public:
   void WriteFStringLn(const char* format, ... );
   void Write(const char *sTxt);
   void WriteLn(const char *sTxt);
-  void GetConsoleInput (char *sParam, int iNoOfChar);
+  void GetConsoleInput (std::string &sInput, int iNoOfChar);
   bool GetYNConfirmation(char *sQuestion);
   ~Console();
 };
+
+#endif /* CONSOLE_H_ */
