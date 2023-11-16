@@ -58,9 +58,7 @@ int IsTokenSeparator(char cCurrent, char cNext){
 };
 
 
-bool IsValidVariableName(std::string &sTxt) {
-	
-
+int IsValidVariableName(std::string &sTxt) {
     
 	std::string::size_type iLen=sTxt.size();
     if (iLen==0) {

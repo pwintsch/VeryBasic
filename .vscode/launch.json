@@ -10,14 +10,9 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-<<<<<<< HEAD
-            "externalConsole": false,
-            "MIMode": "lldb"
-=======
             "externalConsole": true,
             "MIMode": "lldb",
             "preLaunchTask": "C/C++: clang++ build active file"
->>>>>>> 407a823 (Changed Promptloop and GetConsoleInput to use a)
         }
     ]
 }
