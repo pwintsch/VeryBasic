@@ -88,7 +88,7 @@ int IsValidVariableName(std::string &sTxt) {
 			}
 		}
 	}
-	return true;
+	return cvDouble;
 };	
 
 
@@ -264,6 +264,9 @@ bool TokenCollection::Tokenise(std::string pInput) {
 		    }
         }
     } while (sInput[i]!=0);
+	if (strlen(s)>0){   //need to add last token if not in string mode, if in string mode exit with error
+		iTokenId=AddNewToken(SEPARATOR_TYPE_UNKNOWN, s);
+	}
     return true;
 }
 

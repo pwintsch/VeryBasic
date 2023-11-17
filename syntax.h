@@ -1,12 +1,12 @@
 
 #ifndef SYNTAX_H
 #define SYNTAX_H
-
+#include <iostream>
 #include <string>
 
 
 int GetTokenTypeFromID (int iPassedId);
-bool GetTokenInfoFromTxt(std::string sParam, int *iType, int *iID);
+bool GetTokenInfoFromTxt(std::string &sParam, int *iType, int *iID);
 
 
 

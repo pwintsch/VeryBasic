@@ -106,8 +106,51 @@ int GetTokenTypeFromID (int iPassedId) {
 	return tUnknown;
 }
 
-bool GetTokenInfoFromTxt(std::string sParam, int *iType, int *iID) {
 
+
+bool IsStringInt (const char *sTxt) {
+	
+	if (*sTxt=='\0') {
+		return false;
+	}
+	while(*sTxt != '\0') {
+		if(*sTxt < '0' || *sTxt > '9') {
+			return false;
+		}		
+		sTxt++;
+	}
+	return true;
+}
+
+
+bool IsStringFloat (const char *sTxt) {
+	
+	if (*sTxt=='\0') {
+		return false;
+	}
+	while(*sTxt != '\0') {
+		if(*sTxt < '0' || *sTxt > '9') {
+			if (*sTxt!='.') {
+				return false;
+			}
+		}		
+		sTxt++;
+	}
+	return true;
+}
+
+
+bool GetTokenInfoFromTxt(std::string &sParam, int *iType, int *iID) {
+	if (IsStringInt(sParam.c_str())){
+		*iType=tValue;
+		*iID=coInteger;
+		return true;
+	}
+	if (IsStringFloat(sParam.c_str())){
+		*iType=tValue;
+		*iID=coDouble;
+		return true;
+	}
 	std::transform(sParam.begin(), sParam.end(), sParam.begin(), ::toupper);
 	for (int i=0; i<NumberOfTokens(); i++) {
 		if (tTokens[i].sTxt==sParam) {

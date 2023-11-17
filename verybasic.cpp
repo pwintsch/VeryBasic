@@ -1,9 +1,8 @@
 
-#include <iostream>
-#include <string>
+
 #include "console.h"
 #include "token.h"
-
+#include <string>
 #define MAX_STRING_LENGTH 255
 
 
@@ -42,7 +41,7 @@ int main() {
     Console console;
     console.clear();
     console.WriteLn("Hello, world!");
-    console.WriteLn("I am using my new console class! v0.0008");
+    console.WriteLn("I am using my new console class! v0.0009");
     console.WriteFStringLn ("Terminal Size: Rows: %d Columns: %d ", console.get_height(), console.get_width());
     console.WriteLn("");
     PromptLoop(console);
