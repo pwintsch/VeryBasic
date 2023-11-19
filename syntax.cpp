@@ -1,6 +1,5 @@
 
-#include "syntax.h"
-
+#include "syntax.hpp"
 
 typedef struct tTokenType {
 //	char sTxt[MAX_KEYWORD_SIZE];

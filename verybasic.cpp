@@ -1,9 +1,10 @@
 
 
-#include "console.h"
-#include "token.h"
-#include "syntax.h"
+#include "console.hpp"
+#include "token.hpp"
+#include "syntax.hpp"
 #include "error.hpp"
+#include "instruction.hpp"
 #include <string>
 #define MAX_STRING_LENGTH 255
 
@@ -37,9 +38,13 @@ bool bMachineLoop = true;
             if (tokenizeResult!=NO_ERROR) {
                 MyConsole.WriteLn(ErrorMsg(tokenizeResult).c_str());
             } else {
-                MyConsole.WriteLn("Tokenise & Bracket Check OK");
+//                MyConsole.WriteLn("Tokenise & Bracket Check OK");
+//                MyConsole.WriteLn(MyTokens.GetString().c_str());
+                Instruction MyInstruction;
+                MyInstruction.Initialise(MyTokens);
+                MyConsole.WriteLn(MyInstruction.GetString().c_str());
             }
-            MyConsole.WriteLn(MyTokens.GetString().c_str());
+            
 
             MyConsole.WriteLn("OK");
         }

@@ -3,6 +3,7 @@
 
 #include <string>
 
+
 #define NO_ERROR 0
 #define ERR_TOKEN_OPEN_STRING 1
 #define ERR_BAD_BRACKET 2

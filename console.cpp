@@ -4,7 +4,7 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
-#include "console.h"
+#include "console.hpp"
   
 struct termios orig_termios;
 

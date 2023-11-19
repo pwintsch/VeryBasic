@@ -38,13 +38,15 @@ public:
     void AddToken(Token pToken);
     int AddNewToken(int pType, std::string pValue);
     Token GetToken(int pIndex);
+    void RemoveToken(int pIndex);
     int Count();
     int Tokenise(std::string pInput);
     int CheckBrackets();
     std::string GetString();
+    std::vector<Token> Tokens;  
 private:
     /* data */
-    std::vector<Token> Tokens;  
+    
 
 };
 

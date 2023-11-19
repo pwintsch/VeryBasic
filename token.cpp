@@ -1,6 +1,6 @@
 
-#include "token.h"
-#include "syntax.h"
+#include "token.hpp"
+#include "syntax.hpp"
 
 #include "error.hpp"	// error messages
 
@@ -134,6 +134,11 @@ TokenCollection::~TokenCollection() {
 Token TokenCollection::GetToken(int pIndex) {
     return Tokens[pIndex];
 }
+
+void TokenCollection::RemoveToken(int pIndex) {
+	Tokens.erase(Tokens.begin()+pIndex);
+}
+
 
 void TokenCollection::AddToken(Token pToken) {
     Tokens.push_back(pToken);
