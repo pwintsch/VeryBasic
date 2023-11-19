@@ -39,7 +39,8 @@ public:
     int AddNewToken(int pType, std::string pValue);
     Token GetToken(int pIndex);
     int Count();
-    bool Tokenise(std::string pInput);
+    int Tokenise(std::string pInput);
+    int CheckBrackets();
     std::string GetString();
 private:
     /* data */

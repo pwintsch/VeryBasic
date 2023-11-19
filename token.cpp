@@ -2,6 +2,8 @@
 #include "token.h"
 #include "syntax.h"
 
+#include "error.hpp"	// error messages
+
 
 
 int IsTokenSeparator(char cCurrent, char cNext){
@@ -22,20 +24,12 @@ int IsTokenSeparator(char cCurrent, char cNext){
 		case '^':
 		case '=':
 		case '!':
+		case '(':
+		case ')':
+		case '[':
+		case ']':
 		case '\\':
 			return(1);
-			break;
-		case '(':
-			return(11);
-			break;
-		case ')':
-			return(12);
-			break;
-		case '[':
-			return(13);
-			break;
-		case ']':
-			return(14);
 			break;
 		case '<':
 			if ((cNext=='>') || (cNext=='=')) {
@@ -167,7 +161,7 @@ std::string TokenCollection::GetString() {
 }
 
 
-bool TokenCollection::Tokenise(std::string pInput) {
+int TokenCollection::Tokenise(std::string pInput) {
 
     // Tokenise the input string
     // return true if successful
@@ -267,9 +261,30 @@ bool TokenCollection::Tokenise(std::string pInput) {
 	if (strlen(s)>0){   //need to add last token if not in string mode, if in string mode exit with error
 		iTokenId=AddNewToken(SEPARATOR_TYPE_UNKNOWN, s);
 	}
-    return true;
+	if (bStringMode==true) {
+		return ERR_TOKEN_OPEN_STRING;
+	}
+    return NO_ERROR;
 }
 
 
-
+int TokenCollection::CheckBrackets() {
+	int iBracketCount=0;
+	int iSquareBracketCount=0;
+	for (int i=0; i<Count(); i++) {
+		if (Tokens[i].ID==coOpenBracket) {
+			iBracketCount++;
+		} else if (Tokens[i].ID==coCloseBracket) {
+			iBracketCount--;
+		} else if (Tokens[i].ID==coBoxOpen) {
+			iSquareBracketCount++;
+		} else if (Tokens[i].ID==coBoxClose) {
+			iSquareBracketCount--;
+		}
+	}
+	if (iBracketCount!=0 || iSquareBracketCount!=0) {
+		return ERR_BAD_BRACKET;
+	}
+	return NO_ERROR;
+}
 

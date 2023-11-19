@@ -1,1 +1,2 @@
-- Work out why variable type not detectedß
+- Add bad bracket check after Tokenize
+- Tokenize to return an error if openquote (stringmode) at end 

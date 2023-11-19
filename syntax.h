@@ -3,9 +3,10 @@
 #define SYNTAX_H
 #include <iostream>
 #include <string>
+#include <map>
 
 
-int GetTokenTypeFromID (int iPassedId);
+int GetTokenTypeFromID(int iPassedId);
 bool GetTokenInfoFromTxt(std::string &sParam, int *iType, int *iID);
 
 
