@@ -5,7 +5,7 @@
             "name": "C/C++: clang++ build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/verybasic",
+            "program": "${workspaceFolder}/obj/verybasic",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
