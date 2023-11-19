@@ -20,15 +20,37 @@ int Instruction::Initialise(TokenCollection &InputTokens) {
     // look for colons and split accordingly for each command
     for (i=iPosition; i<InputTokens.Tokens.size(); i++){
         if (InputTokens.Tokens[i].ID == coColon && i>iPosition) {   
-            Parameters.push_back (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.begin() + i)); // copy all tokens except the first one
+            int r=AddCommand (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.begin() + i)); // copy all tokens except the first one
+            if (r!=NO_ERROR) {
+                return r;
+            }
             iPosition=i+1;
         }
     }
     if (iPosition<i) {
-        Parameters.push_back(std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.end())); // copy all tokens except the first one
+        int r=AddCommand (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.end())); // copy all tokens except the first one
+        if (r!=NO_ERROR) {
+            return r;
+        }
     }
-    return 0;
+    return NO_ERROR;
 }
+
+
+int Instruction::AddCommand(std::vector<Token> pCommand) {
+    // add a command to the instruction
+    // return true if successful
+    if (pCommand[0].Type == tCommand) {
+        Command cmd;
+        cmd.Initialise(pCommand);
+        commands.push_back(cmd);
+    } else {
+        return ERR_BAD_COMMAND;
+    }
+    
+    return NO_ERROR;
+}
+
 
 std::string Instruction::GetString() {
     std::string s="";
@@ -46,4 +68,10 @@ std::string Instruction::GetString() {
         }
     }
     return s;
+}
+
+
+Instruction::~Instruction() {
+    // destructor
+    Parameters.clear();
 }

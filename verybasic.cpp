@@ -32,20 +32,14 @@ bool bMachineLoop = true;
             MyConsole.WriteLn(sInput.c_str());
             TokenCollection MyTokens;
             int tokenizeResult=MyTokens.Tokenise(sInput);
-            if (tokenizeResult==NO_ERROR) {
-                tokenizeResult=MyTokens.CheckBrackets();
-            }
+            tokenizeResult=tokenizeResult==NO_ERROR ? MyTokens.CheckBrackets():tokenizeResult;
+            Instruction MyInstruction;
+            tokenizeResult=tokenizeResult==NO_ERROR ? MyInstruction.Initialise(MyTokens):tokenizeResult;
             if (tokenizeResult!=NO_ERROR) {
                 MyConsole.WriteLn(ErrorMsg(tokenizeResult).c_str());
             } else {
-//                MyConsole.WriteLn("Tokenise & Bracket Check OK");
-//                MyConsole.WriteLn(MyTokens.GetString().c_str());
-                Instruction MyInstruction;
-                MyInstruction.Initialise(MyTokens);
                 MyConsole.WriteLn(MyInstruction.GetString().c_str());
             }
-            
-
             MyConsole.WriteLn("OK");
         }
     }

@@ -1,2 +1,1 @@
-- Add bad bracket check after Tokenize
-- Tokenize to return an error if openquote (stringmode) at end 
+- Build GetString on Command and get program to run again
