@@ -9,6 +9,7 @@ class Command {
 public:
     ~Command();
     int Initialise(std::vector<Token> &pTokens);
+    std::string GetString();
     // int Execute();
 private:
     int Type;

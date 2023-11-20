@@ -43,7 +43,7 @@ int Instruction::AddCommand(std::vector<Token> pCommand) {
     if (pCommand[0].Type == tCommand) {
         Command cmd;
         cmd.Initialise(pCommand);
-        commands.push_back(cmd);
+        Commands.push_back(cmd);
     } else {
         return ERR_BAD_COMMAND;
     }
@@ -59,13 +59,11 @@ std::string Instruction::GetString() {
     } else {
         s="   Direct  -    \n\r";
     }
-    for (int i=0; i<Parameters.size(); i++){
+    for (int i=0; i<Commands.size(); i++){
         if (i>0) {
             s=s+ "   Extra Command :\n\r";
         }
-        for (int j=0;j<Parameters[i].size(); j++) {
-            s=s+ "       Type: " + std::to_string(Parameters[i][j].Type)+ " - ID: "+ std::to_string(Parameters[i][j].ID) + " - " + Parameters[i][j].Value + "\n\r";
-        }
+        s=s+Commands[i].GetString();
     }
     return s;
 }
@@ -73,5 +71,5 @@ std::string Instruction::GetString() {
 
 Instruction::~Instruction() {
     // destructor
-    Parameters.clear();
+    Commands.clear();
 }

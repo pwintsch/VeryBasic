@@ -10,7 +10,7 @@ class Instruction {
 public:
     int ProgramLine;
     int CommandID;
-    std::vector<Command> commands;
+    std::vector<Command> Commands;
 
     ~Instruction();
     int Initialise(TokenCollection &InputTokens);

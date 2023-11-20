@@ -260,6 +260,7 @@ int TokenCollection::Tokenise(std::string pInput) {
                 } while (sInput[i]!=0);
                 s[iNewStringPos]=0;
                 iTokenId=AddNewToken(SEPARATOR_TYPE_REMARK, s);
+				strcpy(s,"");
 		    }
         }
     } while (sInput[i]!=0);
