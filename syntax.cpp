@@ -160,3 +160,237 @@ bool GetTokenInfoFromTxt(std::string &sParam, int *iType, int *iID) {
 	}
 	return false;
 }
+
+
+
+
+tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
+					{ tComplement, coBASE},
+					{ tValue, 0}, 
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tFORSyntax[] = { 	{ tCommand, coFOR}, 
+					{ tVariable, cvNumeric}, 
+					{ tComparison, coEqual}, 
+					{ tExpression ,0},
+					{ tComplement ,coTO},
+					{ tExpression ,0},					
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tFORSyntax2[] = { 	{ tCommand, coFOR}, 
+					{ tVariable, cvNumeric}, 
+					{ tComparison, coEqual}, 
+					{ tExpression ,0},
+					{ tComplement ,coTO},
+					{ tExpression ,0},
+					{ tComplement ,coSTEP},
+					{ tExpression ,0},					
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tNEXTSyntax[] = { 	{ tCommand, coNEXT}, 
+					{ tVariable, cvNumeric}, 
+					{ SYNTAX_END, 0} };
+
+
+
+tSyntaxNode tDIMSyntax[] = { 	{ tCommand, coDIM}, 
+					{ tVariable, 0}, 
+					{ SYNTAX_END, 0} };
+
+
+
+tSyntaxNode tAssignSyntax[] = { 	{ tVariable, coVariable}, 
+					{ tComparison, coEqual},
+				    { tExpression, 0},	
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tLETSyntax[] = { 	{ tCommand, coLET}, 
+					{ tVariable, coVariable}, 
+					{ tComparison, coEqual}, 
+					{ tExpression ,0},
+					{ SYNTAX_END, 0} };
+				
+
+tSyntaxNode tREMSyntax[] = { 	{ tCommand, coREM}, 
+					{ tRemark, 0}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tREMSyntax2[] = { 	{ tCommand, coREM}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tCONTINUESyntax[] = { 	{ tCommand, coCONTINUE}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tBEEPSyntax[] = { 	{ tCommand, coBEEP}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tCLSSyntax[] = { 	{ tCommand, coCLS}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tIFSyntax[] = { 	{ tCommand, coIF}, 
+					{ tExpression, 0},
+					{ tComplement, coTHEN}, 
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tPRINTSyntax[] = { 	{ tCommand, coPRINT}, 
+					{ tPrintExpression, 0}, 
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tSAVESyntax[] = { 	{ tDirectCommand, coSAVE}, 
+					{ tExpression, tString}, 
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tLOADSyntax[] = { 	{ tDirectCommand, coLOAD}, 
+					{ tExpression, tString}, 
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tINPUTSyntax[] = { 	{ tCommand, coINPUT}, 
+					{ tInputExpression, 0}, 
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tLISTSyntax[] = { 	{ tDirectCommand, coLIST}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tLISTSyntax2[] = { 	{ tDirectCommand, coLIST},
+       					{ tValue, coInteger},	
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tLISTSyntax3[] = { 	{ tDirectCommand, coLIST},
+       					{ tValue, coInteger},
+						{ tOperator, coMinus},
+						{ tValue, coInteger},	
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tNODELISTyntax[] = { 	{ tDirectCommand, coNODELIST},
+       					{ tValue, coInteger},	
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tGOTOSyntax[] = { 	{ tCommand, coGOTO},
+       				{ tExpression, tValue},	
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tGOSUBSyntax[] = { 	{ tCommand, coGOSUB},
+       				{ tExpression, tValue},	
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tRETURNSyntax[] = { 	{ tCommand, coRETURN}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tSTOPSyntax[] = { 	{ tCommand, coSTOP}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tRUNSyntax[] = { 	{ tDirectCommand, coRUN}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tEVALSyntax[] = { 	{ tDirectCommand, coEVAL},
+       					{ tExpression, 0},	
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tEXITSyntax[] = { 	{ tDirectCommand, coEXIT}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tNEWSyntax[] = { 	{ tDirectCommand, coNEW}, 
+                    { SYNTAX_END, 0} };
+					
+tSyntaxNode tDEBUGSyntax[] = { 	{ tDirectCommand, coDEBUG}, 
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tRANDOMIZESyntax[] = { 	{ tCommand, coRANDOMIZE}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tRANDOMIZESyntax2[] = { 	{ tCommand, coRANDOMIZE}, 
+					{ tExpression, tValue},
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tTMPCMDSyntax[] = { 	{ tCommand, coINKEY}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tEDITSyntax[] = { 	{ tDirectCommand, coEDIT},
+       				{ tValue, coInteger},	
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tEDITORSyntax[] = { 	{ tDirectCommand, coEDITOR}, 
+					{ SYNTAX_END, 0} };
+
+
+tSyntaxNode tREADSyntax[] = { 	{ tCommand, coREAD}, 
+					{ tVariableList, 0}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tDATASyntax[] = { 	{ tCommand, coDATA}, 
+					{ tValueList, 0}, 
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tDEFSyntax[] = { 	{ tCommand, coDEF}, 
+//					{ tComplement, coFN},
+					{ tUserFunction, 0}, 
+					{ tComparison, coEqual}, 
+					{ tExpression ,0},
+					{ SYNTAX_END, 0} };
+
+tSyntaxNode tDEFSyntax2[] = { 	{ tCommand, coDEF}, 
+					{ tComplement, coFN},
+					{ tUserFunction, 0}, 
+					{ tComparison, coEqual}, 
+					{ tExpression ,0},
+					{ SYNTAX_END, 0} };
+
+// was const tSyntax tGrammar[] 
+
+std::vector<tSyntax> Grammar ={
+		{ coVariable, 0, tAssignSyntax},
+		{ coLET, 0, tLETSyntax },
+		{ coIF, 0, tIFSyntax },
+		{ coLIST, 0, tLISTSyntax },
+		{ coLIST, 1, tLISTSyntax2 },
+		{ coLIST, 2, tLISTSyntax3 },
+		{ coEXIT, 0, tEXITSyntax },
+		{ coNEW, 0, tNEWSyntax },
+		{ coDEBUG, 0, tDEBUGSyntax },
+		{ coNODELIST, 0, tNODELISTyntax},
+		{ coPRINT, 0, tPRINTSyntax },
+		{ coINPUT, 0, tINPUTSyntax },
+		{ coEVAL, 0, tEVALSyntax },
+		{ coRUN, 0, tRUNSyntax},
+		{ coLOAD, 0, tLOADSyntax},
+		{ coSAVE, 0, tSAVESyntax},
+		{ coGOTO, 0, tGOTOSyntax},
+		{ coGOSUB, 0, tGOSUBSyntax},
+		{ coRETURN, 0, tRETURNSyntax},
+		{ coREM, 0, tREMSyntax},
+		{ coREM, 1, tREMSyntax2},
+		{ coFOR, 0, tFORSyntax2},
+		{ coFOR, 1, tFORSyntax},
+		{ coNEXT, 0, tNEXTSyntax},
+		{ coDIM, 0, tDIMSyntax},
+		{ coRANDOMIZE, 0, tRANDOMIZESyntax},
+		{ coRANDOMIZE, 1, tRANDOMIZESyntax2},
+		{ coSTOP, 0, tSTOPSyntax},
+		{ coOPTION, 0, tOPTIONSyntax},
+		{ coEDIT, 0, tEDITSyntax},
+		{ coEDITOR, 0, tEDITORSyntax},
+		{ coCONTINUE, 0, tCONTINUESyntax},
+		{ coBEEP, 0, tBEEPSyntax},
+		{ coCLS, 0, tCLSSyntax},
+		{ coREAD, 0, tREADSyntax},
+		{ coDATA, 0, tDATASyntax},
+		{ coTMPCMD, 0, tTMPCMDSyntax},
+		{ coDEF, 0, tDEFSyntax},
+		{ coDEF, 0, tDEFSyntax2},
+		};
+

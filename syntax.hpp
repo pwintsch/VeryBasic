@@ -4,6 +4,21 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
+
+
+typedef struct tSyntaxNode_ {
+	int iTType;
+	int iTId;
+} tSyntaxNode;
+
+struct tSyntax {
+	int iCommandCode;
+	int iRuleNo;
+	tSyntaxNode *tRule;
+};
+
+//extern const tSyntax tGrammar[];
 
 
 int GetTokenTypeFromID(int iPassedId);
