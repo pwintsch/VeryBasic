@@ -4,6 +4,21 @@
 #include <string>
 #include <vector>
 #include "token.hpp"
+#include "syntax.hpp"
+
+class CommandNode {
+public:
+    CommandNode();
+    ~CommandNode();
+    int Initialise(Token &SourceToken);
+    std::string GetString();
+    // int Execute();
+private:   
+    int Type;
+    int ID;
+    std::string Value;
+};
+
 
 class Command {
 public:
@@ -14,7 +29,12 @@ public:
 private:
     int Type;
     int ID;
-    std::vector<Token>  Parameters;
+    std::vector<Token> Tokens;
+    std::vector<CommandNode>  Arguments;
+    std::vector<tSyntax> Rules;
 };
+
+
+
 
 #endif /* COMMAND_H_ */

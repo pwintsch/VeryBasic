@@ -18,19 +18,24 @@ int Instruction::Initialise(TokenCollection &InputTokens) {
     }
     int i;
     // look for colons and split accordingly for each command
+    int iCommandType=InputTokens.Tokens[iPosition].Type;   
     for (i=iPosition; i<InputTokens.Tokens.size(); i++){
         if (InputTokens.Tokens[i].ID == coColon && i>iPosition) {   
             int r=AddCommand (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.begin() + i)); // copy all tokens except the first one
-            if (r!=NO_ERROR) {
+            if (r!=NO_ERROR)  {
                 return r;
+            } else if  (ProgramLine!=0 && iCommandType==tDirectCommand) {
+                return ERR_DIRECTCOMMAND_IN_PROGRAM;
             }
             iPosition=i+1;
         }
     }
     if (iPosition<i) {
         int r=AddCommand (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.end())); // copy all tokens except the first one
-        if (r!=NO_ERROR) {
+        if (r==ERR_BAD_COMMAND) {
             return r;
+        } else if  (ProgramLine!=0 && iCommandType==tDirectCommand) {
+            return ERR_DIRECTCOMMAND_IN_PROGRAM;
         }
     }
     return NO_ERROR;
@@ -39,16 +44,20 @@ int Instruction::Initialise(TokenCollection &InputTokens) {
 
 int Instruction::AddCommand(std::vector<Token> pCommand) {
     // add a command to the instruction
-    // return true if successful
-    if (pCommand[0].Type == tCommand) {
+    // return command type
+    int r;
+    if (pCommand[0].Type == tCommand || pCommand[0].Type == tDirectCommand || pCommand[0].Type == tVariable) {
         Command cmd;
-        cmd.Initialise(pCommand);
+        r=cmd.Initialise(pCommand);
+        if (r!=NO_ERROR) {
+            return r;
+        }
         Commands.push_back(cmd);
     } else {
         return ERR_BAD_COMMAND;
     }
     
-    return NO_ERROR;
+    return r;
 }
 
 

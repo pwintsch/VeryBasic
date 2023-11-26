@@ -7,7 +7,7 @@
 #include <vector>
 
 
-typedef struct tSyntaxNode_ {
+ typedef struct tSyntaxNode_ {
 	int iTType;
 	int iTId;
 } tSyntaxNode;
@@ -15,11 +15,14 @@ typedef struct tSyntaxNode_ {
 struct tSyntax {
 	int iCommandCode;
 	int iRuleNo;
-	tSyntaxNode *tRule;
+	std::vector<tSyntaxNode> Syntax;
 };
 
 //extern const tSyntax tGrammar[];
 
+std::vector<tSyntax> GetSyntaxRules(int iCommandCode);
+
+std::string StringFromSyntaxRule(std::vector<tSyntaxNode> tRule);
 
 int GetTokenTypeFromID(int iPassedId);
 bool GetTokenInfoFromTxt(std::string &sParam, int *iType, int *iID);
@@ -54,6 +57,8 @@ bool GetTokenInfoFromTxt(std::string &sParam, int *iType, int *iID);
 #define tPrintExpression 22
 #define tInputExpression 23
 #define tUserFunction 24
+
+
 
 
 #define ntCommand 1

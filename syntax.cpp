@@ -162,7 +162,39 @@ bool GetTokenInfoFromTxt(std::string &sParam, int *iType, int *iID) {
 }
 
 
+std::vector<tSyntaxNode> OptionSyntax = { 	
+					{ tCommand, coOPTION}, 
+					{ tComplement, coBASE},
+					{ tValue, 0} };
 
+std::vector<tSyntaxNode> AssignSyntax = {
+				 	{ tVariable, coVariable}, 
+					{ tComparison, coEqual},
+				    { tExpression, 0}};
+					
+std::vector<tSyntaxNode> LETSyntax = { 	
+					{ tCommand, coLET}, 
+					{ tVariable, coVariable}, 
+					{ tComparison, coEqual}, 
+					{ tExpression ,0} };
+
+std::vector<tSyntaxNode> IFSyntax = { 	
+					{ tCommand, coIF}, 
+					{ tExpression, 0},
+					{ tComplement, coTHEN} };
+
+std::vector<tSyntaxNode> LISTSyntax = { 	
+					{ tDirectCommand, coLIST} };
+
+std::vector<tSyntaxNode> LISTSyntax2 = { 	
+					{ tDirectCommand, coLIST},
+       				{ tValue, coInteger} };
+
+std::vector<tSyntaxNode> LISTSyntax3 = { 	
+					{ tDirectCommand, coLIST},
+       				{ tValue, coInteger},
+					{ tOperator, coMinus},
+					{ tValue, coInteger} };
 
 tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
 					{ tComplement, coBASE},
@@ -208,11 +240,7 @@ tSyntaxNode tAssignSyntax[] = { 	{ tVariable, coVariable},
 					{ SYNTAX_END, 0} };
 
 
-tSyntaxNode tLETSyntax[] = { 	{ tCommand, coLET}, 
-					{ tVariable, coVariable}, 
-					{ tComparison, coEqual}, 
-					{ tExpression ,0},
-					{ SYNTAX_END, 0} };
+
 				
 
 tSyntaxNode tREMSyntax[] = { 	{ tCommand, coREM}, 
@@ -350,15 +378,16 @@ tSyntaxNode tDEFSyntax2[] = { 	{ tCommand, coDEF},
 					{ tExpression ,0},
 					{ SYNTAX_END, 0} };
 
-// was const tSyntax tGrammar[] 
 
-std::vector<tSyntax> Grammar ={
-		{ coVariable, 0, tAssignSyntax},
-		{ coLET, 0, tLETSyntax },
-		{ coIF, 0, tIFSyntax },
-		{ coLIST, 0, tLISTSyntax },
-		{ coLIST, 1, tLISTSyntax2 },
-		{ coLIST, 2, tLISTSyntax3 },
+
+
+std::vector<tSyntax> tGrammar ={	
+		{ coVariable, 0, AssignSyntax},		
+		{ coLET, 0, LETSyntax },
+		{ coIF, 0, IFSyntax },
+		{ coLIST, 0, LISTSyntax },
+		{ coLIST, 1, LISTSyntax2 },
+		{ coLIST, 2, LISTSyntax3 } /*
 		{ coEXIT, 0, tEXITSyntax },
 		{ coNEW, 0, tNEWSyntax },
 		{ coDEBUG, 0, tDEBUGSyntax },
@@ -392,5 +421,63 @@ std::vector<tSyntax> Grammar ={
 		{ coTMPCMD, 0, tTMPCMDSyntax},
 		{ coDEF, 0, tDEFSyntax},
 		{ coDEF, 0, tDEFSyntax2},
+		*/
 		};
 
+
+std::vector<tSyntax> GetSyntaxRules(int iCommandCode) {
+	std::vector<tSyntax> vRules;
+	for (int i=0; i<tGrammar.size(); i++) {
+		if (tGrammar[i].iCommandCode==iCommandCode) {
+			vRules.push_back(tGrammar[i]);
+		}
+	}
+	return vRules;
+}
+
+
+std::map <int, std::string> SyntaxNodeStrings =  { 
+  { tError, "ERROR" }, 
+  { tUnknown, "UNKNOWN" },
+  { tCommand, "COMMAND" }, 
+  { tVariable, "VARIABLE" },
+  { tFunction, "FUNCTION" },   
+  { tOperator, "OPERATOR" },
+  { tComparison, "COMPARISON" },
+  { tString, "STRING" },
+  { tSeparator, "SEPARATOR" },
+  { tBracket, "BRACKET" },
+  { tComplement, "COMPLEMENT" },
+  { tIdentifier, "IDENTIFIER" },
+  { tValue, "VALUE" },
+  { tRemark, "REMARK" },
+  { tDirectCommand, "DIRECT COMMAND" },
+  { tExpressionList, "EXPRESSION LIST" },
+  { tVariableList, "VARIABLE LIST" },
+  { tArray, "ARRAY" },
+  { tNumber, "NUMBER" },
+  { tValueList, "VALUELIST" },
+  { tExpression, "EXPRESSION" },
+  { tPrintArgument, "PRINT ARGUMENT" },
+  { tPrintExpression, "PRINT EXPRESSION" },
+  { tInputExpression, "INPUT EXPRESSION" },
+  { tUserFunction, "USER FUNCTION" }  
+};
+
+std::string GetSyntaxNodeString(int iSyntaxNode) {
+	return SyntaxNodeStrings[iSyntaxNode];
+}
+
+std::string StringFromSyntaxRule(std::vector<tSyntaxNode> tRule) {
+	std::string s="";
+	for (int i=0; i<tRule.size(); i++) {
+		if (i>0) {
+			s=s+" : ";
+		}
+		s=s+GetSyntaxNodeString(tRule[i].iTType);
+		if (tRule[i].iTId!=0) {
+			s=s+" - " + std::to_string(tRule[i].iTId);
+		}
+	}
+	return s;
+}

@@ -10,7 +10,7 @@
 
 
 
-void PromptLoop(Console MyConsole) {
+void PromptLoop(Console MyConsole ) {
 std::string sInput;
 bool bMachineLoop = true;
     // temp message whilst building
@@ -48,6 +48,7 @@ bool bMachineLoop = true;
 
 int main() {
     Console console;
+
     console.clear();
     console.WriteLn("Hello, world!");
     console.WriteLn("I am using my new console class! v0.0009a");
