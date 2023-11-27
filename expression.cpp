@@ -10,6 +10,7 @@ bool IsTokenOKForExpression(const Token &token) {
     case tVariable:
     case tFunction:
     case tOperator:
+    case tComparison:
         return true;
         break;
     case tBracket:

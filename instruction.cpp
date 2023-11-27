@@ -28,6 +28,12 @@ int Instruction::Initialise(TokenCollection &InputTokens) {
                 return ERR_DIRECTCOMMAND_IN_PROGRAM;
             }
             iPosition=i+1;
+        } else if (InputTokens.Tokens[i].ID == coTHEN && i>iPosition) {
+            int r=AddCommand (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.begin() + i +1)); // copy all tokens except the first one
+            if (r!=NO_ERROR)  {
+                return r;
+            }
+            iPosition=i+1;
         }
     }
     if (iPosition<i) {
