@@ -1,2 +1,1 @@
-- Build GetString on Command and get program to run again
-- modify Instruction::GetString to use Command.GetString
+- Check Brackets are balanced in Expression initialiser

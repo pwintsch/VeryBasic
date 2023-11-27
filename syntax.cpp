@@ -162,10 +162,6 @@ bool GetTokenInfoFromTxt(std::string &sParam, int *iType, int *iID) {
 }
 
 
-std::vector<tSyntaxNode> OptionSyntax = { 	
-					{ tCommand, coOPTION}, 
-					{ tComplement, coBASE},
-					{ tValue, 0} };
 
 std::vector<tSyntaxNode> AssignSyntax = {
 				 	{ tVariable, coVariable}, 
@@ -195,6 +191,16 @@ std::vector<tSyntaxNode> LISTSyntax3 = {
        				{ tValue, coInteger},
 					{ tOperator, coMinus},
 					{ tValue, coInteger} };
+
+std::vector<tSyntaxNode> EXITSyntax = { 	
+					{ tDirectCommand, coEXIT} };
+
+
+std::vector<tSyntaxNode> OptionSyntax = { 	
+					{ tCommand, coOPTION}, 
+					{ tComplement, coBASE},
+					{ tValue, 0} };
+
 
 tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
 					{ tComplement, coBASE},
@@ -239,9 +245,6 @@ tSyntaxNode tAssignSyntax[] = { 	{ tVariable, coVariable},
 				    { tExpression, 0},	
 					{ SYNTAX_END, 0} };
 
-
-
-				
 
 tSyntaxNode tREMSyntax[] = { 	{ tCommand, coREM}, 
 					{ tRemark, 0}, 
@@ -387,8 +390,9 @@ std::vector<tSyntax> tGrammar ={
 		{ coIF, 0, IFSyntax },
 		{ coLIST, 0, LISTSyntax },
 		{ coLIST, 1, LISTSyntax2 },
-		{ coLIST, 2, LISTSyntax3 } /*
-		{ coEXIT, 0, tEXITSyntax },
+		{ coLIST, 2, LISTSyntax3 }, 
+		{ coEXIT, 0, EXITSyntax }
+		/*,
 		{ coNEW, 0, tNEWSyntax },
 		{ coDEBUG, 0, tDEBUGSyntax },
 		{ coNODELIST, 0, tNODELISTyntax},

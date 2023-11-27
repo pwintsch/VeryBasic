@@ -32,7 +32,7 @@ int Instruction::Initialise(TokenCollection &InputTokens) {
     }
     if (iPosition<i) {
         int r=AddCommand (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.end())); // copy all tokens except the first one
-        if (r==ERR_BAD_COMMAND) {
+        if (r!=NO_ERROR) {
             return r;
         } else if  (ProgramLine!=0 && iCommandType==tDirectCommand) {
             return ERR_DIRECTCOMMAND_IN_PROGRAM;

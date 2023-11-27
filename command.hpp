@@ -5,18 +5,19 @@
 #include <vector>
 #include "token.hpp"
 #include "syntax.hpp"
+#include "expression.hpp"
 
 class CommandNode {
 public:
     CommandNode();
     ~CommandNode();
-    int Initialise(Token &SourceToken);
-    std::string GetString();
-    // int Execute();
-private:   
+    int InitialiseFromToken(Token &SourceToken);
+    int InitialiseExpression(int pType, int pID, Expression &pExpression);
+    std::string GetString();  
     int Type;
     int ID;
     std::string Value;
+    Expression ExpressionNode;
 };
 
 
@@ -29,6 +30,7 @@ public:
 private:
     int Type;
     int ID;
+    int RuleNo;
     std::vector<Token> Tokens;
     std::vector<CommandNode>  Arguments;
     std::vector<tSyntax> Rules;
