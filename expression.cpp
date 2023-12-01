@@ -27,7 +27,7 @@ bool IsTokenOKForExpression(const Token &token) {
 }
 
 
-int Expression::Initialise(const std::vector<Token>& tokenVector) {
+int Expression::Initialise(const std::vector<Token> tokenVector) {
     tokens = tokenVector;
     // check brackets are balanced
     return NO_ERROR;

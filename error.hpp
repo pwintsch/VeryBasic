@@ -10,6 +10,8 @@
 #define ERR_BAD_COMMAND 3
 #define ERR_DIRECTCOMMAND_IN_PROGRAM 4
 #define ERR_NO_MATCHING_SYNTAX 5
+#define ERR_BAD_EXPRESSION 6
+#define ERR_BAD_FUNCTION_BRACKET 7
 
 
 std::string ErrorMsg(int pID);

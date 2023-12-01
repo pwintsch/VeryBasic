@@ -10,7 +10,9 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_BAD_BRACKET, "SYNTAX ERROR: Bracket error - check open/close"},
                     {ERR_BAD_COMMAND, "SYNTAX ERROR: Unknown command"},
                     {ERR_DIRECTCOMMAND_IN_PROGRAM, "SYNTAX ERROR: Direct command not allowed in program"},
-                    {ERR_NO_MATCHING_SYNTAX, "SYNTAX ERROR: No matching syntax found for command"} 
+                    {ERR_NO_MATCHING_SYNTAX, "SYNTAX ERROR: No matching syntax found for command"},
+                    {ERR_BAD_EXPRESSION, "SYNTAX ERROR: Expression contains invalid tokens"},
+                    {ERR_BAD_FUNCTION_BRACKET, "SYNTAX ERROR: Function call with invalid brackets"}, 
 };
 
 std::string ErrorMsg(int pID) {

@@ -19,6 +19,15 @@ int CommandNode::InitialiseFromToken (Token &SourceToken) {
     ID=SourceToken.ID;
     Type=SourceToken.Type;
     Value=SourceToken.Value;
+    SubArguments.clear();
+    return NO_ERROR;
+}
+
+int CommandNode::InitialiseWithArguments(const Token &SourceToken, std::vector<Expression> &pArguments) {
+    ID=SourceToken.ID;
+    Type=SourceToken.Type;
+    Value=SourceToken.Value;
+    SubArguments=pArguments;
     return NO_ERROR;
 }
 
@@ -27,6 +36,7 @@ int CommandNode::InitialiseExpression(int pType, int pID, Expression &pExpressio
     Type=pType;
     Value="";
     ExpressionNode=pExpression;
+    SubArguments.clear();
     return NO_ERROR;
  }
 
@@ -36,9 +46,158 @@ Command::~Command() {
     Arguments.clear();
 }
 
-// Returns Bad Command if no syntax rules found and if not type of command tDirectCommand, tCommand or tVariable
+
+
+/*        if (pTokens[i].ID==coOpenBracket) {
+            BracketCount++;
+        } else if (pTokens[i].ID==coCloseBracket) {
+            BracketCount--;
+        } else if (pTokens[i].Type==tVariable) {
+            if (pTokens[i+1].ID==coOpenBracket) {
+                // find matching close bracket
+                int BracketCount=1;
+                int j=i+2;
+                while (j<pTokens.size() && BracketCount>0) {
+                    if (pTokens[j].ID==coOpenBracket) {
+                        BracketCount++;
+                    } else if (pTokens[j].ID==coCloseBracket) {
+                        BracketCount--;
+                    }
+                    j++;
+                }
+                if (BracketCount==0) {
+                    // create vector of Exoression Tokens
+                    int r=TokensToExpressionCollection(std::vector<Token>(pTokens.begin() + i + 2, pTokens.begin() + j - 1), pLexResults);
+                    
+                } else {
+                    return ERR_UNBALANCED_BRACKETS;
+                }
+            } else {
+                CommandNode NewNode;
+                NewNode.InitialiseFromToken(pTokens[i]);
+                pLexResults.push_back(NewNode);
+                continue;
+        } else if (pTokens[i].ID==coComma && BracketCount==0) {
+            // create expression node from LastStart to i-1 and add to pLexResults
+            Expression Expr;
+            Expr.Initialise(std::vector<Token>(pTokens.begin() + LastStart, pTokens.begin() + i-1));
+
+            LastStart=i+1; 
+        }*/
+
+
+int TokensToExpressionCollection( std::vector<Token> pTokens, std::vector<Expression> &pLexResults) {
+    // Look for commas and split accordingly
+    // ensure commas are not included in brackets
+    int i=0;
+    int LastStart=0;
+    int BracketCount=0;
+    pLexResults.clear();
+    while (i<pTokens.size()) {
+        if (IsTokenOKForExpression(pTokens[i])==false && pTokens[i].ID!=coComma) {
+            return ERR_BAD_EXPRESSION;
+        }
+        if (pTokens[i].ID==coOpenBracket) {
+            BracketCount++;
+        } else if (pTokens[i].ID==coCloseBracket) {
+            BracketCount--;
+        } else if (pTokens[i].ID==coComma && BracketCount==0) {
+            // create expression node from LastStart to i-1 and add to pLexResults
+            Expression Expr;
+            int r=Expr.Initialise(std::vector<Token>(pTokens.begin() + LastStart, pTokens.begin() + i));
+            if (r!=NO_ERROR) {
+                return r;
+            }
+            pLexResults.push_back(Expr);
+            LastStart=i+1; 
+        }
+        i++;
+    }
+    if (LastStart<i) {
+        Expression Expr;
+        int r=Expr.Initialise(std::vector<Token>(pTokens.begin() + LastStart, pTokens.begin() + i));
+        if (r!=NO_ERROR) {
+            return r;
+        }
+        pLexResults.push_back(Expr);
+    }
+    /*
+    Expression exp;
+    int r=exp.Initialise(std::vector<Token>(pTokens.begin() , pTokens.end()));
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    pLexResults.push_back(exp);*/ 
+   return NO_ERROR;
+  
+}
+
+
+int Command::Lexerize(std::vector<Token> &pTokens) {
+// Lexer takes Tokens and creates Command Nodes and builds Array Items and Function Call Nodes with expressions for parametres/indices
+// Results put into command's LexResults Vector of CommandNodes
+    LexResults.clear();
+    for (int i=0; i<pTokens.size(); i++) {
+        int j=0;
+        if (pTokens[i].Type==tFunction) {
+            // Capture parametres within brackets and create expression node
+            // Check to see if next token is an open bracket
+
+
+            int BracketCount=0;
+            if (pTokens[i+1].ID==coOpenBracket) {
+                // find matching close bracket
+                BracketCount=1;
+                j=i+2;
+                while (j<pTokens.size() && BracketCount>0) {
+                    if (pTokens[j].ID==coOpenBracket) {
+                        BracketCount++;
+                    } else if (pTokens[j].ID==coCloseBracket) {
+                        BracketCount--;
+                    }
+                    j++;
+                }
+            } else {
+                BracketCount=-1;
+            }
+            if (BracketCount!=0) {
+                return ERR_BAD_FUNCTION_BRACKET;
+            } 
+            std::vector<Token> SubTokens(pTokens.begin()+i+2, pTokens.begin()+j-1);
+            std::vector<Expression> SubArgs;
+            int r=TokensToExpressionCollection(SubTokens, SubArgs);
+            if (r!=NO_ERROR) {
+                return r;
+            }
+            CommandNode NewNode;
+            NewNode.InitialiseWithArguments(pTokens[i], SubArgs);
+            LexResults.push_back(NewNode);
+            i=j-1;
+            
+        } else {
+            // define newnode copy content of token
+            CommandNode NewNode;
+            NewNode.InitialiseFromToken(pTokens[i]);
+            LexResults.push_back(NewNode);
+        }
+    }
+    Arguments.clear();
+    Arguments=LexResults;
+    LexResults.clear();
+    return NO_ERROR;
+}
+
 
 int Command::Initialise(std::vector<Token> &pTokens) {
+// First step transform Tokens into Command Nodes using lexer
+    int r=Lexerize(pTokens);
+    return r;
+}
+
+
+// Returns Bad Command if no syntax rules found and if not type of command tDirectCommand, tCommand or tVariable
+
+int Command::OldInitialise(std::vector<Token> &pTokens) {
     int RuleKey=pTokens[0].ID;
     RuleNo=0;
     Tokens=pTokens;
@@ -79,7 +238,6 @@ int Command::Initialise(std::vector<Token> &pTokens) {
                 TokenIndex++;
                 SyntaxIndex++;
             } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tExpression) {
-
                 std::vector<Token> ExpressionTokens;
                 while (TokenIndex<Tokens.size() && IsTokenOKForExpression(Tokens[TokenIndex])) {
                     ExpressionTokens.push_back(Tokens[TokenIndex]);
@@ -125,9 +283,20 @@ std::string Command::GetString() {
         if (i>0) {
             s=s + ", ";
         }
-        s=s + " - {" + std::to_string(Arguments[i].Type) + ":" + std::to_string(Arguments[i].ID) + ":" + Tokens[i].Value + "} ";
+        s=s + " - {" + std::to_string(Arguments[i].Type) + ":" + std::to_string(Arguments[i].ID) + ":" + Arguments[i].Value + "} ";
         if (Arguments[i].Type==tExpression) {
             s=s + "Expression: " + Arguments[i].ExpressionNode.GetString();
+        }
+        if (Arguments[i].Type==tFunction) {
+            s=s + "Function with " +std::to_string(Arguments[i].SubArguments.size()) + " arguments" ; //+ Arguments[i].ExpressionNode.GetString();
+            s=s+"\n\r";
+            if (Arguments[i].SubArguments.size()>0) {
+                s=s+"Arguments: \n\r";
+                for (int j=0; j<Arguments[i].SubArguments.size(); j++) {
+                    s=s+"Argument " + std::to_string(j) + ": " + Arguments[i].SubArguments[j].GetString();
+                    s=s+"\n\r";
+                }
+            }
         }
     }
     s=s+"\n\r";

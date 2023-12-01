@@ -14,7 +14,7 @@ private:
 
 public:
     ~Expression();
-    int Initialise(const std::vector<Token>& tokenVector);
+    int Initialise(const std::vector<Token> tokenVector);
     std::string GetString();
 };
 

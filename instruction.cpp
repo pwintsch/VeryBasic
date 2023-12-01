@@ -52,6 +52,7 @@ int Instruction::AddCommand(std::vector<Token> pCommand) {
     // add a command to the instruction
     // return command type
     int r;
+    
     if (pCommand[0].Type == tCommand || pCommand[0].Type == tDirectCommand || pCommand[0].Type == tVariable) {
         Command cmd;
         r=cmd.Initialise(pCommand);
