@@ -193,6 +193,7 @@ int Command::Lexerize(std::vector<Token> &pTokens) {
 
 int Command::Initialise(std::vector<Token> &pTokens) {
 // First step transform Tokens into Command Nodes using lexer
+    RuleNo=0;
     int r=Lexerize(pTokens);
     return r;
 }

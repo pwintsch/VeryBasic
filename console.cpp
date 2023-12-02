@@ -398,8 +398,23 @@ void Console::Write(const char *sTxt) {
 
 void Console::WriteLn(const char *sTxt) {
   char sStr[255];
-  strncpy(sStr,sTxt,255);  
-	PrintLn(sStr);
+  int iLen=strlen(sTxt);
+  if (iLen<255) {
+    strncpy(sStr,sTxt,255);  
+    PrintLn(sStr);
+  } else {
+    // split string into multiple lines of 255 chars
+    int iPos=0;
+    while (iPos<iLen) {
+      int LentoCopy=(iLen-iPos<255)?iLen-iPos:254;
+      strncpy(sStr,&sTxt[iPos],LentoCopy);
+      sStr[LentoCopy]='\0'; // ensure null termination
+      Print(sStr);
+      iPos+=254;
+    }
+    strncpy(sStr,"",1);
+    PrintLn(sStr);
+  }
 }
 
 
