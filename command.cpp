@@ -111,6 +111,9 @@ int TokensToExpressionCollection( std::vector<Token> pTokens, std::vector<Expres
             pLexResults.push_back(Expr);
             LastStart=i+1; 
         }
+        // else if (pTokens[i].Type==tVariable && pTokens[i+1].ID==coOpenBracket) {
+        // find matching close bracket
+        // create Expresssion node of Function Type with arguments
         i++;
     }
     if (LastStart<i) {

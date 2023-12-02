@@ -8,9 +8,22 @@
 bool IsTokenOKForExpression(const Token &token);
 
 
+class ExpressionNode {
+public:
+    int Type;
+    int ID;
+    std::string Value;
+    std::vector<ExpressionNode> Arguments;
+
+    int Initialise (Token InputToken);
+    int InitialiseWithArguments (Token InputToken, std::vector<ExpressionNode> InputArguments);  
+    ~ExpressionNode();  
+};
+
+
 class Expression {
 private:
-    std::vector<Token> tokens;
+    std::vector<ExpressionNode> nodes;
 
 public:
     ~Expression();
