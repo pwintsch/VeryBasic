@@ -15,21 +15,32 @@ public:
     std::string Value;
     std::vector<ExpressionNode> Arguments;
 
+    int BasicInitialise (int pType, int pID, std::string pValue);
     int Initialise (Token InputToken);
-    int InitialiseWithArguments (Token InputToken, std::vector<ExpressionNode> InputArguments);  
+    int InitialiseWithTokens (Token InputToken, std::vector<Token> tokenVector);  
+
+    int InitialiseWithArguments (Token InputToken, std::vector<ExpressionNode> ExprNodeVector);  
+
+    std::string GetString();
     ~ExpressionNode();  
 };
 
 
 class Expression {
 private:
-    std::vector<ExpressionNode> nodes;
+
 
 public:
+    std::vector<ExpressionNode> nodes;
     ~Expression();
-    int Initialise(const std::vector<Token> tokenVector);
+    int InitialiseWithTokens(const std::vector<Token> tokenVector);
+    int AddExpression(Expression &Expr);
+    int AddNode(ExpressionNode &ExprNode);
     std::string GetString();
 };
+
+int TokensToExpressionCollection( std::vector<Token> pTokens, std::vector<Expression> &pLexResults);
+
 
 #endif // EXPRESSION_HPP
 

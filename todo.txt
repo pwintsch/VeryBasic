@@ -1,3 +1,2 @@
-- Check Brackets are balanced in Expression initialiser
-- Free the console window
-- Check for Array items or functions in lexer (make it recursive)
+
+- Build TokensToExpressionNODECollection (Node) or simplify everything ....

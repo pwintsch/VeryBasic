@@ -12,13 +12,14 @@ public:
     CommandNode();
     ~CommandNode();
     int InitialiseFromToken(Token &SourceToken);
+    int InitialiseFromCommandNode(CommandNode &SourceNode);
     int InitialiseExpression(int pType, int pID, Expression &pExpression);
     int InitialiseWithArguments(const Token &SourceToken, std::vector<Expression> &pArguments);
     std::string GetString();  
     int Type;
     int ID;
     std::string Value;
-    Expression ExpressionNode;
+    Expression CmdExpr;
     std::vector<Expression> SubArguments;
 };
 
@@ -29,6 +30,7 @@ public:
     int OldInitialise(std::vector<Token> &pTokens);
     int Initialise(std::vector<Token> &pTokens);
     int Lexerize (std::vector<Token> &pTokens);
+    int FindSyntaxRule();
     std::string GetString();
     // int Execute();
 private:

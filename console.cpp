@@ -396,6 +396,7 @@ void Console::Write(const char *sTxt) {
 	Print(sStr);
 }
 
+
 void Console::WriteLn(const char *sTxt) {
   char sStr[255];
   int iLen=strlen(sTxt);
@@ -416,7 +417,6 @@ void Console::WriteLn(const char *sTxt) {
     PrintLn(sStr);
   }
 }
-
 
 
 void Console::GetConsoleInput (std::string &sInput, int iNoOfChar) {
