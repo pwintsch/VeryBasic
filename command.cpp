@@ -6,26 +6,8 @@
 
 
  bool IsCommandNodeOKForExpression(const CommandNode &CmdNode) {
-    switch (CmdNode.Type)
-    {
-    case tValue:
-    case tVariable:
-    case tFunction:
-    case tOperator:
-    case tComparison:
-        return true;
-        break;
-    case tBracket:
-        if (CmdNode.ID == coOpenBracket || CmdNode.ID == coCloseBracket) {
-            return true;
-        } 
-        break;
-    
-    default:
-        break;
-    }
 
-    return false;
+    return IsElementOKforExpression(CmdNode.Type, CmdNode.ID);
 }
 
 
@@ -82,56 +64,15 @@ Command::~Command() {
 }
 
 
-
-/*        if (pTokens[i].ID==coOpenBracket) {
-            BracketCount++;
-        } else if (pTokens[i].ID==coCloseBracket) {
-            BracketCount--;
-        } else if (pTokens[i].Type==tVariable) {
-            if (pTokens[i+1].ID==coOpenBracket) {
-                // find matching close bracket
-                int BracketCount=1;
-                int j=i+2;
-                while (j<pTokens.size() && BracketCount>0) {
-                    if (pTokens[j].ID==coOpenBracket) {
-                        BracketCount++;
-                    } else if (pTokens[j].ID==coCloseBracket) {
-                        BracketCount--;
-                    }
-                    j++;
-                }
-                if (BracketCount==0) {
-                    // create vector of Exoression Tokens
-                    int r=TokensToExpressionCollection(std::vector<Token>(pTokens.begin() + i + 2, pTokens.begin() + j - 1), pLexResults);
-                    
-                } else {
-                    return ERR_UNBALANCED_BRACKETS;
-                }
-            } else {
-                CommandNode NewNode;
-                NewNode.InitialiseFromToken(pTokens[i]);
-                pLexResults.push_back(NewNode);
-                continue;
-        } else if (pTokens[i].ID==coComma && BracketCount==0) {
-            // create expression node from LastStart to i-1 and add to pLexResults
-            Expression Expr;
-            Expr.Initialise(std::vector<Token>(pTokens.begin() + LastStart, pTokens.begin() + i-1));
-
-            LastStart=i+1; 
-        }*/
-
-
 int Command::Lexerize(std::vector<Token> &pTokens) {
 // Lexer takes Tokens and creates Command Nodes and builds Array Items and Function Call Nodes with expressions for parametres/indices
 // Results put into command's LexResults Vector of CommandNodes
     LexResults.clear();
     for (int i=0; i<pTokens.size(); i++) {
         int j=0;
-        if (pTokens[i].Type==tFunction) {
+        if ((pTokens[i].Type==tFunction) || (pTokens[i].Type==tVariable && pTokens[i+1].ID==coOpenBracket && i<pTokens.size()-1)) {
             // Capture parametres within brackets and create expression node
             // Check to see if next token is an open bracket
-
-
             int BracketCount=0;
             if (pTokens[i+1].ID==coOpenBracket) {
                 // find matching close bracket
@@ -169,7 +110,6 @@ int Command::Lexerize(std::vector<Token> &pTokens) {
             LexResults.push_back(NewNode);
         }
     }
-
     return NO_ERROR;
 }
 
@@ -199,6 +139,10 @@ int Command::FindSyntaxRule() {
         } 
         int TokenIndex=1;
         int SyntaxIndex=1;
+        if (RuleKey==coVariable) {
+            TokenIndex=0;
+            SyntaxIndex=0;
+        }
         bool RuleSearchError=false;
         while (RuleFound==false && TokenIndex<Nodes.size() && SyntaxIndex<SyntaxRules[i].Syntax.size() && RuleSearchError==false) {
             
@@ -228,22 +172,19 @@ int Command::FindSyntaxRule() {
                 // move command nodes to expression as ExpressionNodes
                 for (int j=0; j<ExpressionCommandNodes.size(); j++) {
                     ExpressionNode ExprNode;
-                    if (ExpressionCommandNodes[j].Type!=tExpression && ExpressionCommandNodes[j].Type!=tFunction) {
+                    if (ExpressionCommandNodes[j].Type!=tExpression) {
                         /// if ExpressionCommandNodes[j] is a function need to pass sub arguments to new ExpressionNode
                         ExprNode.BasicInitialise(ExpressionCommandNodes[j].Type, ExpressionCommandNodes[j].ID, ExpressionCommandNodes[j].Value);
-                        exp.AddNode(ExprNode);
-                    } else if (ExpressionCommandNodes[j].Type==tFunction) {
-                        ExprNode.BasicInitialise(ExpressionCommandNodes[j].Type, ExpressionCommandNodes[j].ID, ExpressionCommandNodes[j].Value);
-          
-                        for (int k=0; k<ExpressionCommandNodes[j].SubArguments.size(); k++) {
-                            // Add an Argument (ExpressionNode) for each subArgument (Expression)
-                            // create an ExpressionNode for each subArgument and add to ExprNode.Arguments
-                            ExpressionNode ArgExp;
-                            ArgExp.BasicInitialise(tExpression, 0, "");
-                            ArgExp.Arguments=ExpressionCommandNodes[j].SubArguments[k].nodes;   
-                            ExprNode.Arguments.push_back(ArgExp);;
+                        if (ExpressionCommandNodes[j].SubArguments.size()>0) {
+                            for (int k=0; k<ExpressionCommandNodes[j].SubArguments.size(); k++) {
+                                // Add an Argument (ExpressionNode) for each subArgument (Expression)
+                                // create an ExpressionNode for each subArgument and add to ExprNode.Arguments
+                                ExpressionNode ArgExp;
+                                ArgExp.BasicInitialise(tExpression, 0, "");
+                                ArgExp.Arguments=ExpressionCommandNodes[j].SubArguments[k].nodes;   
+                                ExprNode.Arguments.push_back(ArgExp);;
+                            }
                         }
-
                         exp.AddNode(ExprNode);
                     } else {
                         exp.AddExpression (ExpressionCommandNodes[j].CmdExpr);
@@ -385,6 +326,17 @@ std::string Command::GetString() {
             s=s + ", ";
         }
         s=s + " - {" + std::to_string(Arguments[i].Type) + ":" + std::to_string(Arguments[i].ID) + ":" + Arguments[i].Value + "} ";
+        if (Arguments[i].Type==tVariable && Arguments[i].SubArguments.size()>0) {
+            s=s + "Array Item with  " +std::to_string(Arguments[i].SubArguments.size()) + " arguments" ; //+ Arguments[i].ExpressionNode.GetString();
+            s=s+"\n\r";
+            if (Arguments[i].SubArguments.size()>0) {
+                s=s+"Arguments: \n\r";
+                for (int j=0; j<Arguments[i].SubArguments.size(); j++) {
+                    s=s+"Argument " + std::to_string(j) + ": " + Arguments[i].SubArguments[j].GetString();
+                    s=s+"\n\r";
+                }
+            }
+        }
         if (Arguments[i].Type==tExpression) {
             s=s + "Expression: " + Arguments[i].CmdExpr.GetString();
         }
@@ -403,16 +355,5 @@ std::string Command::GetString() {
     s=s+"\n\r";
     s=s+"Rule#: " + std::to_string(RuleNo);
     s=s+"\n\r";
-/*    std::vector<tSyntax> SyntaxRules=Rules;
-    if (SyntaxRules.size()==0) {
-        s=s+"No Syntax Rules\n\r";
-    } else {
-        for (int i=0; i<SyntaxRules.size(); i++) {
-            s=s+"Rule#: " + std::to_string(SyntaxRules[i].iRuleNo) + " - ";
-            s=s+"Syntax: " + StringFromSyntaxRule ((SyntaxRules[i].Syntax));
-            s=s+"\n\r";
-        }
-    }*/
-
     return s;
 }

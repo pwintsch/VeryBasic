@@ -3,8 +3,8 @@
 #include "syntax.hpp"
 
 
-bool IsTokenOKForExpression(const Token &token) {
-    switch (token.Type)
+bool IsElementOKforExpression(const int pType, const int pID) {
+    switch (pType)
     {
     case tValue:
     case tVariable:
@@ -14,7 +14,7 @@ bool IsTokenOKForExpression(const Token &token) {
         return true;
         break;
     case tBracket:
-        if (token.ID == coOpenBracket || token.ID == coCloseBracket) {
+        if (pID == coOpenBracket || pID == coCloseBracket) {
             return true;
         } 
         break;
@@ -24,6 +24,12 @@ bool IsTokenOKForExpression(const Token &token) {
     }
 
     return false;
+}
+
+
+bool IsTokenOKForExpression(const Token &token) {
+
+    return IsElementOKforExpression(token.Type, token.ID) ;
 }
 
 
@@ -88,7 +94,7 @@ int TokensToExpressionNodeCollection( std::vector<Token> pTokens, std::vector<Ex
         if (IsTokenOKForExpression(pTokens[i])==false && pTokens[i].ID!=coComma) {
             return ERR_BAD_EXPRESSION;
         }
-        if (pTokens[i].Type==tFunction) {
+        if (pTokens[i].Type==tFunction || (pTokens[i].Type==tVariable && pTokens[i+1].ID==coOpenBracket && i<pTokens.size()-1)) {
             // check for function arguments
             int bracketCount=0;
             int argumentStart=0;
@@ -197,7 +203,7 @@ int ExpressionNode::InitialiseWithTokens (Token InputToken, std::vector<Token> t
     Value = InputToken.Value;
     Arguments.clear();
     for (int i=0; i<tokenVector.size(); i++) {
-        if (tokenVector[i].Type==tFunction) {
+        if (tokenVector[i].Type==tFunction || (tokenVector[i].Type==tVariable && tokenVector[i+1].ID==coOpenBracket && i<tokenVector.size()-1)) {
             // check for function arguments
             int bracketCount=0;
             int argumentStart=0;
@@ -254,7 +260,7 @@ int ExpressionNode::InitialiseWithTokens (Token InputToken, std::vector<Token> t
 
 std::string ExpressionNode::GetString() {
     std::string result;
-    if (Type==tFunction) {
+    if (Type==tFunction || (Type==tVariable && Arguments.size()>0)) {
         result=Value+"(";
         if (Arguments.size()>0) {
             for (int i=0; i<Arguments.size(); i++) {
@@ -304,7 +310,7 @@ int Expression::InitialiseWithTokens(const std::vector<Token> tokenVector) {
 
     nodes.clear();
     for (int i=0; i<tokenVector.size(); i++) {
-        if (tokenVector[i].Type==tFunction) {
+        if (tokenVector[i].Type==tFunction  || (tokenVector[i].Type==tVariable && tokenVector[i+1].ID==coOpenBracket && i<tokenVector.size()-1)) {
             // check for function arguments
             int bracketCount=0;
             int argumentStart=0;
@@ -330,7 +336,6 @@ int Expression::InitialiseWithTokens(const std::vector<Token> tokenVector) {
                 int r=TokensToExpressionNodeCollection(argumentTokens, argumentNodes);
                 ExpressionNode node;
                 int r2=node.InitialiseWithArguments(tokenVector[i], argumentNodes);
-//                int r=node.InitialiseWithTokens(tokenVector[i], argumentTokens); // HERE
                 if (r2!=NO_ERROR) {
                     return r;
                 }

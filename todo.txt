@@ -1,2 +1,2 @@
-
-- Build TokensToExpressionNODECollection (Node) or simplify everything ....
+- Adapt code to identify array items and define how to encode them.
+- Define the "computer object" and how to store instructions and commands 

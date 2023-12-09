@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+
+bool IsElementOKforExpression(const int pType, const int pID);
 bool IsTokenOKForExpression(const Token &token);
 
 
