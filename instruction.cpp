@@ -71,13 +71,11 @@ int Instruction::AddCommand(std::vector<Token> pCommand) {
 std::string Instruction::GetString() {
     std::string s="";
     if (ProgramLine>0) {
-        s="   Line Number: " + std::to_string(ProgramLine) + "   -   \n\r";
-    } else {
-        s="   Direct  -    \n\r";
-    }
+        s=std::to_string(ProgramLine) + "   ";
+    } 
     for (int i=0; i<Commands.size(); i++){
         if (i>0) {
-            s=s+ "   Extra Command :\n\r";
+            s=s+ " : ";
         }
         s=s+Commands[i].GetString();
     }

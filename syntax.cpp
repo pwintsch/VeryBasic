@@ -105,6 +105,16 @@ int GetTokenTypeFromID (int iPassedId) {
 	return tUnknown;
 }
 
+std::string GetTokenTextFromID (int iPassedID) {
+	std::string sText="";
+	for (int i=0; i<NumberOfTokens(); i++) {
+		if (tTokens[i].iId==iPassedID) {
+			sText=tTokens[i].sTxt;
+			break;
+		}
+	}
+	return sText;
+}
 
 
 bool IsStringInt (const char *sTxt) {

@@ -27,20 +27,17 @@ public:
 class Command {
 public:
     ~Command();
-    int OldInitialise(std::vector<Token> &pTokens);
     int Initialise(std::vector<Token> &pTokens);
-    int Lexerize (std::vector<Token> &pTokens);
-    int FindSyntaxRule();
+    int Lexerize (std::vector<Token> &pTokens, std::vector<CommandNode> &LexResults);
+    int FindSyntaxRule(std::vector<CommandNode> &LexResults);
     std::string GetString();
+    std::string GetDetailedString();
     // int Execute();
 private:
     int Type;
     int ID;
     int RuleNo;
-    std::vector<Token> Tokens;
-    std::vector<CommandNode> LexResults;
     std::vector<CommandNode>  Arguments;
-    std::vector<tSyntax> Rules;
 };
 
 

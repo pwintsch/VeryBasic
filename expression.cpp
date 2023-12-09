@@ -265,7 +265,7 @@ std::string ExpressionNode::GetString() {
         if (Arguments.size()>0) {
             for (int i=0; i<Arguments.size(); i++) {
                 if (i>0) {
-                    result+=", ";
+                    result+=",";
                 }
                 result+=Arguments[i].GetString();
             }
@@ -373,7 +373,7 @@ std::string Expression::GetString() {
     std::string result;
     for (int i=0; i<nodes.size(); i++) {
         if (i>0) {
-            result+=", ";
+            result+=",";
         }
         result+=nodes[i].GetString();
     }
