@@ -8,6 +8,7 @@
   
 struct termios orig_termios;
 
+Console Terminal;
 
 // Functions in C to deal with the terminal directly which can not be wrapped in a class
 
@@ -312,7 +313,7 @@ int iMaxRows, iMaxCols;
 }
 
 
-Console::Console() {
+void Console::Initialise() {
     GetWindowSize(&height, &width);
     for (int i=0;i<CONSOLE_LENGTH;i++) gsConsoleHistory[i]=NULL;
     giConsoleHistoryLen=0;

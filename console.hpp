@@ -32,7 +32,7 @@ class Console {
   char gsConsoleStr[255];
 
 public:
-  Console();
+  void Initialise();
   void print(const std::string& str);
   void clear();
   int get_width();
@@ -53,6 +53,6 @@ public:
   ~Console();
 };
 
-
+extern Console Terminal;
 
 #endif /* CONSOLE_H_ */

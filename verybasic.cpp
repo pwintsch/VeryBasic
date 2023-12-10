@@ -8,52 +8,69 @@
 #include <string>
 #define MAX_STRING_LENGTH 255
 
+std::vector<Instruction> Program;
 
 
-void PromptLoop(Console MyConsole ) {
+void PromptLoop() {
 std::string sInput;
 bool bMachineLoop = true;
     // temp message whilst building
-    MyConsole.WriteLn("Enter q to quit");
+    Terminal.WriteLn("Enter q to quit");
 
+    Program.clear();
 	while (bMachineLoop) {
         sInput="";
         while (sInput=="") {
-            MyConsole.GetConsoleInput (sInput, MAX_STRING_LENGTH);
+            Terminal.GetConsoleInput (sInput, MAX_STRING_LENGTH);
     		}
         if (sInput=="?") {
-            MyConsole.WriteLn("Help");
+            Terminal.WriteLn("Help");
 		}
         if (sInput=="q") {
-            MyConsole.WriteLn("Ending ...");
+            Terminal.WriteLn("Ending ...");
             bMachineLoop=false;
         } else {
-            MyConsole.WriteLn("You entered: ");
-            MyConsole.WriteLn(sInput.c_str());
             TokenCollection MyTokens;
             int tokenizeResult=MyTokens.Tokenise(sInput);
             tokenizeResult=tokenizeResult==NO_ERROR ? MyTokens.CheckBrackets():tokenizeResult;
             Instruction MyInstruction;
             tokenizeResult=tokenizeResult==NO_ERROR ? MyInstruction.Initialise(MyTokens):tokenizeResult;
             if (tokenizeResult!=NO_ERROR) {
-                MyConsole.WriteLn(ErrorMsg(tokenizeResult).c_str());
+                Terminal.WriteLn(ErrorMsg(tokenizeResult).c_str());
             } else {
-                MyConsole.WriteLn(MyInstruction.GetString().c_str());
+                // add instruction to program in order
+                int i;
+                if (Program.size()==0) {
+                    Program.push_back(MyInstruction);
+                } else {
+                    for (i=0; i<Program.size(); i++) {
+                        // if programline is equal replace instruction
+                        if (Program[i].ProgramLine == MyInstruction.ProgramLine) {
+                            Program[i]=MyInstruction;
+                            break;
+                        }
+                        if (Program[i].ProgramLine > MyInstruction.ProgramLine) {
+                            break;
+                        }
+                    }
+                    Program.insert(Program.begin()+i, MyInstruction);
+                }
+                Terminal.WriteLn(MyInstruction.GetString().c_str());
             }
-            MyConsole.WriteLn("OK");
+            Terminal.WriteLn("OK");
         }
     }
 }
  
 
 int main() {
-    Console console;
-
-    console.clear();
-    console.WriteLn("Hello, world!");
-    console.WriteLn("I am using my new console class! v0.0009a");
-    console.WriteFStringLn ("Terminal Size: Rows: %d Columns: %d ", console.get_height(), console.get_width());
-    console.WriteLn("");
-    PromptLoop(console);
+    
+    Terminal.Initialise();
+    Terminal.clear();
+    Terminal.WriteLn("Hello, world!");
+    Terminal.WriteLn("I am using my new console class! v0.0009a");
+    Terminal.WriteFStringLn ("Terminal Size: Rows: %d Columns: %d ", Terminal.get_height(), Terminal.get_width());
+    Terminal.WriteLn("");
+    PromptLoop();
     return 0;
 }
