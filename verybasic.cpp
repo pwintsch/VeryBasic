@@ -5,6 +5,8 @@
 #include "syntax.hpp"
 #include "error.hpp"
 #include "instruction.hpp"
+#include "library.hpp"
+
 #include <string>
 #define MAX_STRING_LENGTH 255
 
@@ -28,6 +30,8 @@ bool bMachineLoop = true;
 		}
         if (sInput=="q") {
             Terminal.WriteLn("Ending ...");
+            int r=functptr[2]();
+            Terminal.WriteFStringLn("Result: %d", r);
             bMachineLoop=false;
         } else {
             TokenCollection MyTokens;
