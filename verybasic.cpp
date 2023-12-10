@@ -43,23 +43,30 @@ bool bMachineLoop = true;
                 Terminal.WriteLn(ErrorMsg(tokenizeResult).c_str());
             } else {
                 // add instruction to program in order
-                int i;
-                if (Program.size()==0) {
-                    Program.push_back(MyInstruction);
+                if (MyInstruction.ProgramLine==0) {
+                    if (MyInstruction.Commands[0].Type==tDirectCommand) {
+                        int r=DirectCommandPtr[(MyInstruction.Commands[0].ID-DirectCmdSep)]();
+                        Terminal.WriteFStringLn("Result: %d", r);
+                    }
+
                 } else {
-                    for (i=0; i<Program.size(); i++) {
-                        // if programline is equal replace instruction
-                        if (Program[i].ProgramLine == MyInstruction.ProgramLine) {
-                            Program[i]=MyInstruction;
-                            break;
-                        }
-                        if (Program[i].ProgramLine > MyInstruction.ProgramLine) {
-                            break;
+                    int i;
+                    if (Program.size()==0) {
+                        Program.push_back(MyInstruction);
+                    } else {
+                        for (i=0; i<Program.size(); i++) {
+                            // if programline is equal replace instruction
+                            if (Program[i].ProgramLine == MyInstruction.ProgramLine) {
+                                Program[i]=MyInstruction;
+                                break;
+                            } else if (Program[i].ProgramLine > MyInstruction.ProgramLine) {
+                                Program.insert(Program.begin()+i, MyInstruction);
+                                break;
+                            }
                         }
                     }
-                    Program.insert(Program.begin()+i, MyInstruction);
-                }
                 Terminal.WriteLn(MyInstruction.GetString().c_str());
+                }
             }
             Terminal.WriteLn("OK");
         }

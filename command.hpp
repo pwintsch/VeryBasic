@@ -32,12 +32,13 @@ public:
     int FindSyntaxRule(std::vector<CommandNode> &LexResults);
     std::string GetString();
     std::string GetDetailedString();
-    // int Execute();
-private:
     int Type;
     int ID;
     int RuleNo;
     std::vector<CommandNode>  Arguments;
+    // int Execute();
+private:
+
 };
 
 

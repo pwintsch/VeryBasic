@@ -12,5 +12,6 @@ int test3();
 /* array with three functions */
 extern int (*functptr[])();
 
+extern int (*DirectCommandPtr[])();
 
 #endif /* LIBRARY_H_ */
