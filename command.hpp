@@ -5,22 +5,22 @@
 #include <vector>
 #include "token.hpp"
 #include "syntax.hpp"
-#include "expression.hpp"
 
 class CommandNode {
 public:
     CommandNode();
     ~CommandNode();
+    int BasicInitialise (int pType, int pID, std::string pValue);
     int InitialiseFromToken(Token &SourceToken);
     int InitialiseFromCommandNode(CommandNode &SourceNode);
-    int InitialiseExpression(int pType, int pID, Expression &pExpression);
-    int InitialiseWithArguments(const Token &SourceToken, std::vector<Expression> &pArguments);
+    int InitialiseExpression(std::vector<CommandNode> &pArguments);
+    int InitialiseWithArguments(const Token &SourceToken, std::vector<CommandNode> &pArguments);
+    int InitialiseAsExpressionWithTokens (std::vector<Token> tokenVector);
     std::string GetString();  
     int Type;
     int ID;
     std::string Value;
-    Expression CmdExpr;
-    std::vector<Expression> SubArguments;
+    std::vector<CommandNode> SubArguments;
 };
 
 
