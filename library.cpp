@@ -1,5 +1,6 @@
 #include "library.hpp"
 #include "console.hpp"
+#include "processor.hpp"
 
 int test1()
 {
@@ -27,7 +28,8 @@ int EmptyCmd()
 
 int ListCmd()
 {
-    Terminal.WriteLn("ListCmd");
+    std::string s=MyProcessor.List();
+    Terminal.WriteLn(s.c_str());
     return 0;
 }
 

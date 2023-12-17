@@ -468,7 +468,7 @@ char sEmptyStr[5]="";
 }
 
 
-bool Console::GetYNConfirmation(char *sQuestion) {
+bool Console::GetYNConfirmation(const char *sQuestion) {
 char sEmptyStr[5]="";
 	WriteFString ("%s ? (Y/n)", sQuestion);
 	char *tmpS=NULL;

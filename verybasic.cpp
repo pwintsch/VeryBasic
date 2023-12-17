@@ -6,6 +6,7 @@
 #include "library.hpp"
 #include "command.hpp"
 #include "test.hpp"
+#include "processor.hpp"
 #include <string>
 
 #define MAX_STRING_LENGTH 255
@@ -87,22 +88,15 @@ bool bMachineLoop = true;
                     }
 
                 } else {
-                    int i;
-                    if (Program.size()==0) {
-                        Program.push_back(MyInstruction);
-                    } else {
-                        for (i=0; i<Program.size(); i++) {
-                            // if programline is equal replace instruction
-                            if (Program[i].ProgramLine == MyInstruction.ProgramLine) {
-                                Program[i]=MyInstruction;
-                                break;
-                            } else if (Program[i].ProgramLine > MyInstruction.ProgramLine) {
-                                Program.insert(Program.begin()+i, MyInstruction);
-                                break;
-                            }
+                    int r=MyProcessor.Addline(MyInstruction);
+                    if (r==ERR_LINE_ALREADY_EXISTS) {
+                        std::string s="Line already exists, do you want to replace it?";
+                        bool ChangeLine=Terminal.GetYNConfirmation(s.c_str());
+                        if (ChangeLine) {
+                            r=MyProcessor.ChangeLine(MyInstruction);
                         }
                     }
-                Terminal.WriteLn(MyInstruction.GetString().c_str());
+//                    Terminal.WriteLn(MyInstruction.GetString().c_str());
                 }
             }
             Terminal.WriteLn("OK");

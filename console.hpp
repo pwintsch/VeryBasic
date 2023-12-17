@@ -49,7 +49,7 @@ public:
   void Write(const char *sTxt);
   void WriteLn(const char *sTxt);
   void GetConsoleInput (std::string &sInput, int iNoOfChar);
-  bool GetYNConfirmation(char *sQuestion);
+  bool GetYNConfirmation(const char *sQuestion);
   ~Console();
 };
 
