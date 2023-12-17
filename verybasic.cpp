@@ -1,14 +1,16 @@
-
-
 #include "console.hpp"
 #include "token.hpp"
 #include "syntax.hpp"
 #include "error.hpp"
 #include "instruction.hpp"
 #include "library.hpp"
-
+#include "command.hpp"
+#include "test.hpp"
 #include <string>
+
 #define MAX_STRING_LENGTH 255
+
+bool TestOn = true;
 
 std::vector<Instruction> Program;
 
@@ -16,6 +18,41 @@ std::vector<Instruction> Program;
 void PromptLoop() {
 std::string sInput;
 bool bMachineLoop = true;
+
+    if (TestOn) {
+        Terminal.WriteLn("Test mode on");
+        Terminal.WriteLn("Running Parsing and Lexing tests");
+        int i;
+        bool TestRun=true;
+        for (i=0; i<TestStatements.size(); i++) {
+            Terminal.WriteFString("Test %d :: ", i);
+            TokenCollection MyTokens;
+            int tokenizeResult=MyTokens.Tokenise(TestStatements[i].Statement);
+            tokenizeResult=tokenizeResult==NO_ERROR ? MyTokens.CheckBrackets():tokenizeResult;
+            Instruction MyInstruction;
+            tokenizeResult=tokenizeResult==NO_ERROR ? MyInstruction.Initialise(MyTokens):tokenizeResult;
+            if (tokenizeResult!=NO_ERROR) {
+                Terminal.WriteLn(ErrorMsg(tokenizeResult).c_str());
+            } else {
+                Terminal.Write(MyInstruction.GetString().c_str());
+                Terminal.Write(" :: ");
+                int r=MyInstruction.NodeCount();
+                if (r!=TestStatements[i].NodeCount) {
+                    TestRun=false;
+                    Terminal.WriteFStringLn("Node count error: result was %d, expecting %d", r, TestStatements[i].NodeCount);
+                } else {
+                    Terminal.WriteFStringLn("Node count: %d", r);
+                }               
+            }
+        }
+        Terminal.WriteLn("Tests complete");
+        if (TestRun) {
+            Terminal.WriteLn("All tests passed");
+        } else {
+            Terminal.WriteLn("TESTS FAILED");
+        }
+        Terminal.WriteLn("OK");
+    }
     // temp message whilst building
     Terminal.WriteLn("Enter q to quit");
 

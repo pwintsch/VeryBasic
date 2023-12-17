@@ -68,6 +68,15 @@ int Instruction::AddCommand(std::vector<Token> pCommand) {
 }
 
 
+int Instruction::NodeCount() {
+    int i=0;
+    for (int j=0; j<Commands.size(); j++) {
+        i=i+Commands[j].NodeCount();
+    }
+    return i;
+}
+
+
 std::string Instruction::GetString() {
     std::string s="";
     if (ProgramLine>0) {
@@ -75,7 +84,11 @@ std::string Instruction::GetString() {
     } 
     for (int i=0; i<Commands.size(); i++){
         if (i>0) {
-            s=s+ " : ";
+            if (Commands[i-1].ID!=coIF) { 
+                s= s + " : ";
+            } else { 
+                s= s + " ";
+            }
         }
         s=s+Commands[i].GetString();
     }

@@ -16,6 +16,7 @@ public:
     int InitialiseExpression(std::vector<CommandNode> &pArguments);
     int InitialiseWithArguments(const Token &SourceToken, std::vector<CommandNode> &pArguments);
     int InitialiseAsExpressionWithTokens (std::vector<Token> tokenVector);
+    int NodeCount();
     std::string GetString();  
     int Type;
     int ID;
@@ -32,6 +33,7 @@ public:
     int FindSyntaxRule(std::vector<CommandNode> &LexResults);
     std::string GetString();
     std::string GetDetailedString();
+    int NodeCount();
     int Type;
     int ID;
     int RuleNo;

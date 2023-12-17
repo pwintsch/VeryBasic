@@ -149,7 +149,7 @@ std::string CommandNode::GetString() {
         if (Type==tFunction) s=s+"(";
         for (int j=0; j<SubArguments.size(); j++) {
             if (j>0 && Type==tFunction) {
-                s=s+",";
+                s=s + ", ";
             }
             s=s + SubArguments[j].GetString();
         }
@@ -157,6 +157,16 @@ std::string CommandNode::GetString() {
     }
     return s;
 }
+
+
+
+int CommandNode::NodeCount() {
+    int i=1;
+    for (int j=0; j<SubArguments.size(); j++) {
+        i=i+SubArguments[j].NodeCount();
+    }
+    return i;
+};
 
 
 
@@ -383,11 +393,17 @@ std::string Command::GetString() {
     for (int i=0; i<Arguments.size(); i++) {
         s=s+ " " +Arguments[i].GetString();
     }
-    s=s+"\n\r";
     return s;
-
 }
 
+
+int Command::NodeCount() {
+    int i=1;
+    for (int j=0; j<Arguments.size(); j++) {
+        i=i+Arguments[j].NodeCount();
+    }
+    return i;
+};
 
 
 std::string Command::GetDetailedString() {

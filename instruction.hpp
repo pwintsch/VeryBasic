@@ -15,6 +15,7 @@ public:
     ~Instruction();
     int Initialise(TokenCollection &InputTokens);
     std::string GetString();
+    int NodeCount();
 
 
 private:
