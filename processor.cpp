@@ -47,10 +47,37 @@ int Processor::ChangeLine(Instruction MyInstruction) {
     return ERR_NO_LINE_NUMBER;
 }
 
-std::string Processor::List() {
+std::string Processor::ListFull() {
     std::string s="";
     for (int i=0; i<Program.size(); i++) {
         s+=Program[i].GetString()+"\n\r";
     }
     return s;
+}
+
+std::string Processor::ListPartial(int StartLineNo, int EndLineNo) {
+    std::string s="";
+    for (int i=0; i<Program.size(); i++) {
+        if (Program[i].ProgramLine>=StartLineNo && Program[i].ProgramLine<=EndLineNo) {
+            s+=Program[i].GetString()+"\n\r";
+        }
+    }
+    return s;
+}
+
+std::string Processor::Listline(int LineNo) {
+    std::string s="";
+    for (int i=0; i<Program.size(); i++) {
+        if (Program[i].ProgramLine==LineNo) {
+            s+=Program[i].GetString()+"\n\r";
+            return s;
+        }       
+    }
+    return s;
+}
+
+
+void Processor::Exit() {
+    Active=false;
+
 }

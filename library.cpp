@@ -1,6 +1,7 @@
 #include "library.hpp"
 #include "console.hpp"
 #include "processor.hpp"
+#include "error.hpp"
 
 int test1()
 {
@@ -19,86 +20,102 @@ int test3()
 
 int (*functptr[])() = { test1, test2, test3 } ;
 
-int EmptyCmd()
+int EmptyCmd(Command MyCommand)
 {
     Terminal.WriteLn("EmptyCmd");
     return 0;
 }
 
 
-int ListCmd()
-{
-    std::string s=MyProcessor.List();
-    Terminal.WriteLn(s.c_str());
-    return 0;
+int ListCmd(Command MyCommand)
+{   
+    if (MyCommand.RuleNo==0) {
+        std::string s=MyProcessor.ListFull();
+        Terminal.WriteLn(s.c_str());
+        return NO_ERROR;
+    } else if (MyCommand.RuleNo==1) {
+        int LineNo= stoi(MyCommand.Arguments[0].Value);
+        std::string s=MyProcessor.Listline(LineNo);
+        Terminal.WriteLn(s.c_str());
+        return NO_ERROR;
+    } else if (MyCommand.RuleNo==2) {
+        int StartLineNo= stoi(MyCommand.Arguments[0].Value);
+        int EndLineNo= stoi(MyCommand.Arguments[2].Value);
+        std::string s=MyProcessor.ListPartial(StartLineNo, EndLineNo);
+        Terminal.WriteLn(s.c_str());
+        return NO_ERROR;
+    } else {
+        return ERR_SYNTAX;
+    }
 }
 
-int NewCmd()
+int NewCmd(Command MyCommand)
 {
     Terminal.WriteLn("NewCmd");
     return 0;
 }
 
-int ExitCmd()
+int ExitCmd(Command MyCommand)
 {
-    Terminal.WriteLn("ExitCmd");
-    return 0;
+    MyProcessor.Exit();
+    return NO_ERROR;
 }
 
 
-int DebugCmd()
+int DebugCmd(Command MyCommand)
 {
     Terminal.WriteLn("DebugCmd");
     return 0;
 }
 
 
-int RunCmd()
+int RunCmd(Command MyCommand)
 {
     Terminal.WriteLn("RunCmd");
     return 0;
 }
 
 
-int EvalCmd()
+int EvalCmd(Command MyCommand)
 {
-    Terminal.WriteLn("EvalCmd");
-    return 0;
+    std::string s="Eval expression: " + MyCommand.Arguments[0].GetString();
+    Terminal.WriteLn(s.c_str());
+    return NO_ERROR;
 }
 
 
-int LoadCmd()
+int LoadCmd(Command MyCommand)
 {
     Terminal.WriteLn("LoadCmd");
     return 0;
 }
 
 
-int SaveCmd()
+int SaveCmd(Command MyCommand)
 {
     Terminal.WriteLn("SaveCmd");
     return 0;
 }
 
-int NodelistCmd()
+int NodelistCmd(Command MyCommand)
 {
     Terminal.WriteLn("NodelistCmd");
     return 0;
 }
 
-int EditCmd()
+int EditCmd(Command MyCommand)
 {
     Terminal.WriteLn("EditCmd");
     return 0;
 }
 
-int EditorCmd()
+int EditorCmd(Command MyCommand)
 {
     Terminal.WriteLn("EditorCmd");
     return 0;
 }
 
 
-int (*DirectCommandPtr[])() = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd } ;
+int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd } ;
 
 

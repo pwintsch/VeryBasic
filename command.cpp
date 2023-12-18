@@ -299,7 +299,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
     int RuleKey=LexResults[0].ID;
     Type=LexResults[0].Type;
     ID=LexResults[0].ID;
-    int RuleNo=0;
+    RuleNo=0;
     if (LexResults[0].Type == tVariable) {
         RuleKey=coVariable;
     }

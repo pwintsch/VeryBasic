@@ -15,6 +15,7 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_BAD_FUNCTION_BRACKET, "SYNTAX ERROR: Function call with invalid brackets"},
                     {ERR_NO_LINE_NUMBER, "SYNTAX ERROR: No such line number"},
                     {ERR_LINE_ALREADY_EXISTS, "SYNTAX ERROR: Line already exists"},
+                    {ERR_SYNTAX, "SYNTAX ERROR: Syntax error"}
 };
 
 std::string ErrorMsg(int pID) {

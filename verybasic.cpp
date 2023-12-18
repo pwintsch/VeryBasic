@@ -58,7 +58,7 @@ bool bMachineLoop = true;
     Terminal.WriteLn("Enter q to quit");
 
     Program.clear();
-	while (bMachineLoop) {
+	while (MyProcessor.Active) {
         sInput="";
         while (sInput=="") {
             Terminal.GetConsoleInput (sInput, MAX_STRING_LENGTH);
@@ -69,8 +69,8 @@ bool bMachineLoop = true;
         if (sInput=="q") {
             Terminal.WriteLn("Ending ...");
             int r=functptr[2]();
-            Terminal.WriteFStringLn("Result: %d", r);
-            bMachineLoop=false;
+            if (r!=NO_ERROR) Terminal.WriteFStringLn("Result: %d", r);
+            MyProcessor.Exit();
         } else {
             TokenCollection MyTokens;
             int tokenizeResult=MyTokens.Tokenise(sInput);
@@ -83,7 +83,7 @@ bool bMachineLoop = true;
                 // add instruction to program in order
                 if (MyInstruction.ProgramLine==0) {
                     if (MyInstruction.Commands[0].Type==tDirectCommand) {
-                        int r=DirectCommandPtr[(MyInstruction.Commands[0].ID-DirectCmdSep)]();
+                        int r=DirectCommandPtr[(MyInstruction.Commands[0].ID-DirectCmdSep)](MyInstruction.Commands[0]);
                         Terminal.WriteFStringLn("Result: %d", r);
                     }
 

@@ -215,6 +215,10 @@ std::vector<tSyntaxNode> REMSyntax = {
 				 	{ tCommand, coREM}, 
 					{ tRemark, 0} };
 
+std::vector<tSyntaxNode> EVALSyntax = { 	
+					{ tDirectCommand, coEVAL},
+	   				{ tExpression, 0} };
+
 
 tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
 					{ tComplement, coBASE},
@@ -404,7 +408,8 @@ std::vector<tSyntax> tGrammar ={
 		{ coLIST, 1, LISTSyntax2 },
 		{ coLIST, 2, LISTSyntax3 }, 
 		{ coEXIT, 0, EXITSyntax },
-		{ coREM, 0, REMSyntax}
+		{ coREM, 0, REMSyntax},
+		{ coEVAL, 0, EVALSyntax}
 		/*,
 		{ coNEW, 0, tNEWSyntax },
 		{ coDEBUG, 0, tDEBUGSyntax },

@@ -12,10 +12,14 @@ public:
     Processor();
     ~Processor();
 
+    bool Active=true;
     int Addline(Instruction MyInstruction);
     int ChangeLine(Instruction MyInstruction);
     int RemoveLine(int i);
-    std::string List();
+    std::string ListFull();
+    std::string ListPartial(int StartLineNo, int EndLineNo);
+    std::string Listline(int LineNo);
+    void Exit();
 };
 
 extern Processor MyProcessor;

@@ -14,6 +14,7 @@
 #define ERR_BAD_FUNCTION_BRACKET 7
 #define ERR_NO_LINE_NUMBER 8
 #define ERR_LINE_ALREADY_EXISTS 9
+#define ERR_SYNTAX 10
 
 
 std::string ErrorMsg(int pID);
