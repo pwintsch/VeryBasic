@@ -142,6 +142,26 @@ int CommandNode::InitialiseExpression(std::vector<CommandNode> &pArguments) {
  }
 
 
+std::string CommandNode::GetDetailedString(int Padding) {
+    std::string s="";
+    std::string p="";
+    for (int i=0; i<Padding; i++) {
+        p=p+" ";
+    }
+    s=p + GetSyntaxNodeString(Type) + " - " + GetTokenTextFromID(ID) + ", " + Value + " ";
+    if (SubArguments.size()>0) {
+        s=s+"has " + std::to_string(SubArguments.size()) +" sub-arguments: \n\r";
+        for (int i=0; i<SubArguments.size(); i++) {
+            s=s+p+"Sub-argument #" + std::to_string(i) +":\n\r";
+            s=s+SubArguments[i].GetDetailedString(Padding+4);
+        }
+    } else {
+        s=s+"\n\r";
+    }
+    return s;
+} 
+
+
 
 std::string CommandNode::GetString() {
     std::string s="";
@@ -221,6 +241,12 @@ int CommandNode::InitialiseAsExpressionWithTokens (std::vector<Token> tokenVecto
                 SubArguments.push_back(node);
             }
         } else {
+            if (tokenVector[i].ID==coMinus) {
+                if (i==0 || (tokenVector[i-1].Type!=tVariable && tokenVector[i-1].Type!=tValue && tokenVector[i-1].ID!=coCloseBracket)) {
+                    // unary minus
+                    tokenVector[i].ID=coUnaryMinus;
+                }
+            }
             CommandNode node;
             int r=node.InitialiseFromToken(tokenVector[i]);
             if (r!=NO_ERROR) {
@@ -335,9 +361,15 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
             } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tExpression) {
 // build Expression CommanNode from following CommandNodes that are allowed in an expression
                 std::vector<CommandNode> ExpressionCommandNodes;
+                int ExpressionIndex=0;
                 while (TokenIndex<Nodes.size() && IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
+                    if (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tVariable && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket)) {
+                        // unary minus
+                        Nodes[TokenIndex].ID=coUnaryMinus;
+                    }
                     ExpressionCommandNodes.push_back(Nodes[TokenIndex]);
                     TokenIndex++;
+                    ExpressionIndex++;
                 }
                 if (ExpressionCommandNodes.size()==0) {
                     RuleSearchError=true;
@@ -409,6 +441,8 @@ int Command::NodeCount() {
 
 std::string Command::GetDetailedString() {
     std::string s="";
+
+    /*
     s="Command: " + std::to_string(ID) + " - " + std::to_string(Type) + " :  ";
     for (int i=0; i<Arguments.size(); i++) {
         if (i>0) {
@@ -443,6 +477,16 @@ std::string Command::GetDetailedString() {
     }
     s=s+"\n\r";
     s=s+"Rule#: " + std::to_string(RuleNo);
+    s=s+"\n\r";
+    */
+
+    s="Command: " + std::to_string(ID) + " - " + std::to_string(Type) + " :  " + GetTokenTextFromID(ID) + "\n\r";
+    s=s+"Rule#: " + std::to_string(RuleNo) + "\n\r";
+    s=s+"Total of " + std::to_string(Arguments.size())+ " arguments: \n\r";
+    for (int i=0; i<Arguments.size(); i++) {
+        s=s+"Argument #" + std::to_string(i) +":\n\r";
+        s=s+Arguments[i].GetDetailedString(4);
+    }
     s=s+"\n\r";
     return s;
 }

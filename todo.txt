@@ -1,2 +1,2 @@
-- Adjust function array to take an std:vector of command nodes and rule No as an argument
-- Define the "Basic Engine" and how to store instructions and commands 
+- Deal with Unary minus in Tokenizer
+- When building expression add Expression Type Check

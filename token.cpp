@@ -10,7 +10,7 @@ int IsTokenSeparator(char cCurrent, char cNext){
 
 	switch (cCurrent){ 
 		case ' ':
-			return(4);
+			return(SEPARATOR_TYPE_SPACE);
 			break;
 		case '\n':
 		case 0:
@@ -29,26 +29,26 @@ int IsTokenSeparator(char cCurrent, char cNext){
 		case '[':
 		case ']':
 		case '\\':
-			return(1);
+			return(SEPARATOR_TYPE_SINGLE_SEP);
 			break;
 		case '<':
 			if ((cNext=='>') || (cNext=='=')) {
-				return(2);
+				return(SEPARATOR_TYPE_DOUBLE_SEP);
 			}
-			return(1);
+			return(SEPARATOR_TYPE_SINGLE_SEP);
 			break;
 		case '>':
 			if (cNext=='=') {
-				return(2);
+				return(SEPARATOR_TYPE_DOUBLE_SEP);
 			}
-			return(1);
+			return(SEPARATOR_TYPE_SINGLE_SEP);
 			break;
 		case '"':
 		case '\'':
-			return (5);
+			return (SEPARATOR_TYPE_QUOTE);
 			break;
 		}
-	return 0;
+	return SEPARATOR_TYPE_UNKNOWN;
 };
 
 

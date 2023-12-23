@@ -80,6 +80,8 @@ int EvalCmd(Command MyCommand)
 {
     std::string s="Eval expression: " + MyCommand.Arguments[0].GetString();
     Terminal.WriteLn(s.c_str());
+    s=MyCommand.GetDetailedString();
+    Terminal.WriteLn(s.c_str());
     return NO_ERROR;
 }
 

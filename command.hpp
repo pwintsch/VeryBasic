@@ -17,7 +17,8 @@ public:
     int InitialiseWithArguments(const Token &SourceToken, std::vector<CommandNode> &pArguments);
     int InitialiseAsExpressionWithTokens (std::vector<Token> tokenVector);
     int NodeCount();
-    std::string GetString();  
+    std::string GetString();
+    std::string GetDetailedString(int Padding); 
     int Type;
     int ID;
     std::string Value;
