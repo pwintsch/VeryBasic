@@ -68,8 +68,6 @@ bool bMachineLoop = true;
 		}
         if (sInput=="q") {
             Terminal.WriteLn("Ending ...");
-            int r=functptr[2]();
-            if (r!=NO_ERROR) Terminal.WriteFStringLn("Result: %d", r);
             MyProcessor.Exit();
         } else {
             TokenCollection MyTokens;
@@ -84,7 +82,11 @@ bool bMachineLoop = true;
                 if (MyInstruction.ProgramLine==0) {
                     if (MyInstruction.Commands[0].Type==tDirectCommand) {
                         int r=DirectCommandPtr[(MyInstruction.Commands[0].ID-DirectCmdSep)](MyInstruction.Commands[0]);
-                        Terminal.WriteFStringLn("Result: %d", r);
+                        if (r!=NO_ERROR) {
+                            Terminal.WriteLn(ErrorMsg(r).c_str());
+                        } else {
+                            Terminal.WriteLn("OK");
+                        }
                     }
 
                 } else {

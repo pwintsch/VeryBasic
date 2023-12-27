@@ -15,7 +15,13 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_BAD_FUNCTION_BRACKET, "SYNTAX ERROR: Function call with invalid brackets"},
                     {ERR_NO_LINE_NUMBER, "SYNTAX ERROR: No such line number"},
                     {ERR_LINE_ALREADY_EXISTS, "SYNTAX ERROR: Line already exists"},
-                    {ERR_SYNTAX, "SYNTAX ERROR: Syntax error"}
+                    {ERR_SYNTAX, "SYNTAX ERROR: Syntax error"},
+                    {ERR_NOT_EXPRESSION, "SYNTAX ERROR: Not a valid expression"},
+                    {ERR_NOT_AVAILABLE, "SYNTAX ERROR: Functionality not available yet"},
+                    {ERR_UNKNOWN_EXPRESSION_NODE, "SYNTAX ERROR: Unknown expression node type in evaluation"},
+                    {ERR_MISMATCH_EXPRESSION_TYPES, "SYNTAX_ERROR: Mismatched data types in expression"},
+                    {ERR_UNKNOWN_EXPRESSION_DATA_TYPE, " SYNTAX ERROR: Unknown data type in expression"},
+                    {ERR_EXPRESSION_OPERATOR_DATATYPE, "SYNTAX ERROR: No such operator for data type in expression"}
 };
 
 std::string ErrorMsg(int pID) {

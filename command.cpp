@@ -2,8 +2,15 @@
 #include "error.hpp"
 #include "token.hpp"
 #include "syntax.hpp"
+#include "console.hpp"
 
 #include <stdio.h>
+
+typedef struct tVarValue {
+	int iType;
+	std::string sValue;
+	float fValue;
+} tVarValue;
 
 
 bool IsElementOKforExpression(const int pType, const int pID) {
@@ -100,6 +107,220 @@ CommandNode::~CommandNode() {
 
     // TODO Auto-generated destructor stub
 }
+
+
+int CommandNode::Precedence() {
+	switch (ID) {
+		case coAND:
+		case coOR:
+		case coXOR:
+			return 2;
+			break;
+		case coEqual:
+			return 3;
+			break;
+		case coGreater:
+		case coLess:
+		case coGreaterEqual:
+		case coGreaterLesser:
+		case coLessEqual:
+			return 4;
+			break;
+		case coPlus:
+			return 5;
+			break;
+		case coMinus:
+			return 6;
+			break;
+		case coMultiply:
+			return 7;
+			break;
+		case coDivide:
+			return 8;
+			break;
+		case coPower:
+			return 9;
+			break;
+		case coUnaryMinus:
+		case coNOT:
+			return 10;
+			break;
+	}
+	return 0;
+}
+
+
+int CommandNode::Evaluate(float &NumResult, std::string &StrResult) {
+std::vector<CommandNode> EvalStack;
+std::vector<CommandNode> EvalQueue;
+int NodePrecedence=0;
+bool bPrintRPN=true;
+
+    if (Type!=tExpression) {
+        NumResult=0;
+        StrResult="";
+        return ERR_NOT_EXPRESSION;
+    } else {
+
+// nanob code to migrate
+        for (auto & element : SubArguments) {
+            switch (element.Type) {
+                case tValue:
+                case tString:
+                    EvalQueue.push_back(element);
+                    break;
+                case tVariable:
+                case tFunction:
+                case tUserFunction:
+                    return ERR_NOT_AVAILABLE;
+                    break;
+                case tComparison:
+                case tOperator:
+                    // replace [0] with top
+                    if (EvalStack.size()>0 && EvalStack.back().Precedence()>element.Precedence()) {
+                        EvalQueue.push_back(EvalStack.back());
+                        EvalStack.pop_back();
+                    }
+                    EvalStack.push_back(element);
+                    break;
+                case tBracket:
+                    if (element.ID==coOpenBracket) {
+                        EvalStack.push_back(element);
+                    } else if (element.ID==coCloseBracket) {
+                        // replace [0] with top
+                        while (EvalStack.size()>0 && EvalStack.back().ID!=coOpenBracket) {
+                            EvalQueue.push_back(EvalStack.back());
+                            EvalStack.pop_back();
+                        }
+                        if (EvalStack.size()==0) {
+                            return ERR_BAD_BRACKET;
+                        }
+                        EvalStack.pop_back();
+                    }
+                    break;
+                default:
+                    return ERR_UNKNOWN_EXPRESSION_NODE;
+            }
+        }
+        // while there are operators on the stack, pop them to the queue
+        while (EvalStack.size()>0) {
+            EvalQueue.push_back(EvalStack.back());
+            EvalStack.pop_back();
+        }
+		// Generate Postfix notation
+        std::string sRPN="Postfix : ";
+		if (bPrintRPN) {
+            int Qsize=EvalQueue.size();
+			for (int i=0; i<Qsize; i++) {
+				sRPN=sRPN+EvalQueue[i].Value;
+                if (i<Qsize-1) sRPN=sRPN+", ";
+			}
+			Terminal.WriteLn(sRPN.c_str());
+		}
+        float Flt1;
+        float Flt2;
+        std::string Str1="";
+        std::string Str2="";
+        std::vector<tVarValue> Value;
+        for (int i=0;i<EvalQueue.size();i++) {
+            Flt1=0;
+            Flt2=0;
+            tVarValue TmpValue;
+            TmpValue.iType = tUnknown;
+            TmpValue.fValue = 0;
+            TmpValue.sValue = "";
+            tVarValue Value1;
+            tVarValue Value2;
+
+            switch (EvalQueue[i].Type) {
+                case tValue:
+                    TmpValue.iType = tValue;
+                    TmpValue.fValue = std::stof(EvalQueue[i].Value);
+                    Value.push_back(TmpValue);
+                    break;
+                case tString:
+                case tVariable:
+                case tUserFunction:
+                case tFunction:
+                    return ERR_NOT_AVAILABLE;
+                    break;
+                case tOperator:
+                    Value2 = Value.back();
+                    Flt2 = Value2.fValue;
+                    Value.pop_back();
+                    if (Value.size() > 0) {
+                        Value1 = Value.back();
+                        Flt1 = Value1.fValue;
+                        if (Value1.iType != Value2.iType) {
+                            return ERR_MISMATCH_EXPRESSION_TYPES;
+                        }
+                        Value.pop_back();
+                    }
+                    if (Value2.iType == tValue) {
+                        tVarValue NewValue;
+                        NewValue.iType = tValue;
+                        switch (EvalQueue[i].ID) {
+                            case coAND:
+                                NewValue.fValue = Flt1 && Flt2;
+                                break;
+                            case coOR:
+                                NewValue.fValue = Flt1 || Flt2;
+                                break;
+                            case coPlus:
+                                NewValue.fValue = Flt1 + Flt2;
+                                break;
+                            case coMinus:
+                                NewValue.fValue = Flt1 - Flt2;
+                                break;
+                            case coMultiply:
+                                NewValue.fValue = Flt1 * Flt2;
+                                break;
+                            case coDivide:
+                                NewValue.fValue = Flt1 / Flt2;
+                                break;
+                            case coPower:
+                                NewValue.fValue = pow(Flt1, Flt2);
+                                break;
+                            case coUnaryMinus:
+                                /// POTENTIAL ERROR iNoV++;
+                                NewValue.fValue = Flt1 * -1;
+                                break;
+                            case coNOT:
+                                /// POTENTIAL ERROR iNoV++;
+                                NewValue.fValue = 0 ? 1 : 0;
+                                break;
+                            default:
+                                return ERR_EXPRESSION_OPERATOR_DATATYPE;
+                                break;
+                        }
+                        Value.push_back(NewValue);
+                    } else if (Value2.iType == tString) {
+                        tVarValue NewValue;
+                        NewValue.iType = tString;
+                        switch (EvalQueue[i].ID) {
+                            case coPlus:
+                                NewValue.sValue = Value1.sValue + Value2.sValue;
+                                break;
+                            default:
+                                return ERR_EXPRESSION_OPERATOR_DATATYPE;
+                                break;
+                        }
+                        Value.push_back(NewValue);
+                    } else {
+                        return ERR_UNKNOWN_EXPRESSION_DATA_TYPE;
+                    }
+                    break;
+                default:
+                    return ERR_UNKNOWN_EXPRESSION_NODE;
+            }
+
+        }
+        NumResult=Value[0].fValue;
+        StrResult=Value[0].sValue;
+    }
+    return NO_ERROR;
+}
+
 
 
 int CommandNode::InitialiseFromCommandNode(CommandNode &SourceNode) {
@@ -363,7 +584,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 std::vector<CommandNode> ExpressionCommandNodes;
                 int ExpressionIndex=0;
                 while (TokenIndex<Nodes.size() && IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                    if (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tVariable && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket)) {
+                    if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tVariable && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                         // unary minus
                         Nodes[TokenIndex].ID=coUnaryMinus;
                     }

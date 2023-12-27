@@ -3,27 +3,14 @@
 #include "processor.hpp"
 #include "error.hpp"
 
-int test1()
-{
-   return 101;
-}
 
-int test2()
-{
-   return 202;
-}
 
-int test3()
-{
-   return 303;
-}
 
-int (*functptr[])() = { test1, test2, test3 } ;
 
 int EmptyCmd(Command MyCommand)
 {
     Terminal.WriteLn("EmptyCmd");
-    return 0;
+    return NO_ERROR;
 }
 
 
@@ -52,7 +39,7 @@ int ListCmd(Command MyCommand)
 int NewCmd(Command MyCommand)
 {
     Terminal.WriteLn("NewCmd");
-    return 0;
+    return NO_ERROR;
 }
 
 int ExitCmd(Command MyCommand)
@@ -65,14 +52,14 @@ int ExitCmd(Command MyCommand)
 int DebugCmd(Command MyCommand)
 {
     Terminal.WriteLn("DebugCmd");
-    return 0;
+    return NO_ERROR;
 }
 
 
 int RunCmd(Command MyCommand)
 {
     Terminal.WriteLn("RunCmd");
-    return 0;
+    return NO_ERROR;
 }
 
 
@@ -82,39 +69,43 @@ int EvalCmd(Command MyCommand)
     Terminal.WriteLn(s.c_str());
     s=MyCommand.GetDetailedString();
     Terminal.WriteLn(s.c_str());
-    return NO_ERROR;
+    float NumResult;
+    std::string StrResult;  
+    int r=MyCommand.Arguments[0].Evaluate(NumResult, StrResult);
+    Terminal.WriteFStringLn("Result: %f", NumResult);
+    return r;
 }
 
 
 int LoadCmd(Command MyCommand)
 {
     Terminal.WriteLn("LoadCmd");
-    return 0;
+    return NO_ERROR;
 }
 
 
 int SaveCmd(Command MyCommand)
 {
     Terminal.WriteLn("SaveCmd");
-    return 0;
+    return NO_ERROR;
 }
 
 int NodelistCmd(Command MyCommand)
 {
     Terminal.WriteLn("NodelistCmd");
-    return 0;
+    return NO_ERROR;
 }
 
 int EditCmd(Command MyCommand)
 {
     Terminal.WriteLn("EditCmd");
-    return 0;
+    return NO_ERROR;
 }
 
 int EditorCmd(Command MyCommand)
 {
     Terminal.WriteLn("EditorCmd");
-    return 0;
+    return NO_ERROR;
 }
 
 
