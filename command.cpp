@@ -17,6 +17,7 @@ bool IsElementOKforExpression(const int pType, const int pID) {
     switch (pType)
     {
     case tValue:
+    case tString:
     case tVariable:
     case tFunction:
     case tOperator:
@@ -161,8 +162,7 @@ bool bPrintRPN=true;
         StrResult="";
         return ERR_NOT_EXPRESSION;
     } else {
-
-// nanob code to migrate
+        // Convert to Reverse Polish Notation
         for (auto & element : SubArguments) {
             switch (element.Type) {
                 case tValue:
@@ -176,7 +176,6 @@ bool bPrintRPN=true;
                     break;
                 case tComparison:
                 case tOperator:
-                    // replace [0] with top
                     if (EvalStack.size()>0 && EvalStack.back().Precedence()>element.Precedence()) {
                         EvalQueue.push_back(EvalStack.back());
                         EvalStack.pop_back();
@@ -231,7 +230,7 @@ bool bPrintRPN=true;
             TmpValue.sValue = "";
             tVarValue Value1;
             tVarValue Value2;
-
+            bool ValueListWasEmpty=false;
             switch (EvalQueue[i].Type) {
                 case tValue:
                     TmpValue.iType = tValue;
@@ -239,16 +238,22 @@ bool bPrintRPN=true;
                     Value.push_back(TmpValue);
                     break;
                 case tString:
+                    TmpValue.iType = tString;
+                    TmpValue.sValue = EvalQueue[i].Value;
+                    Value.push_back(TmpValue);
+                    break;
                 case tVariable:
                 case tUserFunction:
                 case tFunction:
                     return ERR_NOT_AVAILABLE;
                     break;
                 case tOperator:
+                    ValueListWasEmpty=true;
                     Value2 = Value.back();
                     Flt2 = Value2.fValue;
                     Value.pop_back();
                     if (Value.size() > 0) {
+                        ValueListWasEmpty = false;
                         Value1 = Value.back();
                         Flt1 = Value1.fValue;
                         if (Value1.iType != Value2.iType) {
@@ -282,12 +287,12 @@ bool bPrintRPN=true;
                                 NewValue.fValue = pow(Flt1, Flt2);
                                 break;
                             case coUnaryMinus:
-                                /// POTENTIAL ERROR iNoV++;
-                                NewValue.fValue = Flt1 * -1;
+                                if (! ValueListWasEmpty) Value.push_back(Value1);
+                                NewValue.fValue = Flt2 * -1;
                                 break;
                             case coNOT:
-                                /// POTENTIAL ERROR iNoV++;
-                                NewValue.fValue = 0 ? 1 : 0;
+                                if (! ValueListWasEmpty) Value.push_back(Value1);
+                                NewValue.fValue = (Flt2==0) ? 1 : 0;
                                 break;
                             default:
                                 return ERR_EXPRESSION_OPERATOR_DATATYPE;
@@ -310,6 +315,80 @@ bool bPrintRPN=true;
                         return ERR_UNKNOWN_EXPRESSION_DATA_TYPE;
                     }
                     break;
+				case tComparison:
+                    Value2=Value.back();
+                    Value.pop_back();
+                    Value1=Value.back();
+                    Value.pop_back();
+                    float CompResult;
+                    CompResult=0;
+                    if (Value1.iType!=Value2.iType) {
+                        return ERR_MISMATCH_EXPRESSION_TYPES;
+                    }/*
+
+                    switch (EvalQueue[i].ID) {
+                        case coGreater:
+                            if (Value2.iType==tValue) {
+                                if (Value1.fValue>Value2.fValue) {
+                                    CompResult=1;
+                                }
+                            } else if (Value1.sValue.compare(Value2.sValue)>0) {
+                                CompResult=1;
+                            }	
+                            break; 
+                        case coLess:
+                            if (Value2.iType==tValue) {
+                                if (Value1.fValue<Value2.fValue) {
+                                    CompResult=1;
+                                }
+                            } else if (Value1.sValue.compare(Value2.sValue)<0) {
+                                CompResult=1;
+                            }	
+                            break;
+                        case coGreaterEqual:
+                            if (Value2.iType==tValue) {
+                                if (Value1.fValue>=Value2.fValue) {
+                                    CompResult=1;
+                                }
+                            } else if (Value1.sValue.compare(Value2.sValue)>=0) {
+                                CompResult=1;
+                            }	
+                            break;
+                        case coLessEqual:
+                            if (Value2.iType==tValue) {
+                                if (Value1.fValue<=Value2.fValue) {
+                                    CompResult=1;
+                                }
+                            } else if (Value1.sValue.compare(Value2.sValue)<=0) {
+                                CompResult=1;
+                            }
+                            break;
+                        case coEqual:
+                            if (Value2.iType==tValue) {
+                                if (Value1.fValue==Value2.fValue) {
+                                    CompResult=1;
+                                }
+                            } else if (Value1.sValue.compare(Value2.sValue)==0) {
+                                CompResult=1;
+                            }
+                            break;
+                        case coGreaterLesser:
+                            if (Value2.iType==tValue) {
+                                if (Value1.fValue!=Value2.fValue) {
+                                    CompResult=1;
+                                }
+                            } else if (Value1.sValue.compare(Value2.sValue)!=0) {
+                                CompResult=1;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    tVarValue NewValue;
+                    NewValue.iType=tValue;
+                    NewValue.fValue=CompResult;
+                    Value.push_back(NewValue); */
+					break; 
                 default:
                     return ERR_UNKNOWN_EXPRESSION_NODE;
             }
@@ -346,6 +425,7 @@ int CommandNode::InitialiseFromToken (Token &SourceToken) {
     return NO_ERROR;
 }
 
+
 int CommandNode::InitialiseWithArguments(const Token &SourceToken, std::vector<CommandNode> &pArguments) {
     ID=SourceToken.ID;
     Type=SourceToken.Type;
@@ -353,6 +433,7 @@ int CommandNode::InitialiseWithArguments(const Token &SourceToken, std::vector<C
     SubArguments=pArguments;
     return NO_ERROR;
 }
+
 
 int CommandNode::InitialiseExpression(std::vector<CommandNode> &pArguments) {
     ID=0;

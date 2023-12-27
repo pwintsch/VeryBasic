@@ -11,7 +11,7 @@
 
 #define MAX_STRING_LENGTH 255
 
-bool TestOn = true;
+bool TestOn = false;
 
 std::vector<Instruction> Program;
 

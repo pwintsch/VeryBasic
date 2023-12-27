@@ -72,7 +72,11 @@ int EvalCmd(Command MyCommand)
     float NumResult;
     std::string StrResult;  
     int r=MyCommand.Arguments[0].Evaluate(NumResult, StrResult);
-    Terminal.WriteFStringLn("Result: %f", NumResult);
+    if (r==NO_ERROR) {
+        Terminal.WriteLn(StrResult.c_str());
+        Terminal.WriteFStringLn("Result: %f", NumResult);
+    }
+    
     return r;
 }
 
