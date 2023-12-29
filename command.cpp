@@ -151,7 +151,7 @@ int CommandNode::Precedence() {
 }
 
 
-int CommandNode::Evaluate(float &NumResult, std::string &StrResult) {
+int CommandNode::Evaluate(int &ResultType, float &NumResult, std::string &StrResult) {
 std::vector<CommandNode> EvalStack;
 std::vector<CommandNode> EvalQueue;
 int NodePrecedence=0;
@@ -315,17 +315,18 @@ bool bPrintRPN=true;
                         return ERR_UNKNOWN_EXPRESSION_DATA_TYPE;
                     }
                     break;
-				case tComparison:
+				case tComparison: {
+                    float CompResult=0;
+                    tVarValue NewValue;
+                    NewValue.iType=tValue;
                     Value2=Value.back();
                     Value.pop_back();
                     Value1=Value.back();
                     Value.pop_back();
-                    float CompResult;
-                    CompResult=0;
+
                     if (Value1.iType!=Value2.iType) {
                         return ERR_MISMATCH_EXPRESSION_TYPES;
-                    }/*
-
+                    }
                     switch (EvalQueue[i].ID) {
                         case coGreater:
                             if (Value2.iType==tValue) {
@@ -380,20 +381,21 @@ bool bPrintRPN=true;
                             } else if (Value1.sValue.compare(Value2.sValue)!=0) {
                                 CompResult=1;
                             }
-                            break;
+                            break; 
                         default:
-                            break;
+                            return ERR_EXPRESSION_OPERATOR_DATATYPE;
                     }
-                    tVarValue NewValue;
-                    NewValue.iType=tValue;
+
                     NewValue.fValue=CompResult;
-                    Value.push_back(NewValue); */
+                    Value.push_back(NewValue); 
 					break; 
+                }
                 default:
                     return ERR_UNKNOWN_EXPRESSION_NODE;
             }
 
         }
+        ResultType=Value[0].iType;
         NumResult=Value[0].fValue;
         StrResult=Value[0].sValue;
     }

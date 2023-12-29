@@ -69,12 +69,16 @@ int EvalCmd(Command MyCommand)
     Terminal.WriteLn(s.c_str());
     s=MyCommand.GetDetailedString();
     Terminal.WriteLn(s.c_str());
+    int ResultType;
     float NumResult;
     std::string StrResult;  
-    int r=MyCommand.Arguments[0].Evaluate(NumResult, StrResult);
+    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
     if (r==NO_ERROR) {
-        Terminal.WriteLn(StrResult.c_str());
-        Terminal.WriteFStringLn("Result: %f", NumResult);
+        if (ResultType==tValue) {
+            Terminal.WriteFStringLn("Result: %f", NumResult);           
+        } else {
+            Terminal.WriteFStringLn("Result: %s", StrResult.c_str());
+        } 
     }
     
     return r;
