@@ -2,7 +2,9 @@
 #include "syntax.hpp"
 #include "error.hpp"
 
+
 Processor MyProcessor;
+
 
 Processor::Processor() {
 }
@@ -80,4 +82,72 @@ std::string Processor::Listline(int LineNo) {
 void Processor::Exit() {
     Active=false;
 
+}
+
+
+MyVariable::MyVariable () {
+}
+    
+void MyVariable::Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue){
+        VariableType=pVarType;
+        FltValue=pFValue;
+        IntValue=pIValue;   
+        StrValue=pSValue;   
+        Name=pName;
+ }
+
+void VariableList::Clear() {
+    VarList.clear();
+}
+
+VariableList::VariableList() {
+}   
+
+VariableList::~VariableList() {
+    Clear();
+}
+
+int VariableList::Store (std::string Name, int VariableType, float FltValue, int IntValue, std::string StrValue) {
+    if (VarList.find(Name)==VarList.end()) {
+        MyVariable NewVariable;
+        NewVariable.Set (Name, VariableType, FltValue, IntValue, StrValue);
+        VarList[Name]=NewVariable;
+        return NO_ERROR;
+    } else {
+        MyVariable NewVariable;
+        NewVariable.Set (Name, VariableType, FltValue, IntValue, StrValue);
+        VarList[Name]=NewVariable;
+        return NO_ERROR;
+    }
+}
+
+int VariableList::Get (std::string Name, int &VariableType, float &FltValue, int &IntValue, std::string &StrValue) {
+    if (VarList.find(Name)==VarList.end()) {
+        return ERR_VARIABLE_NOT_FOUND;
+    } else {
+        VariableType=VarList[Name].VariableType;
+        FltValue=VarList[Name].FltValue;
+        StrValue=VarList[Name].StrValue;
+        IntValue=VarList[Name].IntValue;
+        return NO_ERROR;
+    }
+}
+
+std::string VariableList::ListVariables() {
+    std::string s="";
+    if (VarList.empty()) {
+        s= "No variables declared yet \n\r";
+        return s;
+    }
+    std::map<std::string, MyVariable>::iterator it;
+    for (it=VarList.begin(); it!=VarList.end(); ++it) {
+        s+=it->second.Name + " ";
+        if (it->second.VariableType==tValue) {
+            s+=std::to_string(it->second.FltValue);
+        } else {
+            s+=it->second.StrValue;
+        }
+        s+="\n\r";
+    }
+    return s;
 }

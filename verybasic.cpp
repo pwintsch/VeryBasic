@@ -87,6 +87,13 @@ bool bMachineLoop = true;
                         } else {
                             Terminal.WriteLn("OK");
                         }
+                    } else {
+                        int r=CommandPtr[(MyInstruction.Commands[0].ID-CmdSep)](MyInstruction.Commands[0]);
+                        if (r!=NO_ERROR) {
+                            Terminal.WriteLn(ErrorMsg(r).c_str());
+                        } else {
+                            Terminal.WriteLn("OK");
+                        }
                     }
 
                 } else {

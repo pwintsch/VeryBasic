@@ -63,7 +63,8 @@
         "concepts": "cpp",
         "algorithm": "cpp",
         "__tree": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "charconv": "cpp"
     },
     "C_Cpp.default.compilerPath": "/usr/bin/clang++"
 }

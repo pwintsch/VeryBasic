@@ -21,7 +21,9 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_UNKNOWN_EXPRESSION_NODE, "SYNTAX ERROR: Unknown expression node type in evaluation"},
                     {ERR_MISMATCH_EXPRESSION_TYPES, "SYNTAX_ERROR: Mismatched data types in expression"},
                     {ERR_UNKNOWN_EXPRESSION_DATA_TYPE, " SYNTAX ERROR: Unknown data type in expression"},
-                    {ERR_EXPRESSION_OPERATOR_DATATYPE, "SYNTAX ERROR: No such operator for data type in expression"}
+                    {ERR_EXPRESSION_OPERATOR_DATATYPE, "SYNTAX ERROR: No such operator for data type in expression"},
+                    {ERR_VARIABLE_NOT_FOUND, "SYNTAX ERROR: Trying to refer to non existing Variable"},
+                    {ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE, "SYNTAX ERROR: Mismatched data types between variable and Expressionx "}
 };
 
 std::string ErrorMsg(int pID) {

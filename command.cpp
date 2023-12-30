@@ -3,6 +3,7 @@
 #include "token.hpp"
 #include "syntax.hpp"
 #include "console.hpp"
+#include "processor.hpp"
 
 #include <stdio.h>
 
@@ -164,9 +165,9 @@ bool bPrintRPN=true;
             switch (element.Type) {
                 case tValue:
                 case tString:
+                case tUserDefined:
                     EvalQueue.push_back(element);
                     break;
-                case tUserDefined:
                 case tFunction:
                 case tUserFunction:
                     return ERR_NOT_AVAILABLE;
@@ -228,6 +229,11 @@ bool bPrintRPN=true;
             tVarValue Value1;
             tVarValue Value2;
             bool ValueListWasEmpty=false;
+            std::string VarStrValue="";
+            int VarIntValue=0;
+            float VarFltValue=0;
+            int VarType=0;
+            int r=NO_ERROR;
             switch (EvalQueue[i].Type) {
                 case tValue:
                     TmpValue.iType = tValue;
@@ -240,6 +246,24 @@ bool bPrintRPN=true;
                     Value.push_back(TmpValue);
                     break;
                 case tUserDefined:
+                    r=MyProcessor.Variables.Get(EvalQueue[i].Value, VarType, VarFltValue, VarIntValue, VarStrValue);
+                    if (r!=NO_ERROR) {
+                        return r;
+                    }
+                    if (VarType==cvString) {
+                        TmpValue.iType = tString;
+                        TmpValue.sValue = VarStrValue;
+                        Value.push_back(TmpValue);
+                    } else {
+                        TmpValue.iType = tValue;
+                        if (VarType==cvInteger) {
+                            TmpValue.fValue = (float)VarIntValue;
+                        } else {
+                            TmpValue.fValue = VarFltValue;
+                        }
+                        Value.push_back(TmpValue);
+                    }
+                    break;
                 case tUserFunction:
                 case tFunction:
                     return ERR_NOT_AVAILABLE;

@@ -23,7 +23,7 @@ int IsTokenSeparator(char cCurrent, char cNext){
 		case '/':
 		case '^':
 		case '=':
-		case '!':
+//		case '!':   Disrupting identifying single ! as a variable
 		case '(':
 		case ')':
 		case '[':
@@ -72,10 +72,9 @@ int IsValidVariableName(std::string &sTxt) {
                         return (cvString);
                         break;
 					case '#':
+					default:
 						return (cvDouble);
 						break;
-					default:
-						return 0;
 						}		
 			} else {
 				return 0;

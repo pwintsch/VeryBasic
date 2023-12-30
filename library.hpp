@@ -7,5 +7,7 @@
 
 
 extern int (*DirectCommandPtr[])(Command MyCommand);
+extern int (*CommandPtr[])(Command MyCommand);
+
 
 #endif /* LIBRARY_H_ */
