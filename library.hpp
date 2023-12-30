@@ -4,7 +4,7 @@
 
 
 
-
+int LetCmd(Command MyCommand);
 
 extern int (*DirectCommandPtr[])(Command MyCommand);
 extern int (*CommandPtr[])(Command MyCommand);

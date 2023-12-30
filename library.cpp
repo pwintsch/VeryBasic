@@ -158,8 +158,7 @@ int LetCmd(Command MyCommand)
             }
             Terminal.WriteFStringLn("Result: %s", StrResult.c_str());
         } 
-    }
-    
+    }  
     return r;
 }
 
