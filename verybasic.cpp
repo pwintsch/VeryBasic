@@ -96,8 +96,6 @@ bool bMachineLoop = true;
                         }
                         if (r!=NO_ERROR) {
                             Terminal.WriteLn(ErrorMsg(r).c_str());
-                        } else {
-                            Terminal.WriteLn("OK");
                         }
                     }
 

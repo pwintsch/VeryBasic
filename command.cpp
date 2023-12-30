@@ -153,7 +153,7 @@ int CommandNode::Evaluate(int &ResultType, float &NumResult, std::string &StrRes
 std::vector<CommandNode> EvalStack;
 std::vector<CommandNode> EvalQueue;
 int NodePrecedence=0;
-bool bPrintRPN=true;
+bool bPrintRPN=false;
 
     if (Type!=tExpression) {
         NumResult=0;
@@ -701,6 +701,25 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 }
                 CommandNode Argument;
                 Argument.InitialiseExpression(ExpressionCommandNodes);
+                SyntaxIndex++;
+                Arguments.push_back(Argument);
+            } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tPrintExpression) {
+                std::vector<CommandNode> PrintExpressionCommandNodes;
+                int ExpressionIndex=0;
+                while (TokenIndex<Nodes.size() && IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
+                    if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                        // unary minus
+                        Nodes[TokenIndex].ID=coUnaryMinus;
+                    }
+                    PrintExpressionCommandNodes.push_back(Nodes[TokenIndex]);
+                    TokenIndex++;
+                    ExpressionIndex++;
+                }
+                if (PrintExpressionCommandNodes.size()==0) {
+                    RuleSearchError=true;
+                }
+                CommandNode Argument;
+                Argument.InitialiseExpression(PrintExpressionCommandNodes);
                 SyntaxIndex++;
                 Arguments.push_back(Argument);
             } else {

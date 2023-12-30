@@ -123,9 +123,7 @@ int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, Exit
 
 int LetCmd(Command MyCommand)
 {
-   //  Terminal.WriteLn("Let Cmd");
-   // Evaluate the expression, check the type and store the result in the variable
-    Terminal.WriteLn(MyCommand.GetDetailedString().c_str());
+
     int ResultType;
     float NumResult;
     std::string StrResult;  
@@ -137,12 +135,10 @@ int LetCmd(Command MyCommand)
                 switch (MyCommand.Arguments[0].ID) {
                     case cvInteger:
                         MyProcessor.Variables.Store(MyCommand.Arguments[0].Value, MyCommand.Arguments[0].ID, IntResult, 0, "");
-                        Terminal.WriteFStringLn("Result: %d", IntResult);
                         break;
                     case cvSingle:
                     case cvDouble:
                         MyProcessor.Variables.Store(MyCommand.Arguments[0].Value, MyCommand.Arguments[0].ID, NumResult, 0, "");
-                        Terminal.WriteFStringLn("Result: %f", NumResult); 
                         break;
                     default:
                         return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
@@ -156,7 +152,6 @@ int LetCmd(Command MyCommand)
             } else {
                 return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
             }
-            Terminal.WriteFStringLn("Result: %s", StrResult.c_str());
         } 
     }  
     return r;
@@ -177,10 +172,20 @@ int RemCmd(Command MyCommand)
 }
 
 
-int PrintCmd(Command MyCommand)
-{
-    Terminal.WriteLn("Print Cmd");
-    return NO_ERROR;
+int PrintCmd(Command MyCommand) {
+    int ResultType;
+    float NumResult;
+    std::string StrResult;  
+    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
+    int IntResult=(int)NumResult;
+    if (r==NO_ERROR) {
+        if (ResultType==tValue) {
+            Terminal.WriteFStringLn("%f", NumResult);
+        } else {
+            Terminal.WriteFStringLn("%s", StrResult.c_str());
+        } 
+    }  
+    return r;
 }
 
 
