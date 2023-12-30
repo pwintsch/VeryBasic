@@ -112,7 +112,7 @@ int iID=0;
         } else {
             int iVarType = IsValidVariableName(pValue);
             if (iVarType!=0) {		
-                Type=tVariable;
+                Type=tUserDefined;
                 ID=iVarType;
                 Value = pValue;
                 return ID;

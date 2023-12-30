@@ -36,7 +36,7 @@ std::string GetSyntaxNodeString(int iSyntaxNode);
 #define tError 0
 #define tUnknown 0
 #define tCommand 1
-#define tVariable 2
+#define tUserDefined 2
 #define tFunction 4
 #define tOperator 5
 #define tComparison 6
@@ -49,10 +49,9 @@ std::string GetSyntaxNodeString(int iSyntaxNode);
 #define tRemark 13
 #define tDirectCommand 14
 #define tExpressionList 15
-#define tVariableList 16
+#define tUserDefinedList 16
 #define tArray 17
 #define tNumber 18
-// #define tVariableList 18
 #define tValueList 19
 
 #define tExpression 20

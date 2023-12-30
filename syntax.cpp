@@ -174,13 +174,13 @@ bool GetTokenInfoFromTxt(std::string &sParam, int *iType, int *iID) {
 
 
 std::vector<tSyntaxNode> AssignSyntax = {
-				 	{ tVariable, coVariable}, 
+				 	{ tUserDefined, coVariable}, 
 					{ tComparison, coEqual},
 				    { tExpression, 0}};
 					
 std::vector<tSyntaxNode> LETSyntax = { 	
 					{ tCommand, coLET}, 
-					{ tVariable, coVariable}, 
+					{ tUserDefined, coVariable}, 
 					{ tComparison, coEqual}, 
 					{ tExpression ,0} };
 
@@ -227,7 +227,7 @@ tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION},
 
 
 tSyntaxNode tFORSyntax[] = { 	{ tCommand, coFOR}, 
-					{ tVariable, cvNumeric}, 
+					{ tUserDefined, cvNumeric}, 
 					{ tComparison, coEqual}, 
 					{ tExpression ,0},
 					{ tComplement ,coTO},
@@ -236,7 +236,7 @@ tSyntaxNode tFORSyntax[] = { 	{ tCommand, coFOR},
 
 
 tSyntaxNode tFORSyntax2[] = { 	{ tCommand, coFOR}, 
-					{ tVariable, cvNumeric}, 
+					{ tUserDefined, cvNumeric}, 
 					{ tComparison, coEqual}, 
 					{ tExpression ,0},
 					{ tComplement ,coTO},
@@ -247,18 +247,18 @@ tSyntaxNode tFORSyntax2[] = { 	{ tCommand, coFOR},
 
 
 tSyntaxNode tNEXTSyntax[] = { 	{ tCommand, coNEXT}, 
-					{ tVariable, cvNumeric}, 
+					{ tUserDefined, cvNumeric}, 
 					{ SYNTAX_END, 0} };
 
 
 
 tSyntaxNode tDIMSyntax[] = { 	{ tCommand, coDIM}, 
-					{ tVariable, 0}, 
+					{ tUserDefined, 0}, 
 					{ SYNTAX_END, 0} };
 
 
 
-tSyntaxNode tAssignSyntax[] = { 	{ tVariable, coVariable}, 
+tSyntaxNode tAssignSyntax[] = { 	{ tUserDefined, coVariable}, 
 					{ tComparison, coEqual},
 				    { tExpression, 0},	
 					{ SYNTAX_END, 0} };
@@ -376,7 +376,7 @@ tSyntaxNode tEDITORSyntax[] = { 	{ tDirectCommand, coEDITOR},
 
 
 tSyntaxNode tREADSyntax[] = { 	{ tCommand, coREAD}, 
-					{ tVariableList, 0}, 
+					{ tUserDefinedList, 0}, 
 					{ SYNTAX_END, 0} };
 
 tSyntaxNode tDATASyntax[] = { 	{ tCommand, coDATA}, 
@@ -462,7 +462,7 @@ std::map <int, std::string> SyntaxNodeStrings =  {
   { tError, "ERROR" }, 
   { tUnknown, "UNKNOWN" },
   { tCommand, "COMMAND" }, 
-  { tVariable, "VARIABLE" },
+  { tUserDefined, "USER DEFINED" },
   { tFunction, "FUNCTION" },   
   { tOperator, "OPERATOR" },
   { tComparison, "COMPARISON" },
@@ -475,7 +475,7 @@ std::map <int, std::string> SyntaxNodeStrings =  {
   { tRemark, "REMARK" },
   { tDirectCommand, "DIRECT COMMAND" },
   { tExpressionList, "EXPRESSION LIST" },
-  { tVariableList, "VARIABLE LIST" },
+  { tUserDefinedList, "USER DEFINED LIST" },
   { tArray, "ARRAY" },
   { tNumber, "NUMBER" },
   { tValueList, "VALUELIST" },

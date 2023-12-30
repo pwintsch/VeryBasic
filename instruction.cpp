@@ -53,7 +53,7 @@ int Instruction::AddCommand(std::vector<Token> pCommand) {
     // return command type
     int r;
     
-    if (pCommand[0].Type == tCommand || pCommand[0].Type == tDirectCommand || pCommand[0].Type == tVariable) {
+    if (pCommand[0].Type == tCommand || pCommand[0].Type == tDirectCommand || pCommand[0].Type == tUserDefined) {
         Command cmd;
         r=cmd.Initialise(pCommand);
         if (r!=NO_ERROR) {
