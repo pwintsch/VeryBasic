@@ -189,6 +189,7 @@ int PrintCmd(Command MyCommand) {
                     } 
                 }  
             } else {
+                int r=0;
                 switch (Argument.ID) {
                     case coComma:
                         Terminal.MoveCursorToNextTab();
@@ -201,6 +202,22 @@ int PrintCmd(Command MyCommand) {
                         break;
                     case coBackSlash:
                         Terminal.WriteLn("");
+                        break;
+                    case coTAB:
+                        Terminal.MoveCursorToNextTab();
+                        r=Argument.SubArguments[0].Evaluate(ResultType, NumResult, StrResult);
+                        if (r==NO_ERROR) {
+                            if (ResultType==tValue) {
+                                Terminal.WriteFStringLn("Moving To Column %d", NumResult);
+//                                int NumResult=(int)NumResult;
+//                                Terminal.MoveCursorToColumn(NumResult);
+                            } else {
+                                return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+                            } 
+                        } else {
+                            return r;
+                        }
+                        Terminal.WriteFStringLn("Moving To Column %d", NumResult);
                         break;
                     default:
                         return ERR_SYNTAX;

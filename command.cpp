@@ -732,6 +732,31 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                         Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
                         PrintExpr.SubArguments.push_back(Argument);
                         TokenIndex++;
+                    } else if (Nodes[TokenIndex].ID==coTAB) {
+                        CommandNode TabNode;
+                        TabNode.InitialiseFromCommandNode (Nodes[TokenIndex]);
+                        TokenIndex++;
+                        std::vector<CommandNode> TabArgument;
+                        while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
+                            int ExpressionIndex=0;
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                                // unary minus
+                                Nodes[TokenIndex].ID=coUnaryMinus;
+                            }
+                            TabArgument.push_back(Nodes[TokenIndex]);
+                            TokenIndex++;
+                            ExpressionIndex++;
+                        }
+                        if (TabArgument.size()!=0) {
+                            CommandNode Argument;
+                            Argument.InitialiseExpression(TabArgument);
+                            TabNode.SubArguments.push_back(Argument);
+                            PrintExpr.SubArguments.push_back(TabNode);
+                            PrintExpressionCommandNodes.clear();
+                        } else {
+                            return ERR_BAD_PRINT_EXPRESSION;
+                        }
+                    
                     } else if (TokenIndex<Nodes.size()) {
                         RuleSearchError=true;
                     }

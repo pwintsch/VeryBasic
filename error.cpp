@@ -23,7 +23,8 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_UNKNOWN_EXPRESSION_DATA_TYPE, " SYNTAX ERROR: Unknown data type in expression"},
                     {ERR_EXPRESSION_OPERATOR_DATATYPE, "SYNTAX ERROR: No such operator for data type in expression"},
                     {ERR_VARIABLE_NOT_FOUND, "SYNTAX ERROR: Trying to refer to non existing Variable"},
-                    {ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE, "SYNTAX ERROR: Mismatched data types between variable and Expression"}
+                    {ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE, "SYNTAX ERROR: Mismatched data types between variable and Expression"},
+                    {ERR_BAD_PRINT_EXPRESSION, "SYNTAX ERROR: Bad expression in print statement"}
 };
 
 std::string ErrorMsg(int pID) {
