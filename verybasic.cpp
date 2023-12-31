@@ -120,7 +120,7 @@ bool bMachineLoop = true;
 int main() {
     
     Terminal.Initialise();
-    Terminal.clear();
+    Terminal.Clear();
     Terminal.WriteLn("Hello, world!");
     Terminal.WriteLn("I am using my new console class! v0.0009a");
     Terminal.WriteFStringLn ("Terminal Size: Rows: %d Columns: %d ", Terminal.get_height(), Terminal.get_width());

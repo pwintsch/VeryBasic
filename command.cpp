@@ -704,24 +704,40 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 SyntaxIndex++;
                 Arguments.push_back(Argument);
             } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tPrintExpression) {
+                CommandNode PrintExpr;
+                PrintExpr.Type=tPrintExpression;
+                PrintExpr.ID=0;
+                PrintExpr.Value="";
                 std::vector<CommandNode> PrintExpressionCommandNodes;
-                int ExpressionIndex=0;
-                while (TokenIndex<Nodes.size() && IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                    if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
-                        // unary minus
-                        Nodes[TokenIndex].ID=coUnaryMinus;
+                while (TokenIndex<Nodes.size()) {
+                    // adapt for if below to become a while function (while token for expression make expression if not and control char then add token for control char and continue till end of line)
+                    while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
+                        int ExpressionIndex=0;
+                        if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                            // unary minus
+                            Nodes[TokenIndex].ID=coUnaryMinus;
+                        }
+                        PrintExpressionCommandNodes.push_back(Nodes[TokenIndex]);
+                        TokenIndex++;
+                        ExpressionIndex++;
+                    } 
+                    if (PrintExpressionCommandNodes.size()!=0) {
+                        CommandNode Argument;
+                        Argument.InitialiseExpression(PrintExpressionCommandNodes);
+                        PrintExpr.SubArguments.push_back(Argument);
+                        PrintExpressionCommandNodes.clear();
                     }
-                    PrintExpressionCommandNodes.push_back(Nodes[TokenIndex]);
-                    TokenIndex++;
-                    ExpressionIndex++;
+                    if (Nodes[TokenIndex].ID==coComma || Nodes[TokenIndex].ID==coSemiColon || Nodes[TokenIndex].ID==coBackSlash || Nodes[TokenIndex].ID==coExclamation) {
+                        CommandNode Argument;
+                        Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
+                        PrintExpr.SubArguments.push_back(Argument);
+                        TokenIndex++;
+                    } else if (TokenIndex<Nodes.size()) {
+                        RuleSearchError=true;
+                    }
                 }
-                if (PrintExpressionCommandNodes.size()==0) {
-                    RuleSearchError=true;
-                }
-                CommandNode Argument;
-                Argument.InitialiseExpression(PrintExpressionCommandNodes);
+                Arguments.push_back(PrintExpr);
                 SyntaxIndex++;
-                Arguments.push_back(Argument);
             } else {
                 break;
             }

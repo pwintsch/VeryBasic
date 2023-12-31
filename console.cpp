@@ -328,7 +328,7 @@ void Console::print(const std::string& str) {
   std::cout << str << std::endl;
 }
 
-void Console::clear() {
+void Console::Clear() {
   ResetScreen();
 }
 
@@ -483,7 +483,23 @@ char sEmptyStr[5]="";
 	return false;
 }
 
+void Console::MoveCursorToNextTab() {
 
+int iY;
+int iX;
+int iMaxRows, iMaxCols;
+const int TABSIZE=8;
+
+  GetCursorPosition (&iY, &iX);
+  GetWindowSize(&iMaxRows, &iMaxCols);
+  int iAvailableChar=iMaxCols-iX;
+  if (iAvailableChar<TABSIZE) {
+    WriteLn("");
+  } else {
+    int iSpaces=(iAvailableChar+TABSIZE)%TABSIZE;
+    for (int i=0;i<iSpaces;i++) Write(" ");
+  }
+}
 
 Console::~Console() {
 	ShowCursor();

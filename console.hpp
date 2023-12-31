@@ -34,7 +34,7 @@ class Console {
 public:
   void Initialise();
   void print(const std::string& str);
-  void clear();
+  void Clear();
   int get_width();
   int get_height();
   void Beep();
@@ -50,6 +50,7 @@ public:
   void WriteLn(const char *sTxt);
   void GetConsoleInput (std::string &sInput, int iNoOfChar);
   bool GetYNConfirmation(const char *sQuestion);
+  void MoveCursorToNextTab();
   ~Console();
 };
 

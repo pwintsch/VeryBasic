@@ -176,16 +176,40 @@ int PrintCmd(Command MyCommand) {
     int ResultType;
     float NumResult;
     std::string StrResult;  
-    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
-    int IntResult=(int)NumResult;
-    if (r==NO_ERROR) {
-        if (ResultType==tValue) {
-            Terminal.WriteFStringLn("%f", NumResult);
-        } else {
-            Terminal.WriteFStringLn("%s", StrResult.c_str());
-        } 
-    }  
-    return r;
+    if (MyCommand.Arguments[0].SubArguments.size()>0) {
+        for (auto &Argument : MyCommand.Arguments[0].SubArguments) {
+            if (Argument.Type==tExpression) {
+                int r=Argument.Evaluate(ResultType, NumResult, StrResult);
+                int IntResult=(int)NumResult;
+                if (r==NO_ERROR) {
+                    if (ResultType==tValue) {
+                        Terminal.WriteFString("%f ", NumResult);
+                    } else {
+                        Terminal.WriteFString("%s ", StrResult.c_str());
+                    } 
+                }  
+            } else {
+                switch (Argument.ID) {
+                    case coComma:
+                        Terminal.MoveCursorToNextTab();
+                        break;
+                    case coSemiColon:
+                        Terminal.Write("");
+                        break;
+                    case coExclamation:
+                        Terminal.Write(" ");
+                        break;
+                    case coBackSlash:
+                        Terminal.WriteLn("");
+                        break;
+                    default:
+                        return ERR_SYNTAX;
+                        break;
+                } 
+            }
+        }
+    }
+    return NO_ERROR;
 }
 
 
