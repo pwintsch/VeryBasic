@@ -496,10 +496,31 @@ const int TABSIZE=8;
   if (iAvailableChar<TABSIZE) {
     WriteLn("");
   } else {
-    int iSpaces=(iAvailableChar+TABSIZE)%TABSIZE;
+    int iSpaces=TABSIZE-(iX%TABSIZE); 
     for (int i=0;i<iSpaces;i++) Write(" ");
   }
 }
+
+
+void Console::MoveCursorToColumn(int iColumn) {
+
+int iY;
+int iX;
+int iMaxRows, iMaxCols;
+
+
+  GetCursorPosition (&iY, &iX);
+  GetWindowSize(&iMaxRows, &iMaxCols);
+  iColumn=iColumn%iMaxCols;
+  if (iColumn>iX) {
+    int iSpaces=iColumn-iX;
+    for (int i=0;i<iSpaces;i++) Write(" ");
+  } else {
+    WriteLn("");
+    for (int i=0;i<iColumn;i++) Write(" ");
+  }
+}
+
 
 Console::~Console() {
 	ShowCursor();

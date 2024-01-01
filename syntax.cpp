@@ -226,6 +226,9 @@ std::vector<tSyntaxNode> PRINTSyntax = {
 					{ tPrintExpression, 0}};
 
 
+std::vector<tSyntaxNode> PRINTSyntax2 = { 	
+					{ tCommand, coPRINT}};
+
 tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
 					{ tComplement, coBASE},
 					{ tValue, 0},  
@@ -416,7 +419,8 @@ std::vector<tSyntax> tGrammar ={
 		{ coEXIT, 0, EXITSyntax },
 		{ coREM, 0, REMSyntax},
 		{ coEVAL, 0, EVALSyntax},
-		{ coPRINT, 0, PRINTSyntax}
+		{ coPRINT, 0, PRINTSyntax},
+		{ coPRINT, 1, PRINTSyntax2}
 		/*,
 		{ coNEW, 0, tNEWSyntax },
 		{ coDEBUG, 0, tDEBUGSyntax },

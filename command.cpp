@@ -767,7 +767,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 break;
             }
         }
-        if (RuleSearchError==false && SyntaxIndex==SyntaxRules[i].Syntax.size() && TokenIndex==Nodes.size()) {
+        if (RuleSearchError==false && SyntaxIndex==SyntaxRules[i].Syntax.size() && TokenIndex>=Nodes.size()) {
             RuleFound=true;
             RuleNo=SyntaxRules[i].iRuleNo;
             return NO_ERROR;

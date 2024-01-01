@@ -51,6 +51,7 @@ public:
   void GetConsoleInput (std::string &sInput, int iNoOfChar);
   bool GetYNConfirmation(const char *sQuestion);
   void MoveCursorToNextTab();
+  void MoveCursorToColumn(int iColumn);
   ~Console();
 };
 

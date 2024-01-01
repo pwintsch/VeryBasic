@@ -175,20 +175,23 @@ int RemCmd(Command MyCommand)
 int PrintCmd(Command MyCommand) {
     int ResultType;
     float NumResult;
-    std::string StrResult;  
-    if (MyCommand.Arguments[0].SubArguments.size()>0) {
+    std::string StrResult;
+    bool LastExpressionWasExpression=true;
+    if (MyCommand.Arguments.size()>0 && MyCommand.Arguments[0].SubArguments.size()>0) {
         for (auto &Argument : MyCommand.Arguments[0].SubArguments) {
             if (Argument.Type==tExpression) {
+                LastExpressionWasExpression=true;
                 int r=Argument.Evaluate(ResultType, NumResult, StrResult);
                 int IntResult=(int)NumResult;
                 if (r==NO_ERROR) {
                     if (ResultType==tValue) {
-                        Terminal.WriteFString("%f ", NumResult);
+                        Terminal.WriteFString("%f", NumResult);
                     } else {
-                        Terminal.WriteFString("%s ", StrResult.c_str());
+                        Terminal.WriteFString("%s", StrResult.c_str());
                     } 
                 }  
             } else {
+                LastExpressionWasExpression=false;
                 int r=0;
                 switch (Argument.ID) {
                     case coComma:
@@ -204,20 +207,16 @@ int PrintCmd(Command MyCommand) {
                         Terminal.WriteLn("");
                         break;
                     case coTAB:
-                        Terminal.MoveCursorToNextTab();
                         r=Argument.SubArguments[0].Evaluate(ResultType, NumResult, StrResult);
                         if (r==NO_ERROR) {
                             if (ResultType==tValue) {
-                                Terminal.WriteFStringLn("Moving To Column %d", NumResult);
-//                                int NumResult=(int)NumResult;
-//                                Terminal.MoveCursorToColumn(NumResult);
+                                Terminal.MoveCursorToColumn((int)NumResult);
                             } else {
                                 return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
                             } 
                         } else {
                             return r;
                         }
-                        Terminal.WriteFStringLn("Moving To Column %d", NumResult);
                         break;
                     default:
                         return ERR_SYNTAX;
@@ -225,6 +224,9 @@ int PrintCmd(Command MyCommand) {
                 } 
             }
         }
+    }
+    if (LastExpressionWasExpression) {
+        Terminal.WriteLn("");
     }
     return NO_ERROR;
 }
