@@ -52,6 +52,7 @@ public:
   bool GetYNConfirmation(const char *sQuestion);
   void MoveCursorToNextTab();
   void MoveCursorToColumn(int iColumn);
+  void MoveCursor(int iX, int iY);
   ~Console();
 };
 

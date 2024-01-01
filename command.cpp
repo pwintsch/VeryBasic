@@ -737,8 +737,8 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                         TabNode.InitialiseFromCommandNode (Nodes[TokenIndex]);
                         TokenIndex++;
                         std::vector<CommandNode> TabArgument;
+                        int ExpressionIndex=0;
                         while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                            int ExpressionIndex=0;
                             if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                                 // unary minus
                                 Nodes[TokenIndex].ID=coUnaryMinus;
@@ -756,7 +756,56 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                         } else {
                             return ERR_BAD_PRINT_EXPRESSION;
                         }
-                    
+                    } else if (Nodes[TokenIndex].ID==coAT) {
+                        CommandNode AtNode;
+                        AtNode.InitialiseFromCommandNode (Nodes[TokenIndex]);
+                        TokenIndex++;
+                        std::vector<CommandNode> AtArgument;
+                        int ExpressionIndex=0;
+                        while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                                // unary minus
+                                Nodes[TokenIndex].ID=coUnaryMinus;
+                            }
+                            AtArgument.push_back(Nodes[TokenIndex]);
+                            TokenIndex++;
+                            ExpressionIndex++;
+                        }
+                        if (AtArgument.size()!=0) {
+                            CommandNode Argument;
+                            Argument.InitialiseExpression(AtArgument);
+                            AtNode.SubArguments.push_back(Argument);
+                            AtArgument.clear();
+                        } else {
+                            return ERR_BAD_PRINT_EXPRESSION;
+                        }
+                        if (Nodes[TokenIndex].ID==coComma) {
+                            CommandNode Argument;
+                            Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
+                            AtNode.SubArguments.push_back(Argument);
+                            TokenIndex++;
+                        } else {
+                            return ERR_BAD_PRINT_EXPRESSION;
+                        }
+                        ExpressionIndex=0;
+                        while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                                // unary minus
+                                Nodes[TokenIndex].ID=coUnaryMinus;
+                            }
+                            AtArgument.push_back(Nodes[TokenIndex]);
+                            TokenIndex++;
+                            ExpressionIndex++;
+                        }
+                        if (AtArgument.size()!=0) {
+                            CommandNode Argument;
+                            Argument.InitialiseExpression(AtArgument);
+                            AtNode.SubArguments.push_back(Argument);
+                            PrintExpr.SubArguments.push_back(AtNode);
+                            PrintExpressionCommandNodes.clear();
+                        } else {
+                            return ERR_BAD_PRINT_EXPRESSION;
+                        }
                     } else if (TokenIndex<Nodes.size()) {
                         RuleSearchError=true;
                     }

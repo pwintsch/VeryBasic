@@ -177,6 +177,8 @@ int PrintCmd(Command MyCommand) {
     float NumResult;
     std::string StrResult;
     bool LastExpressionWasExpression=true;
+    int MaxX=Terminal.get_width();
+    int MaxY=Terminal.get_height();
     if (MyCommand.Arguments.size()>0 && MyCommand.Arguments[0].SubArguments.size()>0) {
         for (auto &Argument : MyCommand.Arguments[0].SubArguments) {
             if (Argument.Type==tExpression) {
@@ -193,6 +195,8 @@ int PrintCmd(Command MyCommand) {
             } else {
                 LastExpressionWasExpression=false;
                 int r=0;
+                int ATLine=0;
+                int ATColumn=0;
                 switch (Argument.ID) {
                     case coComma:
                         Terminal.MoveCursorToNextTab();
@@ -211,6 +215,31 @@ int PrintCmd(Command MyCommand) {
                         if (r==NO_ERROR) {
                             if (ResultType==tValue) {
                                 Terminal.MoveCursorToColumn((int)NumResult);
+                            } else {
+                                return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+                            } 
+                        } else {
+                            return r;
+                        }
+                        break;
+                    case coAT:
+                        ATLine=0;
+                        ATColumn=0;
+                        r=Argument.SubArguments[0].Evaluate(ResultType, NumResult, StrResult);
+                        if (r==NO_ERROR) {
+                            if (ResultType==tValue) {
+                                ATLine=(int)NumResult;
+                                r=Argument.SubArguments[2].Evaluate(ResultType, NumResult, StrResult);
+                                if (ResultType==tValue) {
+                                    ATColumn=(int)NumResult;
+                                    if (ATLine<0 || ATLine>=MaxY || ATColumn<0 || ATColumn>=MaxX) {
+                                        return ERR_BAD_PRINT_COORDINATES;
+                                    } else {
+                                        Terminal.MoveCursor(ATLine, ATColumn);
+                                    }
+                                } else {
+                                    return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+                                }
                             } else {
                                 return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
                             } 

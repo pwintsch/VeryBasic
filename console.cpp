@@ -522,6 +522,11 @@ int iMaxRows, iMaxCols;
 }
 
 
+void Console::MoveCursor(int iY, int iX) {
+  SetCursorPosition(iY,iX);
+}
+
+
 Console::~Console() {
 	ShowCursor();
 	DisableRawMode();
