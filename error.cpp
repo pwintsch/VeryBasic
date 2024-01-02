@@ -26,6 +26,8 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE, "SYNTAX ERROR: Mismatched data types between variable and Expression"},
                     {ERR_BAD_PRINT_EXPRESSION, "SYNTAX ERROR: Bad expression in print statement"},
                     {ERR_BAD_PRINT_COORDINATES, "SYNTAX ERROR: Trying to print outside Terminal window dimensions"},
+                    {ERR_BAD_INPUT_EXPRESSION, "SYNTAX ERROR: Bad expression in input statement"},
+                    {ERR_BAD_INPUT_COORDINATES, "SYNTAX ERROR: Trying to input outside Terminal window dimensions"}
 };
 
 std::string ErrorMsg(int pID) {

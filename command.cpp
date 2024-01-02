@@ -703,6 +703,59 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 Argument.InitialiseExpression(ExpressionCommandNodes);
                 SyntaxIndex++;
                 Arguments.push_back(Argument);
+            } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tInputExpression) {
+                CommandNode InputExpr;
+                InputExpr.Type=tInputExpression;
+                InputExpr.ID=0;
+                InputExpr.Value="";
+                std::vector<CommandNode> InputExpressionCommandNodes;
+                int NoOfBracketsOpen=0;
+                while (TokenIndex<Nodes.size()) {
+                    // the problem is that it is taking the close bracket into the expression might have to change order of things
+                    // Txpically if openbracket start the expression including the open bracket so it closes off normally
+                    if (Nodes[TokenIndex].ID==coComma || Nodes[TokenIndex].ID==coSemiColon || Nodes[TokenIndex].ID==coBackSlash || Nodes[TokenIndex].ID==coExclamation) {
+                        CommandNode Argument;
+                        Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
+                        InputExpr.SubArguments.push_back(Argument);
+                        TokenIndex++;
+                    } else if (NoOfBracketsOpen==0 && (Nodes[TokenIndex].Type==tString || Nodes[TokenIndex].Type==tValue || Nodes[TokenIndex].ID==cvDouble || Nodes[TokenIndex].ID==cvSingle || Nodes[TokenIndex].ID==cvString || Nodes[TokenIndex].ID==cvInteger )) {
+                        CommandNode Argument;
+                        Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
+                        InputExpr.SubArguments.push_back(Argument);
+                        TokenIndex++;                          
+                    } else if (Nodes[TokenIndex].ID==coOpenBracket) {
+                        NoOfBracketsOpen++;
+                        TokenIndex++;
+                    } else if (Nodes[TokenIndex].ID==coCloseBracket) {
+                        NoOfBracketsOpen--;
+                        TokenIndex++;
+                    } else if (NoOfBracketsOpen>0 && IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
+                        int ExpressionIndex=0;
+                        while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                                // unary minus
+                                Nodes[TokenIndex].ID=coUnaryMinus;
+                            }
+                            InputExpressionCommandNodes.push_back(Nodes[TokenIndex]);
+                            TokenIndex++;
+                            ExpressionIndex++;
+                        }
+                        if (InputExpressionCommandNodes.size()!=0) {
+                            CommandNode Argument;
+                            Argument.InitialiseExpression(InputExpressionCommandNodes);
+                            InputExpr.SubArguments.push_back(Argument);
+                            InputExpressionCommandNodes.clear();
+                        } else {
+                            return ERR_BAD_INPUT_EXPRESSION;
+                        }
+                    }                 
+                } 
+                if (InputExpr.SubArguments.size()==0) { 
+                    return ERR_BAD_INPUT_EXPRESSION;               
+                } else { 
+                    Arguments.push_back(InputExpr);
+                    SyntaxIndex++;
+                }
             } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tPrintExpression) {
                 CommandNode PrintExpr;
                 PrintExpr.Type=tPrintExpression;
@@ -711,8 +764,8 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 std::vector<CommandNode> PrintExpressionCommandNodes;
                 while (TokenIndex<Nodes.size()) {
                     // adapt for if below to become a while function (while token for expression make expression if not and control char then add token for control char and continue till end of line)
+                    int ExpressionIndex=0;
                     while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                        int ExpressionIndex=0;
                         if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                             // unary minus
                             Nodes[TokenIndex].ID=coUnaryMinus;
