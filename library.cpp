@@ -416,8 +416,24 @@ int PrintCmd(Command MyCommand) {
 
 int IfCmd(Command MyCommand)
 {
-    Terminal.WriteLn("If Cmd");
-    return CMD_OK;
+
+    int ResultType;
+    float NumResult;
+    std::string StrResult;  
+    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
+    if (r==NO_ERROR) {
+        if (ResultType==tValue) {
+            if (NumResult!=0) {
+                return CMD_OK;
+            } else {
+                return CMD_OK_Cond_Fail;
+            }
+        } else {
+            return ERR_CMD_IF_EXPRESSION_NOT_VALUE;
+        } 
+    } else {
+        return r;
+    }
 }
 
 

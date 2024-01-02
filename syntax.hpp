@@ -185,7 +185,7 @@ bool IsStringInt(const char *sTxt);
 #define MAX_STRING_LENGTH 255
 
 
-#define CMD_OK 0
+#define CMD_OK 1000
 #define CMD_OK_Cond_Fail 1001
 #define CMD_STOP 1002
 #define CMD_BREAK 1003
