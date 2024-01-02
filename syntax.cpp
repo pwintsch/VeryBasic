@@ -229,10 +229,23 @@ std::vector<tSyntaxNode> PRINTSyntax = {
 std::vector<tSyntaxNode> PRINTSyntax2 = { 	
 					{ tCommand, coPRINT}};
 
+
 std::vector<tSyntaxNode> INPUTSyntax = {
 				 	{ tCommand, coINPUT}, 
 					{ tInputExpression, 0}
 					};
+
+
+std::vector <tSyntaxNode> BEEPSyntax = {
+				 	{ tCommand, coBEEP} 
+					};
+
+
+std::vector <tSyntaxNode> RUNSyntax = {
+				 	{ tDirectCommand, coRUN} 
+					};
+
+
 
 tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
 					{ tComplement, coBASE},
@@ -422,11 +435,13 @@ std::vector<tSyntax> tGrammar ={
 		{ coLIST, 1, LISTSyntax2 },
 		{ coLIST, 2, LISTSyntax3 }, 
 		{ coEXIT, 0, EXITSyntax },
+		{ coRUN, 0, RUNSyntax },
 		{ coREM, 0, REMSyntax},
 		{ coEVAL, 0, EVALSyntax},
 		{ coPRINT, 0, PRINTSyntax},
 		{ coPRINT, 1, PRINTSyntax2},
-		{ coINPUT, 0, INPUTSyntax}
+		{ coINPUT, 0, INPUTSyntax},
+		{ coBEEP, 0, BEEPSyntax},
 		/*,
 		{ coNEW, 0, tNEWSyntax },
 		{ coDEBUG, 0, tDEBUGSyntax },

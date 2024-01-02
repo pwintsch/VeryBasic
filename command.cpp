@@ -490,7 +490,13 @@ std::string CommandNode::GetDetailedString(int Padding) {
 
 std::string CommandNode::GetString() {
     std::string s="";
+    if (Type==tString) {
+        s=s + "\"";
+    }
     s=s + Value;
+    if (Type==tString) {
+        s=s + "\"";
+    }
     if (SubArguments.size()>0) {
         if (Type==tFunction) s=s+"(";
         for (int j=0; j<SubArguments.size(); j++) {
@@ -962,25 +968,26 @@ int Command::Initialise(std::vector<Token> &pTokens) {
     if (r!=NO_ERROR) {
         return r;
     }
-
     Arguments.clear();
-
-
-
     r=FindSyntaxRule(TmpNodes);
     if (r!=NO_ERROR) {
         return r;
     }
     return NO_ERROR;
-
 }
 
 
 std::string Command::GetString() {
     std::string s="";
     s=GetTokenTextFromID(ID);
+    if (s!="") {
+        s=s+" ";
+    } 
     for (int i=0; i<Arguments.size(); i++) {
-        s=s+ " " +Arguments[i].GetString();
+        if (i>0) {
+            s=s+" ";
+        }
+        s=s+Arguments[i].GetString();
     }
     return s;
 }

@@ -20,8 +20,6 @@ public:
 
 
 class VariableList {
-
-
 public:
     std::map<std::string, MyVariable> VarList;
     VariableList();
@@ -36,6 +34,7 @@ public:
 class Processor {
 private:
     std::vector<Instruction> Program;
+    int CurrentLine;
 public:
     Processor();
     ~Processor();
@@ -49,6 +48,8 @@ public:
     std::string ListPartial(int StartLineNo, int EndLineNo);
     std::string Listline(int LineNo);
     void Exit();
+    int Run();
+    int ExecuteNextInstruction();
 };
 
 extern Processor MyProcessor;

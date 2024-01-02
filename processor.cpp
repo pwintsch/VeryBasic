@@ -1,6 +1,8 @@
 #include "processor.hpp"
 #include "syntax.hpp"
 #include "error.hpp"
+#include "library.hpp"
+#include "console.hpp"
 
 
 Processor MyProcessor;
@@ -77,6 +79,48 @@ std::string Processor::Listline(int LineNo) {
     }
     return s;
 }
+
+
+int Processor::ExecuteNextInstruction(){
+
+    int r=NO_ERROR;
+    bool NoBreakOrError=true;
+    int i=0;
+    Instruction MyInstruction=Program[CurrentLine];
+    bool ConditionFailed=false;
+    while (NoBreakOrError && i<MyInstruction.Commands.size() && !ConditionFailed) {                      
+        if (MyInstruction.Commands[i].Type==tUserDefined) {
+            r=LetCmd(MyInstruction.Commands[i]);
+        } else { 
+            r=CommandPtr[(MyInstruction.Commands[i].ID-CmdSep)](MyInstruction.Commands[i]);
+        }
+        if (r!=CMD_OK) {
+            if (r==CMD_OK_Cond_Fail) {
+                ConditionFailed=true;
+            } else {
+                return r;
+            }
+        }        
+        i++;
+    }
+    return CMD_OK;
+}
+
+
+int Processor::Run() {
+    CurrentLine=0;
+    Variables.Clear();
+    while (Active && CurrentLine<Program.size()) {
+        int CommandResult=ExecuteNextInstruction();
+        if (CommandResult==CMD_OK) {
+            CurrentLine++;
+        } else {
+            return CommandResult;
+        }
+    }
+    return CMD_OK;
+}
+
 
 
 void Processor::Exit() {

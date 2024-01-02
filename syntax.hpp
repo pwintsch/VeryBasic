@@ -83,22 +83,22 @@ bool IsStringInt(const char *sTxt);
 #define coGOTO CmdSep+5
 #define coGOSUB CmdSep+6
 #define coRETURN CmdSep+7
-#define coSTOP CmdSep+10
-#define coFOR CmdSep+11
-#define coNEXT CmdSep+12
-#define coCLEAR CmdSep+13
-#define coEND CmdSep+14
-#define coMEM CmdSep+20
-#define coDIM CmdSep+21
-#define coRANDOMIZE CmdSep+24
-#define coOPTION CmdSep+25
-#define coCONTINUE CmdSep + 28
-#define coBEEP CmdSep + 29
-#define coCLS CmdSep + 30
-#define coREAD CmdSep+31
-#define coDATA CmdSep +32
-#define coDEF CmdSep+33
-#define coTMPCMD CmdSep+34
+#define coSTOP CmdSep+8
+#define coFOR CmdSep+9
+#define coNEXT CmdSep+10
+#define coCLEAR CmdSep+11
+#define coEND CmdSep+12
+#define coMEM CmdSep+13
+#define coDIM CmdSep+14
+#define coRANDOMIZE CmdSep+15
+#define coOPTION CmdSep+16
+#define coCONTINUE CmdSep + 17
+#define coBEEP CmdSep + 18
+#define coCLS CmdSep + 19
+#define coREAD CmdSep+20
+#define coDATA CmdSep + 21
+#define coDEF CmdSep+22
+#define coTMPCMD CmdSep+23
 
 #define DirectCmdSep 300
 #define coLIST DirectCmdSep+1

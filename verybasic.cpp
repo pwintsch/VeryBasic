@@ -83,10 +83,8 @@ bool bMachineLoop = true;
                     bool ConditionFailed=false;
                     if (MyInstruction.Commands[0].Type==tDirectCommand) {
                         int r=DirectCommandPtr[(MyInstruction.Commands[0].ID-DirectCmdSep)](MyInstruction.Commands[0]);
-                        if (r!=NO_ERROR) {
+                        if (r!=CMD_OK) {
                             Terminal.WriteLn(ErrorMsg(r).c_str());
-                        } else {
-                            Terminal.WriteLn("OK");
                         }
                     } else {
                         int r=NO_ERROR;
@@ -138,7 +136,6 @@ bool bMachineLoop = true;
                             r=MyProcessor.ChangeLine(MyInstruction);
                         }
                     }
-//                    Terminal.WriteLn(MyInstruction.GetString().c_str());
                 }
             }
             Terminal.WriteLn("OK");

@@ -59,8 +59,7 @@ int DebugCmd(Command MyCommand)
 
 int RunCmd(Command MyCommand)
 {
-    Terminal.WriteLn("RunCmd");
-    return CMD_OK;
+    return MyProcessor.Run();
 }
 
 
@@ -521,7 +520,7 @@ int ContinueCmd(Command MyCommand)
 
 int BeepCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Beep Cmd");
+    Terminal.Beep();
     return CMD_OK;
 }
 
