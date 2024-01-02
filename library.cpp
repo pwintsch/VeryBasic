@@ -2,6 +2,7 @@
 #include "console.hpp"
 #include "processor.hpp"
 #include "error.hpp"
+#include "syntax.hpp"
 
 
 
@@ -160,8 +161,156 @@ int LetCmd(Command MyCommand)
 
 int InputCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Input Cmd");
+    int ResultType;
+    float NumResult;
+    std::string StrResult;
+    bool LastExpressionWasVariable=true;
+    int MaxX=Terminal.get_width();
+    int MaxY=Terminal.get_height();
+    if (MyCommand.Arguments.size()>0 && MyCommand.Arguments[0].SubArguments.size()>0) {
+        for (auto &Argument : MyCommand.Arguments[0].SubArguments) {
+            if (Argument.ID==cvString) {
+                std::string StrInput="";
+                int i=Terminal.GetString(StrInput);
+                if (i==0 || i==CTRL_KEY('z')) {
+                    StrInput="";
+                    MyProcessor.Variables.Store(Argument.Value, cvString, 0, 0, StrInput);
+                    if (i==CTRL_KEY('z')) {
+                        return ERR_CMD_INPUT_BREAK;
+                    } else {
+                        return ERR_CMD_INPUT_ERROR ;
+                    }
+                } else {
+                    MyProcessor.Variables.Store(Argument.Value, cvString, 0, 0, StrInput);
+                }
+            } else if (Argument.ID==cvDouble || Argument.ID==cvSingle || Argument.ID==cvInteger) {
+                LastExpressionWasVariable=true;    
+                std::string StrInput="";
+                bool ValidInput=false;
+                while (!ValidInput) {
+                    int CurrentX=0;
+                    int CurrentY=0;
+                    Terminal.GetCursorPos (CurrentY, CurrentX);
+                    int i=Terminal.GetString(StrInput);
+                    if (i==0 || i==CTRL_KEY('z')) {
+                        StrInput="";
+                        MyProcessor.Variables.Store(Argument.Value, Argument.ID, 0, 0, StrInput);
+                        if (i==CTRL_KEY('z')) {
+                            return ERR_CMD_INPUT_BREAK;
+                        } else {
+                            return ERR_CMD_INPUT_ERROR ;
+                        }
+                    } else {
+                        float FltInput=0;
+                        int IntInput=0;
+                        if (Argument.ID==cvDouble || Argument.ID==cvSingle) {
+                            if (IsStringFloat(StrInput.c_str())) {
+                                FltInput=stof(StrInput);
+                                ValidInput=true;
+                            }
+                        } else {
+                            if (IsStringInt(StrInput.c_str())) {
+                                IntInput=stoi(StrInput);
+                                ValidInput=true;
+                            }
+                        } 
+                        if (ValidInput) {
+                            MyProcessor.Variables.Store(Argument.Value, Argument.ID, FltInput, IntInput, StrInput);
+                        } else {
+                            Terminal.Beep();
+                            Terminal.MoveCursor(CurrentY, CurrentX);
+                            std::string s="";
+                            for (int i=0; i<StrInput.length(); i++) {
+                                s+=" ";
+                            }
+                            Terminal.Write(s.c_str());
+                            Terminal.MoveCursor(CurrentY, CurrentX);
+                        }
+                    }
+                }
+            } else if (Argument.Type==tExpression) {
+                LastExpressionWasVariable=false;
+                int r=Argument.Evaluate(ResultType, NumResult, StrResult);
+                int IntResult=(int)NumResult;
+                if (r==NO_ERROR) {
+                    if (ResultType==tValue) {
+                        Terminal.WriteFString("%f", NumResult);
+                    } else {
+                        Terminal.WriteFString("%s", StrResult.c_str());
+                    } 
+                }  
+            } else {
+                LastExpressionWasVariable=false;
+                int r=0;
+                int ATLine=0;
+                int ATColumn=0;
+                switch (Argument.ID) {
+                    case coString:
+                    case coInteger:
+                    case coDouble:                   
+                        Terminal.WriteFString("%s", Argument.Value.c_str());
+                        break;
+                    case coComma:
+                        Terminal.MoveCursorToNextTab();
+                        break;
+                    case coSemiColon:
+                        Terminal.Write("");
+                        break;
+                    case coExclamation:
+                        Terminal.Write(" ");
+                        break;
+                    case coBackSlash:
+                        Terminal.WriteLn("");
+                        break;
+                    case coTAB:
+                        r=Argument.SubArguments[0].Evaluate(ResultType, NumResult, StrResult);
+                        if (r==NO_ERROR) {
+                            if (ResultType==tValue) {
+                                Terminal.MoveCursorToColumn((int)NumResult);
+                            } else {
+                                return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+                            } 
+                        } else {
+                            return r;
+                        }
+                        break;
+                    case coAT:
+                        ATLine=0;
+                        ATColumn=0;
+                        r=Argument.SubArguments[0].Evaluate(ResultType, NumResult, StrResult);
+                        if (r==NO_ERROR) {
+                            if (ResultType==tValue) {
+                                ATLine=(int)NumResult;
+                                r=Argument.SubArguments[2].Evaluate(ResultType, NumResult, StrResult);
+                                if (ResultType==tValue) {
+                                    ATColumn=(int)NumResult;
+                                    if (ATLine<0 || ATLine>=MaxY || ATColumn<0 || ATColumn>=MaxX) {
+                                        return ERR_BAD_PRINT_COORDINATES;
+                                    } else {
+                                        Terminal.MoveCursor(ATLine, ATColumn);
+                                    }
+                                } else {
+                                    return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+                                }
+                            } else {
+                                return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+                            } 
+                        } else {
+                            return r;
+                        }
+                        break;
+                    default:
+                        return ERR_BAD_INPUT_EXPRESSION;
+                        break;
+                } 
+            }
+        }
+    }
+    if (LastExpressionWasVariable) {
+        Terminal.WriteLn("");
+    }
     return NO_ERROR;
+
 }
 
 

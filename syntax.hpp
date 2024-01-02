@@ -29,6 +29,9 @@ int GetTokenTypeFromID(int iPassedId);
 bool GetTokenInfoFromTxt(std::string &sParam, int *iType, int *iID);
 std::string GetTokenTextFromID (int iPassedId);
 std::string GetSyntaxNodeString(int iSyntaxNode);
+bool IsStringFloat(const char *sTxt);
+bool IsStringInt(const char *sTxt);
+
 
 
 

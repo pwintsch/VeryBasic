@@ -709,7 +709,6 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 InputExpr.ID=0;
                 InputExpr.Value="";
                 std::vector<CommandNode> InputExpressionCommandNodes;
-                int NoOfBracketsOpen=0;
                 while (TokenIndex<Nodes.size()) {
                     // the problem is that it is taking the close bracket into the expression might have to change order of things
                     // Txpically if openbracket start the expression including the open bracket so it closes off normally
@@ -718,18 +717,12 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                         Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
                         InputExpr.SubArguments.push_back(Argument);
                         TokenIndex++;
-                    } else if (NoOfBracketsOpen==0 && (Nodes[TokenIndex].Type==tString || Nodes[TokenIndex].Type==tValue || Nodes[TokenIndex].ID==cvDouble || Nodes[TokenIndex].ID==cvSingle || Nodes[TokenIndex].ID==cvString || Nodes[TokenIndex].ID==cvInteger )) {
+                    } else if (Nodes[TokenIndex].Type==tString || Nodes[TokenIndex].Type==tValue || Nodes[TokenIndex].ID==cvDouble || Nodes[TokenIndex].ID==cvSingle || Nodes[TokenIndex].ID==cvString || Nodes[TokenIndex].ID==cvInteger ) {
                         CommandNode Argument;
                         Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
                         InputExpr.SubArguments.push_back(Argument);
                         TokenIndex++;                          
                     } else if (Nodes[TokenIndex].ID==coOpenBracket) {
-                        NoOfBracketsOpen++;
-                        TokenIndex++;
-                    } else if (Nodes[TokenIndex].ID==coCloseBracket) {
-                        NoOfBracketsOpen--;
-                        TokenIndex++;
-                    } else if (NoOfBracketsOpen>0 && IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
                         int ExpressionIndex=0;
                         while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
                             if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
@@ -748,7 +741,83 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                         } else {
                             return ERR_BAD_INPUT_EXPRESSION;
                         }
-                    }                 
+                    } else if (Nodes[TokenIndex].ID==coTAB) {
+                        CommandNode TabNode;
+                        TabNode.InitialiseFromCommandNode (Nodes[TokenIndex]);
+                        TokenIndex++;
+                        std::vector<CommandNode> TabArgument;
+                        int ExpressionIndex=0;
+                        while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                                // unary minus
+                                Nodes[TokenIndex].ID=coUnaryMinus;
+                            }
+                            TabArgument.push_back(Nodes[TokenIndex]);
+                            TokenIndex++;
+                            ExpressionIndex++;
+                        }
+                        if (TabArgument.size()!=0) {
+                            CommandNode Argument;
+                            Argument.InitialiseExpression(TabArgument);
+                            TabNode.SubArguments.push_back(Argument);
+                            InputExpr.SubArguments.push_back(TabNode);
+                            InputExpressionCommandNodes.clear();
+                        } else {
+                            return ERR_BAD_PRINT_EXPRESSION;
+                        }
+                    } else if (Nodes[TokenIndex].ID==coAT) {
+                        CommandNode AtNode;
+                        AtNode.InitialiseFromCommandNode (Nodes[TokenIndex]);
+                        TokenIndex++;
+                        std::vector<CommandNode> AtArgument;
+                        int ExpressionIndex=0;
+                        while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                                // unary minus
+                                Nodes[TokenIndex].ID=coUnaryMinus;
+                            }
+                            AtArgument.push_back(Nodes[TokenIndex]);
+                            TokenIndex++;
+                            ExpressionIndex++;
+                        }
+                        if (AtArgument.size()!=0) {
+                            CommandNode Argument;
+                            Argument.InitialiseExpression(AtArgument);
+                            AtNode.SubArguments.push_back(Argument);
+                            AtArgument.clear();
+                        } else {
+                            return ERR_BAD_PRINT_EXPRESSION;
+                        }
+                        if (Nodes[TokenIndex].ID==coComma) {
+                            CommandNode Argument;
+                            Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
+                            AtNode.SubArguments.push_back(Argument);
+                            TokenIndex++;
+                        } else {
+                            return ERR_BAD_PRINT_EXPRESSION;
+                        }
+                        ExpressionIndex=0;
+                        while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                                // unary minus
+                                Nodes[TokenIndex].ID=coUnaryMinus;
+                            }
+                            AtArgument.push_back(Nodes[TokenIndex]);
+                            TokenIndex++;
+                            ExpressionIndex++;
+                        }
+                        if (AtArgument.size()!=0) {
+                            CommandNode Argument;
+                            Argument.InitialiseExpression(AtArgument);
+                            AtNode.SubArguments.push_back(Argument);
+                            InputExpr.SubArguments.push_back(AtNode);
+                            InputExpressionCommandNodes.clear();
+                        } else {
+                            return ERR_BAD_PRINT_EXPRESSION;
+                        }
+                    } else if (TokenIndex<Nodes.size()) {
+                        RuleSearchError=true;
+                    }
                 } 
                 if (InputExpr.SubArguments.size()==0) { 
                     return ERR_BAD_INPUT_EXPRESSION;               

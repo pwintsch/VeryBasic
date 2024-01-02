@@ -27,7 +27,9 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_BAD_PRINT_EXPRESSION, "SYNTAX ERROR: Bad expression in print statement"},
                     {ERR_BAD_PRINT_COORDINATES, "SYNTAX ERROR: Trying to print outside Terminal window dimensions"},
                     {ERR_BAD_INPUT_EXPRESSION, "SYNTAX ERROR: Bad expression in input statement"},
-                    {ERR_BAD_INPUT_COORDINATES, "SYNTAX ERROR: Trying to input outside Terminal window dimensions"}
+                    {ERR_BAD_INPUT_COORDINATES, "SYNTAX ERROR: Trying to input outside Terminal window dimensions"},
+                    {ERR_CMD_INPUT_ERROR, "SYNTAX ERROR: Error in INPUT command"},
+                    {ERR_CMD_INPUT_BREAK, "SYNTAX ERROR: Break requested in INPUT"}
 };
 
 std::string ErrorMsg(int pID) {

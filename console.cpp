@@ -419,6 +419,14 @@ void Console::WriteLn(const char *sTxt) {
   }
 }
 
+int Console::GetString (std::string &sInput) {
+char *sIn=NULL;
+int i=GetStr(&sIn,0,0,0);
+  sInput=sIn;
+  if (sIn!=NULL) free (sIn);
+  return i;
+}
+
 
 void Console::GetConsoleInput (std::string &sInput, int iNoOfChar) {
 
@@ -519,6 +527,10 @@ int iMaxRows, iMaxCols;
     WriteLn("");
     for (int i=0;i<iColumn;i++) Write(" ");
   }
+}
+
+void Console::GetCursorPos(int &iY, int &iX) {
+  GetCursorPosition (&iY, &iX);
 }
 
 

@@ -49,10 +49,12 @@ public:
   void Write(const char *sTxt);
   void WriteLn(const char *sTxt);
   void GetConsoleInput (std::string &sInput, int iNoOfChar);
+  int GetString (std::string &sInput);
   bool GetYNConfirmation(const char *sQuestion);
   void MoveCursorToNextTab();
   void MoveCursorToColumn(int iColumn);
-  void MoveCursor(int iX, int iY);
+  void GetCursorPos(int &iY, int &iX);
+  void MoveCursor(int iY, int iX);
   ~Console();
 };
 
