@@ -11,7 +11,7 @@
 int EmptyCmd(Command MyCommand)
 {
     Terminal.WriteLn("EmptyCmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
@@ -20,18 +20,18 @@ int ListCmd(Command MyCommand)
     if (MyCommand.RuleNo==0) {
         std::string s=MyProcessor.ListFull();
         Terminal.WriteLn(s.c_str());
-        return NO_ERROR;
+        return CMD_OK;
     } else if (MyCommand.RuleNo==1) {
         int LineNo= stoi(MyCommand.Arguments[0].Value);
         std::string s=MyProcessor.Listline(LineNo);
         Terminal.WriteLn(s.c_str());
-        return NO_ERROR;
+        return CMD_OK;
     } else if (MyCommand.RuleNo==2) {
         int StartLineNo= stoi(MyCommand.Arguments[0].Value);
         int EndLineNo= stoi(MyCommand.Arguments[2].Value);
         std::string s=MyProcessor.ListPartial(StartLineNo, EndLineNo);
         Terminal.WriteLn(s.c_str());
-        return NO_ERROR;
+        return CMD_OK;
     } else {
         return ERR_SYNTAX;
     }
@@ -40,27 +40,27 @@ int ListCmd(Command MyCommand)
 int NewCmd(Command MyCommand)
 {
     Terminal.WriteLn("NewCmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int ExitCmd(Command MyCommand)
 {
     MyProcessor.Exit();
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int DebugCmd(Command MyCommand)
 {
     Terminal.WriteLn("DebugCmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int RunCmd(Command MyCommand)
 {
     Terminal.WriteLn("RunCmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
@@ -80,6 +80,7 @@ int EvalCmd(Command MyCommand)
         } else {
             Terminal.WriteFStringLn("Result: %s", StrResult.c_str());
         } 
+        return CMD_OK;
     }
     
     return r;
@@ -89,32 +90,32 @@ int EvalCmd(Command MyCommand)
 int LoadCmd(Command MyCommand)
 {
     Terminal.WriteLn("LoadCmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int SaveCmd(Command MyCommand)
 {
     Terminal.WriteLn("SaveCmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int NodelistCmd(Command MyCommand)
 {
     Terminal.WriteLn("NodelistCmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int EditCmd(Command MyCommand)
 {
     Terminal.WriteLn("EditCmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int EditorCmd(Command MyCommand)
 {
     Terminal.WriteLn("EditorCmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
@@ -136,10 +137,12 @@ int LetCmd(Command MyCommand)
                 switch (MyCommand.Arguments[0].ID) {
                     case cvInteger:
                         MyProcessor.Variables.Store(MyCommand.Arguments[0].Value, MyCommand.Arguments[0].ID, IntResult, 0, "");
+                        return CMD_OK;
                         break;
                     case cvSingle:
                     case cvDouble:
                         MyProcessor.Variables.Store(MyCommand.Arguments[0].Value, MyCommand.Arguments[0].ID, NumResult, 0, "");
+                        return CMD_OK;
                         break;
                     default:
                         return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
@@ -150,6 +153,7 @@ int LetCmd(Command MyCommand)
         } else {
             if (MyCommand.Arguments[0].ID==cvString) {
                 MyProcessor.Variables.Store(MyCommand.Arguments[0].Value, cvString, 0, 0, StrResult);
+                return CMD_OK;
             } else {
                 return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
             }
@@ -176,7 +180,7 @@ int InputCmd(Command MyCommand)
                     StrInput="";
                     MyProcessor.Variables.Store(Argument.Value, cvString, 0, 0, StrInput);
                     if (i==CTRL_KEY('z')) {
-                        return ERR_CMD_INPUT_BREAK;
+                        return CMD_BREAK;
                     } else {
                         return ERR_CMD_INPUT_ERROR ;
                     }
@@ -196,7 +200,7 @@ int InputCmd(Command MyCommand)
                         StrInput="";
                         MyProcessor.Variables.Store(Argument.Value, Argument.ID, 0, 0, StrInput);
                         if (i==CTRL_KEY('z')) {
-                            return ERR_CMD_INPUT_BREAK;
+                            return CMD_BREAK;
                         } else {
                             return ERR_CMD_INPUT_ERROR ;
                         }
@@ -309,7 +313,7 @@ int InputCmd(Command MyCommand)
     if (LastExpressionWasVariable) {
         Terminal.WriteLn("");
     }
-    return NO_ERROR;
+    return CMD_OK;
 
 }
 
@@ -317,7 +321,7 @@ int InputCmd(Command MyCommand)
 int RemCmd(Command MyCommand)
 {
     Terminal.WriteLn("Rem Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
@@ -397,7 +401,7 @@ int PrintCmd(Command MyCommand) {
                         }
                         break;
                     default:
-                        return ERR_SYNTAX;
+                        return ERR_BAD_PRINT_EXPRESSION;
                         break;
                 } 
             }
@@ -406,110 +410,110 @@ int PrintCmd(Command MyCommand) {
     if (LastExpressionWasExpression) {
         Terminal.WriteLn("");
     }
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int IfCmd(Command MyCommand)
 {
     Terminal.WriteLn("If Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int GotoCmd(Command MyCommand)
 {
     Terminal.WriteLn("Goto Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int GosubCmd(Command MyCommand)
 {
     Terminal.WriteLn("Gosub Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int ReturnCmd(Command MyCommand)
 {
     Terminal.WriteLn("Return Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int StopCmd(Command MyCommand)
 {
     Terminal.WriteLn("Stop Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int ForCmd(Command MyCommand)
 {
     Terminal.WriteLn("For Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int NextCmd(Command MyCommand)
 {
     Terminal.WriteLn("Next Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int ClearCmd(Command MyCommand)
 {
     Terminal.WriteLn("Clear Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int EndCmd(Command MyCommand)
 {
     Terminal.WriteLn("End Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int MemCmd(Command MyCommand)
 {
     Terminal.WriteLn("Mem Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 int DimCmd(Command MyCommand)
 {
     Terminal.WriteLn("Dim Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int RandomizeCmd(Command MyCommand)
 {
     Terminal.WriteLn("Randomize Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int OptionCmd(Command MyCommand)
 {
     Terminal.WriteLn("Option Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int ContinueCmd(Command MyCommand)
 {
     Terminal.WriteLn("Continue Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int BeepCmd(Command MyCommand)
 {
     Terminal.WriteLn("Beep Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int ClsCmd(Command MyCommand)
 {
     Terminal.WriteLn("Cls Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
@@ -517,28 +521,28 @@ int ClsCmd(Command MyCommand)
 int ReadCmd(Command MyCommand)
 {
     Terminal.WriteLn("Read Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }   
 
 
 int DataCmd(Command MyCommand)
 {
     Terminal.WriteLn("Data Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int DefCmd(Command MyCommand)
 {
     Terminal.WriteLn("Def Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 
 int TmpCmd(Command MyCommand)
 {
     Terminal.WriteLn("Tmp Cmd");
-    return NO_ERROR;
+    return CMD_OK;
 }
 
 

@@ -80,6 +80,7 @@ bool bMachineLoop = true;
             } else {
                 // add instruction to program in order
                 if (MyInstruction.ProgramLine==0) {
+                    bool ConditionFailed=false;
                     if (MyInstruction.Commands[0].Type==tDirectCommand) {
                         int r=DirectCommandPtr[(MyInstruction.Commands[0].ID-DirectCmdSep)](MyInstruction.Commands[0]);
                         if (r!=NO_ERROR) {
@@ -89,15 +90,43 @@ bool bMachineLoop = true;
                         }
                     } else {
                         int r=NO_ERROR;
-                        for (auto &MyCommand: MyInstruction.Commands) {
-                            if (MyCommand.Type==tUserDefined) {
-                                r=LetCmd(MyCommand);
+                        bool NoBreakOrError=true;
+                        int i=0;
+                        while (NoBreakOrError && i<MyInstruction.Commands.size() && !ConditionFailed) {                      
+                            if (MyInstruction.Commands[i].Type==tUserDefined) {
+                                r=LetCmd(MyInstruction.Commands[i]);
                             } else { 
-                                r=CommandPtr[(MyCommand.ID-CmdSep)](MyCommand);
+                                r=CommandPtr[(MyInstruction.Commands[i].ID-CmdSep)](MyInstruction.Commands[i]);
                             }
-                            if (r!=NO_ERROR) {
+                            if (r<CMD_OK) {
                                 Terminal.WriteLn(ErrorMsg(r).c_str());
+                                NoBreakOrError=false;
+                            } else {
+                                switch (r) {
+                                    case CMD_OK:
+                                        break;
+                                    case CMD_OK_Cond_Fail:
+                                        ConditionFailed=true;
+                                        break;
+                                    case CMD_STOP:
+                                        Terminal.WriteLn("STOP");
+                                        NoBreakOrError=false;
+                                        break;
+                                    case CMD_BREAK:
+                                        Terminal.WriteLn("BREAK Requested by user");
+                                        NoBreakOrError=false;
+                                        break;
+                                    case CMD_ENDRUN:
+                                        Terminal.WriteLn("END RUN");
+                                        NoBreakOrError=false;
+                                        break;
+                                    default:
+                                        Terminal.WriteLn("Unknown command return code");
+                                        NoBreakOrError=false;
+                                        break;
+                                }
                             }
+                            i++;
                         }
                     }
                 } else {

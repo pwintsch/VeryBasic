@@ -422,8 +422,10 @@ void Console::WriteLn(const char *sTxt) {
 int Console::GetString (std::string &sInput) {
 char *sIn=NULL;
 int i=GetStr(&sIn,0,0,0);
-  sInput=sIn;
-  if (sIn!=NULL) free (sIn);
+  if (sIn!=NULL) {
+    sInput=sIn;
+    free (sIn);
+  }
   return i;
 }
 
