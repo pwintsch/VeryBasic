@@ -31,6 +31,7 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_CMD_INPUT_ERROR, "SYNTAX ERROR: Error in INPUT command"},
                     {ERR_CMD_INPUT_BREAK, "SYNTAX ERROR: Break requested in INPUT"},
                     {ERR_CMD_IF_EXPRESSION_NOT_VALUE, "SYNTAX ERROR: Invalid IF condition, it does not evaluate to a value"},
+                    {ERR_CALLSTACK_EMPTY, "SYNTAX ERROR: RETURN without GOSUB or FUNCTION CALL"},
 };
 
 std::string ErrorMsg(int pID) {

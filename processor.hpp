@@ -30,18 +30,35 @@ public:
     std::string ListVariables();
 };
 
+struct StackItem {
+    int LineNo;
+    int CommandNo;
+};
+
+class CallStack {
+    public:
+    std::vector<StackItem> Stack;
+    CallStack();
+    ~CallStack();
+    int Push(int LineNo, int CommandNo);
+    int Pop(int &LineNo, int &CommandNo);
+};
+
 
 class Processor {
 private:
     std::vector<Instruction> Program;
-    int CurrentLine;
     bool ProgramRunning;
 public:
     int LastLine;
+    int CurrentLine;
+    int CurrentCommand;
+    bool ResumeInstructionFlag;
     Processor();
     ~Processor();
 
     VariableList Variables;
+    CallStack ReturnStack;
     bool Active=true;
     int Addline(Instruction MyInstruction);
     int ChangeLine(Instruction MyInstruction);
@@ -54,6 +71,7 @@ public:
     void Exit();
     int Run();
     int ExecuteNextInstruction();
+    int ResumeInstruction();
 };
 
 extern Processor MyProcessor;

@@ -1,9 +1,9 @@
 To get current interpreter to Tiny Basic level I need to:
     (X) Write the IF xxx THEN command control flow and sort out return codes for commands
     (X) Create the MyProcessor RUN command and functionality which require program pointers etc..
-    ( ) add the GOTO command
-    ( ) add the GOSUB and RETURN command
+    (X) add the GOTO command
+    (X) add the STOP and END commands
+    (X) add the GOSUB and RETURN command
     ( ) add the SAVE command
     ( ) add the LOAD command
     ( ) test Expression for return type
-    

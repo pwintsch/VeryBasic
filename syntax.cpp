@@ -258,6 +258,14 @@ std::vector <tSyntaxNode> GOTOSyntax = {
 	   				{ tExpression, tValue} 
 					};
 
+std::vector <tSyntaxNode> GOSUBSyntax = {
+				 	{ tCommand, coGOSUB},
+	   				{ tExpression, tValue} 
+					};
+
+std::vector <tSyntaxNode> RETURNSyntax = {
+				 	{ tCommand, coRETURN} 
+					};
 
 
 tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
@@ -457,7 +465,9 @@ std::vector<tSyntax> tGrammar ={
 		{ coBEEP, 0, BEEPSyntax},
 		{ coGOTO,0, GOTOSyntax},
 		{ coSTOP, 0, STOPSyntax},
-		{ coEND, 0, ENDSyntax}
+		{ coEND, 0, ENDSyntax},
+		{ coGOSUB, 0, GOSUBSyntax},
+		{ coRETURN,0, RETURNSyntax}
 		/*,
 		{ coNEW, 0, tNEWSyntax },
 		{ coDEBUG, 0, tDEBUGSyntax },

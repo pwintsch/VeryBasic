@@ -5,6 +5,35 @@
 #include "console.hpp"
 
 
+CallStack::CallStack() {
+   Stack.clear();
+}
+
+CallStack::~CallStack() {
+   Stack.clear();
+}
+
+int CallStack::Push(int LineNo, int CommandNo) {
+    StackItem NewItem;
+    NewItem.LineNo=LineNo;
+    NewItem.CommandNo=CommandNo;
+    Stack.push_back(NewItem);
+    return NO_ERROR;
+}
+
+
+int CallStack::Pop(int &LineNo, int &CommandNo) {
+    if (Stack.size()==0) {
+        return ERR_CALLSTACK_EMPTY;
+    } else {
+        LineNo=Stack[Stack.size()-1].LineNo;
+        CommandNo=Stack[Stack.size()-1].CommandNo;
+        Stack.pop_back();
+        return NO_ERROR;
+    }
+}
+
+
 Processor MyProcessor;
 
 
@@ -89,7 +118,34 @@ int Processor::ExecuteNextInstruction(){
     Instruction MyInstruction=Program[CurrentLine];
     bool ConditionFailed=false;
     while (NoBreakOrError && i<MyInstruction.Commands.size() && !ConditionFailed) {   
-        LastLine=MyInstruction.ProgramLine;                   
+        LastLine=MyInstruction.ProgramLine;
+        CurrentCommand=i;                   
+        if (MyInstruction.Commands[i].Type==tUserDefined) {
+            r=LetCmd(MyInstruction.Commands[i]);
+        } else { 
+            r=CommandPtr[(MyInstruction.Commands[i].ID-CmdSep)](MyInstruction.Commands[i]);
+        }
+        if (r!=CMD_OK) {
+            if (r==CMD_OK_Cond_Fail) {
+                ConditionFailed=true;
+            } else {
+                return r;
+            }
+        }        
+        i++;
+    }
+    return CMD_OK;
+}
+
+int Processor::ResumeInstruction() {
+    int r=NO_ERROR;
+    bool NoBreakOrError=true;
+    int i=CurrentCommand;
+    Instruction MyInstruction=Program[CurrentLine];
+    bool ConditionFailed=false;
+    while (NoBreakOrError && i<MyInstruction.Commands.size() && !ConditionFailed) {   
+        LastLine=MyInstruction.ProgramLine;
+        CurrentCommand=i;                   
         if (MyInstruction.Commands[i].Type==tUserDefined) {
             r=LetCmd(MyInstruction.Commands[i]);
         } else { 
@@ -117,12 +173,19 @@ int Processor::Run() {
     CurrentLine=0;
     Variables.Clear();
     ProgramRunning=true;
+    ResumeInstructionFlag=false;
+    int CommandResult=0;
     while (Active && ProgramRunning && CurrentLine<Program.size()) {
-        int CommandResult=ExecuteNextInstruction();
+        if (ResumeInstructionFlag) {
+            CommandResult=ResumeInstruction();
+            ResumeInstructionFlag=false;
+        } else {
+            CommandResult=ExecuteNextInstruction();
+        }
         if (CommandResult==CMD_OK || CommandResult==CMD_OK_POINTER_CHANGE) {
             if (CommandResult==CMD_OK) {
                   CurrentLine++;
-            }
+            } 
         } else {
             return CommandResult;
         }
@@ -134,6 +197,7 @@ int Processor::GotoLine(int LineNo) {
     for (int i=0; i<Program.size(); i++) {
         if (Program[i].ProgramLine>=LineNo) {
             CurrentLine=i;
+            CurrentCommand=0;
             return NO_ERROR;
         }
     }

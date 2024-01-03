@@ -461,14 +461,41 @@ int GotoCmd(Command MyCommand)
 
 int GosubCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Gosub Cmd");
-    return CMD_OK;
+    int ResultType;
+    float NumResult;
+    std::string StrResult;  
+    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult); 
+    if (r==NO_ERROR) {
+        if (ResultType==tValue) {
+            r=MyProcessor.ReturnStack.Push(MyProcessor.CurrentLine, MyProcessor.CurrentCommand);
+            r=MyProcessor.GotoLine((int)NumResult);
+            if (r==NO_ERROR) {
+                return CMD_OK_POINTER_CHANGE;
+            } else {
+                return r;
+            }
+        } else {
+            return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+        } 
+    } else {
+        return r;
+    }   
 }
 
 int ReturnCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Return Cmd");
-    return CMD_OK;
+    int TmpLineIndex=0;
+    int TmpCommandIndex=0;
+    int r=MyProcessor.ReturnStack.Pop(TmpLineIndex, TmpCommandIndex);
+    TmpCommandIndex++;
+    if (r==NO_ERROR) {
+        MyProcessor.CurrentLine=TmpLineIndex;
+        MyProcessor.CurrentCommand=TmpCommandIndex;
+        MyProcessor.ResumeInstructionFlag=true;
+        return CMD_OK_POINTER_CHANGE;
+    } else {
+        return r;
+    }
 }
 
 int StopCmd(Command MyCommand)
