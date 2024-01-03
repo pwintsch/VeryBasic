@@ -69,6 +69,7 @@ public:
     int GotoLine(int LineNo);
     int Stop();
     void Exit();
+    void Clear();
     int Run();
     int ExecuteNextInstruction();
     int ResumeInstruction();

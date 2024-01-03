@@ -273,6 +273,16 @@ std::vector <tSyntaxNode> CLSSyntax = {
 					};
 
 
+std::vector <tSyntaxNode> CLEARSyntax = {
+				 	{ tCommand, coCLEAR} 
+					};
+
+
+std::vector <tSyntaxNode> NEWSyntax = {
+				 	{ tDirectCommand, coNEW} 
+					};
+
+
 tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
 					{ tComplement, coBASE},
 					{ tValue, 0},  
@@ -473,7 +483,9 @@ std::vector<tSyntax> tGrammar ={
 		{ coEND, 0, ENDSyntax},
 		{ coGOSUB, 0, GOSUBSyntax},
 		{ coRETURN,0, RETURNSyntax},
-		{ coCLS, 0, CLSSyntax}
+		{ coCLS, 0, CLSSyntax},
+		{ coCLEAR, 0, CLEARSyntax},
+		{ coNEW, 0, NEWSyntax}
 		/*,
 		{ coNEW, 0, tNEWSyntax },
 		{ coDEBUG, 0, tDEBUGSyntax },

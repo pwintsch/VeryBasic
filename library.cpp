@@ -39,9 +39,11 @@ int ListCmd(Command MyCommand)
 
 int NewCmd(Command MyCommand)
 {
-    Terminal.WriteLn("NewCmd");
+    MyProcessor.Clear();
+    Terminal.WriteLn("All program lines and Variables cleared");
     return CMD_OK;
 }
+
 
 int ExitCmd(Command MyCommand)
 {
@@ -519,7 +521,7 @@ int NextCmd(Command MyCommand)
 
 int ClearCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Clear Cmd");
+    MyProcessor.Variables.Clear();
     return CMD_OK;
 }
 

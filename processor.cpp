@@ -169,6 +169,17 @@ int Processor::Stop() {
     return CMD_OK;
 }
 
+
+void Processor::Clear() {
+    Program.clear();
+    Variables.Clear();
+    ReturnStack.Stack.clear();
+    CurrentLine=0;
+    CurrentCommand=0;
+    ResumeInstructionFlag=false;
+    ProgramRunning=false;
+}
+
 int Processor::Run() {
     CurrentLine=0;
     Variables.Clear();
