@@ -573,7 +573,7 @@ int BeepCmd(Command MyCommand)
 
 int ClsCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Cls Cmd");
+    Terminal.Clear();
     return CMD_OK;
 }
 

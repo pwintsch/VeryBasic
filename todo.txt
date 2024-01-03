@@ -6,4 +6,5 @@ To get current interpreter to Tiny Basic level I need to:
     (X) add the GOSUB and RETURN command
     ( ) add the SAVE command
     ( ) add the LOAD command
+    ( ) add Arrays
     ( ) test Expression for return type
