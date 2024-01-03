@@ -345,7 +345,9 @@ int PrintCmd(Command MyCommand) {
                     } else {
                         Terminal.WriteFString("%s", StrResult.c_str());
                     } 
-                }  
+                } else {
+                    return r;
+                }
             } else {
                 LastExpressionWasExpression=false;
                 int r=0;
