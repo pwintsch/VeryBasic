@@ -473,8 +473,9 @@ int ReturnCmd(Command MyCommand)
 
 int StopCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Stop Cmd");
-    return CMD_OK;
+    int r=MyProcessor.Stop();
+    Terminal.WriteFStringLn("PROGRAM STOPPED AT LINE %d", MyProcessor.LastLine);
+    return r;
 }
 
 int ForCmd(Command MyCommand)
@@ -497,8 +498,9 @@ int ClearCmd(Command MyCommand)
 
 int EndCmd(Command MyCommand)
 {
-    Terminal.WriteLn("End Cmd");
-    return CMD_OK;
+    int r=MyProcessor.Stop();
+    Terminal.WriteFStringLn("PROGRAM STOPPED AT LINE %d", MyProcessor.LastLine);
+    return r;
 }
 
 int MemCmd(Command MyCommand)

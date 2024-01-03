@@ -88,7 +88,8 @@ int Processor::ExecuteNextInstruction(){
     int i=0;
     Instruction MyInstruction=Program[CurrentLine];
     bool ConditionFailed=false;
-    while (NoBreakOrError && i<MyInstruction.Commands.size() && !ConditionFailed) {                      
+    while (NoBreakOrError && i<MyInstruction.Commands.size() && !ConditionFailed) {   
+        LastLine=MyInstruction.ProgramLine;                   
         if (MyInstruction.Commands[i].Type==tUserDefined) {
             r=LetCmd(MyInstruction.Commands[i]);
         } else { 
@@ -107,10 +108,16 @@ int Processor::ExecuteNextInstruction(){
 }
 
 
+int Processor::Stop() {
+    ProgramRunning=false;
+    return CMD_OK;
+}
+
 int Processor::Run() {
     CurrentLine=0;
     Variables.Clear();
-    while (Active && CurrentLine<Program.size()) {
+    ProgramRunning=true;
+    while (Active && ProgramRunning && CurrentLine<Program.size()) {
         int CommandResult=ExecuteNextInstruction();
         if (CommandResult==CMD_OK || CommandResult==CMD_OK_POINTER_CHANGE) {
             if (CommandResult==CMD_OK) {

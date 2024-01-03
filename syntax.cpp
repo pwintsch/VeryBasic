@@ -241,6 +241,14 @@ std::vector <tSyntaxNode> BEEPSyntax = {
 					};
 
 
+std::vector <tSyntaxNode> STOPSyntax = {
+				 	{ tCommand, coSTOP} 
+					};
+
+std::vector <tSyntaxNode> ENDSyntax = {
+				 	{ tCommand, coEND} 
+					};
+
 std::vector <tSyntaxNode> RUNSyntax = {
 				 	{ tDirectCommand, coRUN} 
 					};
@@ -447,7 +455,9 @@ std::vector<tSyntax> tGrammar ={
 		{ coPRINT, 1, PRINTSyntax2},
 		{ coINPUT, 0, INPUTSyntax},
 		{ coBEEP, 0, BEEPSyntax},
-		{ coGOTO,0, GOTOSyntax}
+		{ coGOTO,0, GOTOSyntax},
+		{ coSTOP, 0, STOPSyntax},
+		{ coEND, 0, ENDSyntax}
 		/*,
 		{ coNEW, 0, tNEWSyntax },
 		{ coDEBUG, 0, tDEBUGSyntax },

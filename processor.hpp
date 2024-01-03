@@ -35,7 +35,9 @@ class Processor {
 private:
     std::vector<Instruction> Program;
     int CurrentLine;
+    bool ProgramRunning;
 public:
+    int LastLine;
     Processor();
     ~Processor();
 
@@ -48,6 +50,7 @@ public:
     std::string ListPartial(int StartLineNo, int EndLineNo);
     std::string Listline(int LineNo);
     int GotoLine(int LineNo);
+    int Stop();
     void Exit();
     int Run();
     int ExecuteNextInstruction();
