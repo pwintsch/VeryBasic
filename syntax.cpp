@@ -245,6 +245,11 @@ std::vector <tSyntaxNode> RUNSyntax = {
 				 	{ tDirectCommand, coRUN} 
 					};
 
+std::vector <tSyntaxNode> GOTOSyntax = {
+				 	{ tCommand, coGOTO},
+	   				{ tExpression, tValue} 
+					};
+
 
 
 tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
@@ -442,6 +447,7 @@ std::vector<tSyntax> tGrammar ={
 		{ coPRINT, 1, PRINTSyntax2},
 		{ coINPUT, 0, INPUTSyntax},
 		{ coBEEP, 0, BEEPSyntax},
+		{ coGOTO,0, GOTOSyntax}
 		/*,
 		{ coNEW, 0, tNEWSyntax },
 		{ coDEBUG, 0, tDEBUGSyntax },

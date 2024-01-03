@@ -112,8 +112,10 @@ int Processor::Run() {
     Variables.Clear();
     while (Active && CurrentLine<Program.size()) {
         int CommandResult=ExecuteNextInstruction();
-        if (CommandResult==CMD_OK) {
-            CurrentLine++;
+        if (CommandResult==CMD_OK || CommandResult==CMD_OK_POINTER_CHANGE) {
+            if (CommandResult==CMD_OK) {
+                  CurrentLine++;
+            }
         } else {
             return CommandResult;
         }
@@ -121,7 +123,15 @@ int Processor::Run() {
     return CMD_OK;
 }
 
-
+int Processor::GotoLine(int LineNo) {
+    for (int i=0; i<Program.size(); i++) {
+        if (Program[i].ProgramLine>=LineNo) {
+            CurrentLine=i;
+            return NO_ERROR;
+        }
+    }
+    return ERR_NO_LINE_NUMBER;
+}
 
 void Processor::Exit() {
     Active=false;

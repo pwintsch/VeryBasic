@@ -438,8 +438,25 @@ int IfCmd(Command MyCommand)
 
 int GotoCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Goto Cmd");
-    return CMD_OK;
+    int ResultType;
+    float NumResult;
+    std::string StrResult;  
+    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult); 
+    if (r==NO_ERROR) {
+        if (ResultType==tValue) {
+            r=MyProcessor.GotoLine((int)NumResult);
+            if (r==NO_ERROR) {
+                return CMD_OK_POINTER_CHANGE;
+            } else {
+                return r;
+            }
+        } else {
+            return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+        } 
+    } else {
+        return r;
+    }   
+
 }
 
 int GosubCmd(Command MyCommand)

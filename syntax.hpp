@@ -190,6 +190,7 @@ bool IsStringInt(const char *sTxt);
 #define CMD_STOP 1002
 #define CMD_BREAK 1003
 #define CMD_ENDRUN 1004
+#define CMD_OK_POINTER_CHANGE 1005
 
 # define SYNTAX_END 255
 

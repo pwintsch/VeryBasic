@@ -47,6 +47,7 @@ public:
     std::string ListFull();
     std::string ListPartial(int StartLineNo, int EndLineNo);
     std::string Listline(int LineNo);
+    int GotoLine(int LineNo);
     void Exit();
     int Run();
     int ExecuteNextInstruction();
