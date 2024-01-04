@@ -64,6 +64,7 @@ int Processor::Addline(Instruction MyInstruction) {
     return NO_ERROR;
 }
 
+
 int Processor::ChangeLine(Instruction MyInstruction) {
     int i;
     if (Program.size()==0) {
@@ -222,15 +223,87 @@ void Processor::Exit() {
 
 
 MyVariable::MyVariable () {
+    VariablePtr=NULL;
 }
     
 void MyVariable::Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue){
-        VariableType=pVarType;
-        FltValue=pFValue;
-        IntValue=pIValue;   
-        StrValue=pSValue;   
+        VariableType=pVarType;  
         Name=pName;
+        switch (VariableType) {
+            case cvDouble:
+            case cvSingle:
+                VariablePtr=new float(pFValue);
+                break;
+            case cvInteger:
+                VariablePtr=new int(pIValue);
+                break;
+            case cvString:
+                VariablePtr=new std::string(pSValue); 
+                break;
+            default:
+                break;
+        }
  }
+
+
+void MyVariable::Update(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue){
+        VariableType=pVarType;   
+        Name=pName;
+        switch (VariableType) {
+            case cvDouble:
+            case cvSingle:
+                *(float*)VariablePtr=pFValue;
+                break;
+            case cvInteger:
+                *(int*)VariablePtr=pIValue;
+                break;
+            case cvString:
+                *(std::string*)VariablePtr=pSValue; 
+                break;
+            default:
+                break;
+        }
+}
+
+void MyVariable::Get(std::string pName, int &pVarType, float &pFValue, int &pIValue, std::string &pSValue){
+    pVarType=VariableType; 
+    switch (VariableType) {
+        case cvDouble:
+        case cvSingle:
+            pFValue=*(float*)VariablePtr;
+            break;
+        case cvInteger:
+            pIValue=*(int*)VariablePtr;
+            break;
+        case cvString:
+            pSValue=*(std::string*)VariablePtr; 
+            break;
+        default:
+            break;
+    }
+}
+
+
+MyVariable::~MyVariable() {
+
+    if (VariablePtr!=NULL) {    
+        switch (VariableType) {
+            case cvDouble:
+            case cvSingle:
+                delete (float *)VariablePtr;
+                break;
+            case cvInteger:
+                delete (int *)VariablePtr;
+                break;
+            case cvString:
+                delete (std::string *)VariablePtr;
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 
 void VariableList::Clear() {
     VarList.clear();
@@ -244,27 +317,23 @@ VariableList::~VariableList() {
 }
 
 int VariableList::Store (std::string Name, int VariableType, float FltValue, int IntValue, std::string StrValue) {
-    if (VarList.find(Name)==VarList.end()) {
-        MyVariable NewVariable;
-        NewVariable.Set (Name, VariableType, FltValue, IntValue, StrValue);
-        VarList[Name]=NewVariable;
+    auto item=VarList.find(Name);
+    if (item==VarList.end()) {
+        VarList[Name]=MyVariable();
+        VarList[Name].Set (Name, VariableType, FltValue, IntValue, StrValue);
         return NO_ERROR;
     } else {
-        MyVariable NewVariable;
-        NewVariable.Set (Name, VariableType, FltValue, IntValue, StrValue);
-        VarList[Name]=NewVariable;
+        item->second.Update(Name, VariableType, FltValue, IntValue, StrValue);    
         return NO_ERROR;
     }
 }
 
 int VariableList::Get (std::string Name, int &VariableType, float &FltValue, int &IntValue, std::string &StrValue) {
-    if (VarList.find(Name)==VarList.end()) {
+    auto item=VarList.find(Name);
+    if (item==VarList.end()) {
         return ERR_VARIABLE_NOT_FOUND;
     } else {
-        VariableType=VarList[Name].VariableType;
-        FltValue=VarList[Name].FltValue;
-        StrValue=VarList[Name].StrValue;
-        IntValue=VarList[Name].IntValue;
+        item->second.Get(Name, VariableType, FltValue, IntValue, StrValue);
         return NO_ERROR;
     }
 }

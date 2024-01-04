@@ -14,8 +14,13 @@ public:
     float FltValue;
     int IntValue;
     std::string StrValue;
+    void *VariablePtr;
     MyVariable ();
+    ~MyVariable();
+
     void Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
+    void Update(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
+    void Get(std::string pName, int &pVarType, float &pFValue, int &pIValue, std::string &pSValue);
 };
 
 
@@ -29,6 +34,20 @@ public:
     void Clear();
     std::string ListVariables();
 };
+
+
+class MyArray {
+public:
+    std::string Name;
+    // Variable type must be one of cvSingle, cvInteger, cvString, cvDouble
+    int ArrayType;
+    std::vector<float> FltValue;
+    std::vector<int> IntValue; 
+    std::vector<std::string> StrValue;
+    MyArray ();
+    void Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
+};
+
 
 struct StackItem {
     int LineNo;

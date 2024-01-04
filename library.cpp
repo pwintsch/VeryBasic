@@ -137,7 +137,7 @@ int LetCmd(Command MyCommand)
             if (MyCommand.Arguments[0].ID!=cvString) {
                 switch (MyCommand.Arguments[0].ID) {
                     case cvInteger:
-                        MyProcessor.Variables.Store(MyCommand.Arguments[0].Value, MyCommand.Arguments[0].ID, IntResult, 0, "");
+                        MyProcessor.Variables.Store(MyCommand.Arguments[0].Value, MyCommand.Arguments[0].ID, 0,IntResult,  "");
                         return CMD_OK;
                         break;
                     case cvSingle:
