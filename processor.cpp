@@ -174,6 +174,7 @@ int Processor::Stop() {
 void Processor::Clear() {
     Program.clear();
     Variables.Clear();
+    Arrays.Clear();
     ReturnStack.Stack.clear();
     CurrentLine=0;
     CurrentCommand=0;
@@ -283,6 +284,29 @@ void MyVariable::Get(std::string pName, int &pVarType, float &pFValue, int &pIVa
     }
 }
 
+std::string MyVariable::StringDesc() {
+    std::string s="";
+    s+=Name + " - ";
+    switch (VariableType) {
+        case cvDouble:
+        case cvSingle:
+            s+="Float : ";
+            s+=std::to_string(*(float*)VariablePtr);
+            break;
+        case cvInteger:
+            s+="Integer : ";
+            s+=std::to_string(*(int*)VariablePtr);
+            break;
+        case cvString:
+            s+="String : ";
+            s+=*(std::string*)VariablePtr; 
+            break;
+        default:
+            break;
+    }
+    return s;
+}
+
 
 MyVariable::~MyVariable() {
 
@@ -304,13 +328,75 @@ MyVariable::~MyVariable() {
     }
 }
 
+MyArray::MyArray() {
+    VariablePtr=NULL;
+}
+
+
+
+void MyArray::Define (std::string pName, int pVarType, std::vector<int> &Dimensions) {
+    VariableType=pVarType;   
+    Name=pName;
+    VariablePtr=NULL;
+    this->Dimensions=Dimensions;
+    TotalSize=1;
+    for (int i=0; i<Dimensions.size(); i++) {
+        TotalSize*=Dimensions[i];
+    }
+    switch (VariableType) {
+        case cvDouble:
+        case cvSingle:
+            VariablePtr=new float[TotalSize];
+            break;
+        case cvInteger:
+            VariablePtr=new int[TotalSize];
+            break;
+        case cvString:
+            VariablePtr=new std::string[TotalSize]; 
+            break;
+        default:
+            break;
+    }
+}
+
+
+MyArray::~MyArray() {
+    if (VariablePtr!=NULL) {    
+        switch (VariableType) {
+            case cvDouble:
+            case cvSingle:
+                delete[] (float *)VariablePtr;
+                break;
+            case cvInteger:
+                delete[] (int *)VariablePtr;
+                break;
+            case cvString:
+                delete[] (std::string *)VariablePtr;
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+
+
+VariableList::VariableList() {
+}   
+
 
 void VariableList::Clear() {
     VarList.clear();
 }
 
-VariableList::VariableList() {
-}   
+bool VariableList::Exists(std::string Name) {
+    auto item=VarList.find(Name);
+    if (item==VarList.end()) {
+        return false;
+    } else {
+        return true;
+    }
+}
 
 VariableList::~VariableList() {
     Clear();
@@ -346,13 +432,135 @@ std::string VariableList::ListVariables() {
     }
     std::map<std::string, MyVariable>::iterator it;
     for (it=VarList.begin(); it!=VarList.end(); ++it) {
-        s+=it->second.Name + " ";
-        if (it->second.VariableType==tValue) {
-            s+=std::to_string(it->second.FltValue);
-        } else {
-            s+=it->second.StrValue;
-        }
-        s+="\n\r";
+        s+= it->second.StringDesc() + "\n\r";
     }
     return s;
+}
+
+
+ArrayList::ArrayList() {
+}
+
+void ArrayList::Clear() {
+    ArrList.clear();
+}
+
+bool ArrayList::Exists(std::string Name) {
+    auto item=ArrList.find(Name);
+    if (item==ArrList.end()) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+int ArrayList::Create(std::string Name, int VariableType, std::vector<int> &Dimensions) {
+    auto item=ArrList.find(Name);
+    if (item==ArrList.end()) {
+
+        ArrList[Name]=MyArray();
+        ArrList[Name].Define(Name, VariableType, Dimensions);
+        return NO_ERROR;
+    } else {
+        return ERR_DIM_ARRAY_ALREADY_EXISTS;
+    }
+}
+
+int ArrayList::Store (std::string Name, std::vector<int> &Dimensions, float FltValue, int IntValue, std::string StrValue) {
+    auto item=ArrList.find(Name);
+    if (item==ArrList.end()) {
+        return ERR_VARIABLE_NOT_FOUND;
+    } else {
+        int Index=0;
+        int Multiplier=1;
+        for (int i=Dimensions.size()-1; i>=0; i--) {
+            Index+=Dimensions[i]*Multiplier;
+            Multiplier*=item->second.Dimensions[i];
+        }
+        switch (item->second.VariableType) {
+            case cvDouble:
+            case cvSingle:
+                ((float*)item->second.VariablePtr)[Index]=FltValue;
+                break;
+            case cvInteger:
+                ((int*)item->second.VariablePtr)[Index]=IntValue;
+                break;
+            case cvString:
+                ((std::string*)item->second.VariablePtr)[Index]=StrValue; 
+                break;
+            default:
+                break;
+        }
+        return NO_ERROR;
+    }
+}
+
+
+int ArrayList::Get (std::string Name, std::vector<int> &Dimensions, float &FltValue, int &IntValue, std::string &StrValue) {
+    auto item=ArrList.find(Name);
+    if (item==ArrList.end()) {
+        return ERR_VARIABLE_NOT_FOUND;
+    } else {
+        int Index=0;
+        int Multiplier=1;
+        for (int i=Dimensions.size()-1; i>=0; i--) {
+            Index+=Dimensions[i]*Multiplier;
+            Multiplier*=item->second.Dimensions[i];
+        }
+        switch (item->second.VariableType) {
+            case cvDouble:
+            case cvSingle:
+                FltValue=((float*)item->second.VariablePtr)[Index];
+                break;
+            case cvInteger:
+                IntValue=((int*)item->second.VariablePtr)[Index];
+                break;
+            case cvString:
+                StrValue=((std::string*)item->second.VariablePtr)[Index]; 
+                break;
+            default:
+                break;
+        }
+        return NO_ERROR;
+    }
+}
+
+std::string ArrayList::ListArrays() {
+    std::string s="";
+    if (ArrList.empty()) {
+        s= "No arrays declared yet \n\r";
+        return s;
+    }
+    std::map<std::string, MyArray>::iterator it;
+    for (it=ArrList.begin(); it!=ArrList.end(); ++it) {
+        s+= it->second.Name + " - ";
+        switch (it->second.VariableType) {
+            case cvDouble:
+            case cvSingle:
+                s+="Float : ";
+                break;
+            case cvInteger:
+                s+="Integer : ";
+                break;
+            case cvString:
+                s+="String : ";
+                break;
+            default:
+                break;
+        }
+        s+=std::to_string(it->second.Dimensions.size()) + " dimensions (";
+        for (int i=0; i<it->second.Dimensions.size(); i++) {
+            s+=std::to_string(it->second.Dimensions[i]);
+            if (i<it->second.Dimensions.size()-1) {
+                s+=", ";
+            }
+        }
+        s+=")\n\r";
+    }
+    return s;
+}
+
+
+ArrayList::~ArrayList() {
+    Clear();
 }

@@ -283,6 +283,16 @@ std::vector <tSyntaxNode> NEWSyntax = {
 					};
 
 
+std::vector <tSyntaxNode> DIMSyntax = {
+				 	{ tCommand, coDIM}, 
+					{ tUserDefined, 0}
+					};
+
+std::vector <tSyntaxNode> TMPCMDSyntax = {
+				 	{ tCommand, coTMPCMD} 
+					};
+
+
 tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
 					{ tComplement, coBASE},
 					{ tValue, 0},  
@@ -485,7 +495,9 @@ std::vector<tSyntax> tGrammar ={
 		{ coRETURN,0, RETURNSyntax},
 		{ coCLS, 0, CLSSyntax},
 		{ coCLEAR, 0, CLEARSyntax},
-		{ coNEW, 0, NEWSyntax}
+		{ coNEW, 0, NEWSyntax},
+		{ coDIM, 0, DIMSyntax},
+		{ coTMPCMD, 0, TMPCMDSyntax}
 		/*,
 		{ coNEW, 0, tNEWSyntax },
 		{ coDEBUG, 0, tDEBUGSyntax },

@@ -543,7 +543,25 @@ int MemCmd(Command MyCommand)
 int DimCmd(Command MyCommand)
 {
     Terminal.WriteLn("Dim Cmd");
-    return CMD_OK;
+    // Check Argument 0 is a variable, which is not declared yet !!! and check it has subarguments
+    // if so then check the subarguments are all expressions which evaluate to numbers and store the result in a vector of integers
+    if (MyCommand.Arguments[0].Type!=tUserDefined || MyCommand.Arguments[0].SubArguments.size()==0) {
+        return ERR_BAD_DIM_COMMAND;
+    }
+    std::vector<int> Dimensions;
+    for (int i=0; i<MyCommand.Arguments[0].SubArguments.size(); i++) {
+        int ResultType=0;
+        float NumResult=0;
+        std::string StrResult="";
+        MyCommand.Arguments[0].SubArguments[i].Evaluate(ResultType, NumResult, StrResult);
+        if (ResultType!=tValue) {
+            return ERR_BAD_DIM_COMMAND;
+        }
+        int IntResult=(int)NumResult;
+        Dimensions.push_back(IntResult);
+    }
+    int r=MyProcessor.Arrays.Create(MyCommand.Arguments[0].Value, MyCommand.Arguments[0].ID, Dimensions);
+    return r;
 }
 
 
@@ -607,6 +625,7 @@ int DefCmd(Command MyCommand)
 int TmpCmd(Command MyCommand)
 {
     Terminal.WriteLn("Tmp Cmd");
+    Terminal.WriteLn(MyProcessor.Arrays.ListArrays().c_str());
     return CMD_OK;
 }
 

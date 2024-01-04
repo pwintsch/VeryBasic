@@ -6,14 +6,12 @@
 #include <map>
 #include "instruction.hpp"
 
+
 class MyVariable {
 public:
     std::string Name;
     // Variable type must be one of cvSingle, cvInteger, cvString, cvDouble
     int VariableType;
-    float FltValue;
-    int IntValue;
-    std::string StrValue;
     void *VariablePtr;
     MyVariable ();
     ~MyVariable();
@@ -21,7 +19,24 @@ public:
     void Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
     void Update(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
     void Get(std::string pName, int &pVarType, float &pFValue, int &pIValue, std::string &pSValue);
+    std::string StringDesc();
 };
+
+
+class MyArray {
+public:
+    std::string Name;
+    // Variable type must be one of cvSingle, cvInteger, cvString, cvDouble
+    int VariableType;
+    void *VariablePtr=NULL;
+    std::vector<int> Dimensions;
+    int TotalSize=0;
+    MyArray();
+    void Define (std::string pName, int pVarType, std::vector<int> &Dimensions);
+    ~MyArray();
+//    void Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
+};
+
 
 
 class VariableList {
@@ -31,21 +46,23 @@ public:
     ~VariableList();
     int Store (std::string Name, int VariableType, float FltValue, int IntValue, std::string StrValue);
     int Get (std::string Name, int &VariableType, float &FltValue, int &IntValue, std::string &StrValue);
+    bool Exists(std::string Name);
     void Clear();
     std::string ListVariables();
 };
 
 
-class MyArray {
+class ArrayList {
 public:
-    std::string Name;
-    // Variable type must be one of cvSingle, cvInteger, cvString, cvDouble
-    int ArrayType;
-    std::vector<float> FltValue;
-    std::vector<int> IntValue; 
-    std::vector<std::string> StrValue;
-    MyArray ();
-    void Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
+    std::map<std::string, MyArray> ArrList;
+    ArrayList();
+    ~ArrayList();
+    int Create(std::string Name, int VariableType, std::vector<int> &Dimensions);
+    int Store (std::string Name, std::vector<int> &Dimensions, float FltValue, int IntValue, std::string StrValue);
+    int Get (std::string Name, std::vector<int> &Dimensions, float &FltValue, int &IntValue, std::string &StrValue);
+    bool Exists(std::string Name);
+    void Clear();
+    std::string ListArrays();
 };
 
 
@@ -77,6 +94,7 @@ public:
     ~Processor();
 
     VariableList Variables;
+    ArrayList Arrays;
     CallStack ReturnStack;
     bool Active=true;
     int Addline(Instruction MyInstruction);
