@@ -33,7 +33,7 @@ public:
     int TotalSize=0;
     MyArray();
     void Define (std::string pName, int pVarType, std::vector<int> &Dimensions);
-    bool DimensionsMatch(std::vector<int> &DimensionsToTest);
+    bool DimensionsMatch(std::vector<int> &DimensionsToTest, int Base);
     ~MyArray();
 //    void Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
 };
@@ -54,6 +54,8 @@ public:
 
 
 class ArrayList {
+private:
+    int DimensionBase=0;
 public:
     std::map<std::string, MyArray> ArrList;
     ArrayList();
@@ -61,6 +63,7 @@ public:
     int Create(std::string Name, int VariableType, std::vector<int> &Dimensions);
     int Store (std::string Name, std::vector<int> &Dimensions, float FltValue, int IntValue, std::string StrValue);
     int Get (std::string Name, std::vector<int> &Dimensions, float &FltValue, int &IntValue, std::string &StrValue);
+    void SetBase(int Size);
     bool Exists(std::string Name);
     void Clear();
     std::string ListArrays();

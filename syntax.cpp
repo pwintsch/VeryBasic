@@ -309,7 +309,11 @@ std::vector <tSyntaxNode> LOADSyntax = {
 					{ tExpression, tString}
 };
 
-
+std::vector <tSyntaxNode> OPTIONSyntax = {
+				 	{ tCommand, coOPTION},
+					{ tComplement, coBASE},
+					{ tValue, 0}
+};
 
 // ------------------------------
 
@@ -424,7 +428,8 @@ std::vector<tSyntax> tGrammar ={
 		{ coDIM, 0, DIMSyntax},
 		{ coLOAD, 0, LOADSyntax},
 		{ coSAVE, 0, SAVESyntax},
-		{ coTMPCMD, 0, TMPCMDSyntax}
+		{ coTMPCMD, 0, TMPCMDSyntax},
+		{ coOPTION, 0, OPTIONSyntax}
 		/*,
 
 		{ coFOR, 0, tFORSyntax2},
@@ -432,7 +437,6 @@ std::vector<tSyntax> tGrammar ={
 		{ coNEXT, 0, tNEXTSyntax},
 		{ coRANDOMIZE, 0, tRANDOMIZESyntax},
 		{ coRANDOMIZE, 1, tRANDOMIZESyntax2},
-		{ coOPTION, 0, tOPTIONSyntax},
 		{ coEDIT, 0, tEDITSyntax},
 		{ coEDITOR, 0, tEDITORSyntax},
 		{ coCONTINUE, 0, tCONTINUESyntax},

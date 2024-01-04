@@ -545,7 +545,7 @@ int MemCmd(Command MyCommand)
 
 int DimCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Dim Cmd");
+
     // Check Argument 0 is a variable, which is not declared yet !!! and check it has subarguments
     // if so then check the subarguments are all expressions which evaluate to numbers and store the result in a vector of integers
     if (MyCommand.Arguments[0].Type!=tUserDefined || MyCommand.Arguments[0].SubArguments.size()==0) {
@@ -577,7 +577,20 @@ int RandomizeCmd(Command MyCommand)
 
 int OptionCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Option Cmd");
+    int ResultType;
+    float NumResult;
+    std::string StrResult;
+    if (MyCommand.Arguments[1].ID==coInteger) {  
+        int NewBase=stoi(MyCommand.Arguments[1].Value);
+        if (NewBase>=0 and NewBase<2) {
+            MyProcessor.Arrays.SetBase (NewBase);
+            Terminal.WriteFStringLn("Array Base Option set to %d", NewBase);
+        } else {
+            return ERR_CMD_OPTION_BASE_OUT_OF_RANGE;
+        }
+    } else {
+        return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+    }
     return CMD_OK;
 }
 

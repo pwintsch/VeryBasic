@@ -408,12 +408,12 @@ MyVariable::~MyVariable() {
     }
 }
 
-bool MyArray::DimensionsMatch(std::vector<int> &DimensionsToTest) {
+bool MyArray::DimensionsMatch(std::vector<int> &DimensionsToTest, int Base) {
     if (DimensionsToTest.size()!=Dimensions.size()) {
         return false;
     }
     for (int i=0; i<Dimensions.size(); i++) {
-        if (DimensionsToTest[i]>=0 && DimensionsToTest[i]<Dimensions[i]) {
+        if ((DimensionsToTest[i]-Base)>=0 && (DimensionsToTest[i]-Base)<Dimensions[i]) {
             return true;
         }
     }
@@ -567,10 +567,10 @@ int ArrayList::Store (std::string Name, std::vector<int> &Dimensions, float FltV
         int Index=0;
         int Multiplier=1;
         for (int i=Dimensions.size()-1; i>=0; i--) {
-            Index+=Dimensions[i]*Multiplier;
+            Index+=(Dimensions[i]-DimensionBase)*Multiplier;
             Multiplier*=item->second.Dimensions[i];
         }
-        if (item->second.DimensionsMatch(Dimensions)) {
+        if (item->second.DimensionsMatch(Dimensions, DimensionBase)) {
             switch (item->second.VariableType) {
                 case cvDouble:
                 case cvSingle:
@@ -601,10 +601,10 @@ int ArrayList::Get (std::string Name, std::vector<int> &Dimensions, float &FltVa
         int Index=0;
         int Multiplier=1;
         for (int i=Dimensions.size()-1; i>=0; i--) {
-            Index+=Dimensions[i]*Multiplier;
+            Index+=(Dimensions[i]-DimensionBase)*Multiplier;
             Multiplier*=item->second.Dimensions[i];
         }
-        if (item->second.DimensionsMatch(Dimensions)) {
+        if (item->second.DimensionsMatch(Dimensions, DimensionBase)) {
             switch (item->second.VariableType) {
                 case cvDouble:
                 case cvSingle:
@@ -660,6 +660,11 @@ std::string ArrayList::ListArrays() {
         s+=")\n\r";
     }
     return s;
+}
+
+
+void ArrayList::SetBase(int Size) {
+    DimensionBase=Size;
 }
 
 
