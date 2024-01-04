@@ -216,6 +216,11 @@ std::vector<tSyntaxNode> REMSyntax = {
 					{ tRemark, 0} };
 
 
+std::vector<tSyntaxNode> REMSyntax2 = {
+				 	{ tCommand, coREM}
+					};
+
+
 std::vector<tSyntaxNode> EVALSyntax = { 	
 					{ tDirectCommand, coEVAL},
 	   				{ tExpression, 0} };
@@ -293,6 +298,22 @@ std::vector <tSyntaxNode> TMPCMDSyntax = {
 					};
 
 
+std::vector <tSyntaxNode> SAVESyntax = {
+				 	{ tDirectCommand, coSAVE}, 
+					{ tExpression, tString}
+};
+
+
+std::vector <tSyntaxNode> LOADSyntax = {
+				 	{ tDirectCommand, coLOAD}, 
+					{ tExpression, tString}
+};
+
+
+
+// ------------------------------
+
+
 tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
 					{ tComplement, coBASE},
 					{ tValue, 0},  
@@ -325,69 +346,7 @@ tSyntaxNode tNEXTSyntax[] = { 	{ tCommand, coNEXT},
 
 
 
-tSyntaxNode tDIMSyntax[] = { 	{ tCommand, coDIM}, 
-					{ tUserDefined, 0}, 
-					{ SYNTAX_END, 0} };
-
-
-
-tSyntaxNode tAssignSyntax[] = { 	{ tUserDefined, coVariable}, 
-					{ tComparison, coEqual},
-				    { tExpression, 0},	
-					{ SYNTAX_END, 0} };
-
-
-
-
-tSyntaxNode tREMSyntax2[] = { 	{ tCommand, coREM}, 
-					{ SYNTAX_END, 0} };
-
 tSyntaxNode tCONTINUESyntax[] = { 	{ tCommand, coCONTINUE}, 
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tBEEPSyntax[] = { 	{ tCommand, coBEEP}, 
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tCLSSyntax[] = { 	{ tCommand, coCLS}, 
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tIFSyntax[] = { 	{ tCommand, coIF}, 
-					{ tExpression, 0},
-					{ tComplement, coTHEN}, 
-					{ SYNTAX_END, 0} };
-
-
-tSyntaxNode tPRINTSyntax[] = { 	{ tCommand, coPRINT}, 
-					{ tPrintExpression, 0}, 
-					{ SYNTAX_END, 0} };
-
-
-tSyntaxNode tSAVESyntax[] = { 	{ tDirectCommand, coSAVE}, 
-					{ tExpression, tString}, 
-					{ SYNTAX_END, 0} };
-
-
-tSyntaxNode tLOADSyntax[] = { 	{ tDirectCommand, coLOAD}, 
-					{ tExpression, tString}, 
-					{ SYNTAX_END, 0} };
-
-
-tSyntaxNode tINPUTSyntax[] = { 	{ tCommand, coINPUT}, 
-					{ tInputExpression, 0}, 
-					{ SYNTAX_END, 0} };
-
-
-tSyntaxNode tLISTSyntax[] = { 	{ tDirectCommand, coLIST}, 
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tLISTSyntax2[] = { 	{ tDirectCommand, coLIST},
-       					{ tValue, coInteger},	
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tLISTSyntax3[] = { 	{ tDirectCommand, coLIST},
-       					{ tValue, coInteger},
-						{ tOperator, coMinus},
-						{ tValue, coInteger},	
 					{ SYNTAX_END, 0} };
 
 
@@ -396,38 +355,6 @@ tSyntaxNode tNODELISTyntax[] = { 	{ tDirectCommand, coNODELIST},
 					{ SYNTAX_END, 0} };
 
 
-tSyntaxNode tGOTOSyntax[] = { 	{ tCommand, coGOTO},
-       				{ tExpression, tValue},	
-					{ SYNTAX_END, 0} };
-
-
-tSyntaxNode tGOSUBSyntax[] = { 	{ tCommand, coGOSUB},
-       				{ tExpression, tValue},	
-					{ SYNTAX_END, 0} };
-
-
-tSyntaxNode tRETURNSyntax[] = { 	{ tCommand, coRETURN}, 
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tSTOPSyntax[] = { 	{ tCommand, coSTOP}, 
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tRUNSyntax[] = { 	{ tDirectCommand, coRUN}, 
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tEVALSyntax[] = { 	{ tDirectCommand, coEVAL},
-       					{ tExpression, 0},	
-					{ SYNTAX_END, 0} };
-
-
-tSyntaxNode tEXITSyntax[] = { 	{ tDirectCommand, coEXIT}, 
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tNEWSyntax[] = { 	{ tDirectCommand, coNEW}, 
-                    { SYNTAX_END, 0} };
-					
-tSyntaxNode tDEBUGSyntax[] = { 	{ tDirectCommand, coDEBUG}, 
-					{ SYNTAX_END, 0} };
 
 
 tSyntaxNode tRANDOMIZESyntax[] = { 	{ tCommand, coRANDOMIZE}, 
@@ -435,9 +362,6 @@ tSyntaxNode tRANDOMIZESyntax[] = { 	{ tCommand, coRANDOMIZE},
 
 tSyntaxNode tRANDOMIZESyntax2[] = { 	{ tCommand, coRANDOMIZE}, 
 					{ tExpression, tValue},
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tTMPCMDSyntax[] = { 	{ tCommand, coINKEY}, 
 					{ SYNTAX_END, 0} };
 
 tSyntaxNode tEDITSyntax[] = { 	{ tDirectCommand, coEDIT},
@@ -483,6 +407,7 @@ std::vector<tSyntax> tGrammar ={
 		{ coEXIT, 0, EXITSyntax },
 		{ coRUN, 0, RUNSyntax },
 		{ coREM, 0, REMSyntax},
+		{ coREM, 1, REMSyntax2},
 		{ coEVAL, 0, EVALSyntax},
 		{ coPRINT, 0, PRINTSyntax},
 		{ coPRINT, 1, PRINTSyntax2},
@@ -497,38 +422,22 @@ std::vector<tSyntax> tGrammar ={
 		{ coCLEAR, 0, CLEARSyntax},
 		{ coNEW, 0, NEWSyntax},
 		{ coDIM, 0, DIMSyntax},
+		{ coLOAD, 0, LOADSyntax},
+		{ coSAVE, 0, SAVESyntax},
 		{ coTMPCMD, 0, TMPCMDSyntax}
 		/*,
-		{ coNEW, 0, tNEWSyntax },
-		{ coDEBUG, 0, tDEBUGSyntax },
-		{ coNODELIST, 0, tNODELISTyntax},
-		{ coPRINT, 0, tPRINTSyntax },
-		{ coINPUT, 0, tINPUTSyntax },
-		{ coEVAL, 0, tEVALSyntax },
-		{ coRUN, 0, tRUNSyntax},
-		{ coLOAD, 0, tLOADSyntax},
-		{ coSAVE, 0, tSAVESyntax},
-		{ coGOTO, 0, tGOTOSyntax},
-		{ coGOSUB, 0, tGOSUBSyntax},
-		{ coRETURN, 0, tRETURNSyntax},
-		{ coREM, 0, tREMSyntax},
-		{ coREM, 1, tREMSyntax2},
+
 		{ coFOR, 0, tFORSyntax2},
 		{ coFOR, 1, tFORSyntax},
 		{ coNEXT, 0, tNEXTSyntax},
-		{ coDIM, 0, tDIMSyntax},
 		{ coRANDOMIZE, 0, tRANDOMIZESyntax},
 		{ coRANDOMIZE, 1, tRANDOMIZESyntax2},
-		{ coSTOP, 0, tSTOPSyntax},
 		{ coOPTION, 0, tOPTIONSyntax},
 		{ coEDIT, 0, tEDITSyntax},
 		{ coEDITOR, 0, tEDITORSyntax},
 		{ coCONTINUE, 0, tCONTINUESyntax},
-		{ coBEEP, 0, tBEEPSyntax},
-		{ coCLS, 0, tCLSSyntax},
 		{ coREAD, 0, tREADSyntax},
 		{ coDATA, 0, tDATASyntax},
-		{ coTMPCMD, 0, tTMPCMDSyntax},
 		{ coDEF, 0, tDEFSyntax},
 		{ coDEF, 0, tDEFSyntax2},
 		*/
