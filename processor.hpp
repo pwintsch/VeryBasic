@@ -17,8 +17,8 @@ public:
     ~MyVariable();
 
     void Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
-    void Update(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
-    void Get(std::string pName, int &pVarType, float &pFValue, int &pIValue, std::string &pSValue);
+    void Update(float pFValue, int pIValue, std::string pSValue);
+    void Get( float &pFValue, int &pIValue, std::string &pSValue);
     std::string StringDesc();
 };
 
@@ -33,6 +33,7 @@ public:
     int TotalSize=0;
     MyArray();
     void Define (std::string pName, int pVarType, std::vector<int> &Dimensions);
+    bool DimensionsMatch(std::vector<int> &DimensionsToTest);
     ~MyArray();
 //    void Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
 };
@@ -108,6 +109,8 @@ public:
     void Exit();
     void Clear();
     int Run();
+    int SetVariable(CommandNode &Node, float FltValue, std::string StrValue);
+    int GetVariable(CommandNode &Node, float &FltValue, int &IntValue, std::string &StrValue);
     int ExecuteNextInstruction();
     int ResumeInstruction();
 };

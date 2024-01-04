@@ -7,4 +7,5 @@ To get current interpreter to Tiny Basic level I need to:
     ( ) add the SAVE command
     ( ) add the LOAD command
     ( ) add Arrays
+        ( ) In Arrays.Store check dimensions size and range
     ( ) test Expression for return type

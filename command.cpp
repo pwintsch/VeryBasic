@@ -246,20 +246,20 @@ bool bPrintRPN=false;
                     Value.push_back(TmpValue);
                     break;
                 case tUserDefined:
-                    r=MyProcessor.Variables.Get(EvalQueue[i].Value, VarType, VarFltValue, VarIntValue, VarStrValue);
+                    r=MyProcessor.GetVariable(EvalQueue[i], VarFltValue, VarIntValue, VarStrValue);
                     if (r!=NO_ERROR) {
                         return r;
                     }
-                    if (VarType==cvString) {
+                    if (EvalQueue[i].ID==cvString) {
                         TmpValue.iType = tString;
                         TmpValue.sValue = VarStrValue;
                         Value.push_back(TmpValue);
                     } else {
                         TmpValue.iType = tValue;
-                        if (VarType==cvInteger) {
+                        if (EvalQueue[i].ID==cvInteger) {
                             TmpValue.fValue = (float)VarIntValue;
                         } else {
-                            TmpValue.fValue = VarFltValue;
+                             TmpValue.fValue = VarFltValue;
                         }
                         Value.push_back(TmpValue);
                     }

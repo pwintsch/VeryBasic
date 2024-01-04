@@ -61,7 +61,12 @@ int DebugCmd(Command MyCommand)
 
 int RunCmd(Command MyCommand)
 {
-    return MyProcessor.Run();
+    int r=MyProcessor.Run();
+    if (r==NO_ERROR) {
+        return CMD_OK;
+    } else {
+        return r;
+    }
 }
 
 
@@ -124,8 +129,7 @@ int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, Exit
 
 
 
-int LetCmd(Command MyCommand)
-{
+int LetCmd(Command MyCommand) {
 
     int ResultType;
     float NumResult;
@@ -133,33 +137,18 @@ int LetCmd(Command MyCommand)
     int r=MyCommand.Arguments[2].Evaluate(ResultType, NumResult, StrResult);
     int IntResult=(int)NumResult;
     if (r==NO_ERROR) {
-        if (ResultType==tValue) {
-            if (MyCommand.Arguments[0].ID!=cvString) {
-                switch (MyCommand.Arguments[0].ID) {
-                    case cvInteger:
-                        MyProcessor.Variables.Store(MyCommand.Arguments[0].Value, MyCommand.Arguments[0].ID, 0,IntResult,  "");
-                        return CMD_OK;
-                        break;
-                    case cvSingle:
-                    case cvDouble:
-                        MyProcessor.Variables.Store(MyCommand.Arguments[0].Value, MyCommand.Arguments[0].ID, NumResult, 0, "");
-                        return CMD_OK;
-                        break;
-                    default:
-                        return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
-                }
-            } else {
-                return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
-            }        
+        if ((MyCommand.Arguments[0].Type!=tUserDefined) || (MyCommand.Arguments[0].ID==cvString && ResultType==tValue) || (MyCommand.Arguments[0].ID!=cvString && ResultType==tString)) {
+            return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
         } else {
-            if (MyCommand.Arguments[0].ID==cvString) {
-                MyProcessor.Variables.Store(MyCommand.Arguments[0].Value, cvString, 0, 0, StrResult);
+            r=MyProcessor.SetVariable(MyCommand.Arguments[0],NumResult,StrResult);
+            if (r==NO_ERROR) {
                 return CMD_OK;
             } else {
-                return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+                return r;
             }
-        } 
-    }  
+        }
+
+    }
     return r;
 }
 
@@ -179,14 +168,20 @@ int InputCmd(Command MyCommand)
                 int i=Terminal.GetString(StrInput);
                 if (i==0 || i==CTRL_KEY('z')) {
                     StrInput="";
-                    MyProcessor.Variables.Store(Argument.Value, cvString, 0, 0, StrInput);
+                    int r= MyProcessor.SetVariable(Argument,0,StrInput);
+                    if (r!=NO_ERROR) {
+                        return r;
+                    }
                     if (i==CTRL_KEY('z')) {
                         return CMD_BREAK;
                     } else {
                         return ERR_CMD_INPUT_ERROR ;
                     }
                 } else {
-                    MyProcessor.Variables.Store(Argument.Value, cvString, 0, 0, StrInput);
+                    int r=MyProcessor.SetVariable(Argument,0,StrInput);
+                    if (r!=NO_ERROR) {
+                        return r;
+                    }
                 }
             } else if (Argument.ID==cvDouble || Argument.ID==cvSingle || Argument.ID==cvInteger) {
                 LastExpressionWasVariable=true;    
@@ -199,7 +194,10 @@ int InputCmd(Command MyCommand)
                     int i=Terminal.GetString(StrInput);
                     if (i==0 || i==CTRL_KEY('z')) {
                         StrInput="";
-                        MyProcessor.Variables.Store(Argument.Value, Argument.ID, 0, 0, StrInput);
+                        int r=MyProcessor.SetVariable(Argument,0,StrInput);
+                        if (r!=NO_ERROR) {
+                            return r;
+                        }
                         if (i==CTRL_KEY('z')) {
                             return CMD_BREAK;
                         } else {
@@ -216,11 +214,15 @@ int InputCmd(Command MyCommand)
                         } else {
                             if (IsStringInt(StrInput.c_str())) {
                                 IntInput=stoi(StrInput);
+                                FltInput=(float)IntInput;
                                 ValidInput=true;
                             }
                         } 
                         if (ValidInput) {
-                            MyProcessor.Variables.Store(Argument.Value, Argument.ID, FltInput, IntInput, StrInput);
+                            int r=MyProcessor.SetVariable(Argument,FltInput,StrInput);
+                            if (r!=NO_ERROR) {
+                                return r;
+                            }
                         } else {
                             Terminal.Beep();
                             Terminal.MoveCursor(CurrentY, CurrentX);
@@ -524,6 +526,7 @@ int NextCmd(Command MyCommand)
 int ClearCmd(Command MyCommand)
 {
     MyProcessor.Variables.Clear();
+    MyProcessor.Arrays.Clear();
     return CMD_OK;
 }
 

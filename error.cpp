@@ -33,7 +33,10 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_CMD_IF_EXPRESSION_NOT_VALUE, "SYNTAX ERROR: Invalid IF condition, it does not evaluate to a value"},
                     {ERR_CALLSTACK_EMPTY, "SYNTAX ERROR: RETURN without GOSUB or FUNCTION CALL"},
                     {ERR_BAD_DIM_COMMAND, "SYNTAX ERROR: Bad DIM command parametres, must be an undeclared variable with dimension parametres"},
-                    {ERR_DIM_ARRAY_ALREADY_EXISTS, "SYNTAX ERROR: DIM nor possible, Array already exists"}
+                    {ERR_DIM_ARRAY_ALREADY_EXISTS, "SYNTAX ERROR: DIM nor possible, Array already exists"},
+                    {ERR_ARRAY_ITEM_NOT_FOUND, "SYNTAX ERROR: Array item not found, possibly not declared"},
+                    {ERR_LAZY_PROGRAMMER, "SYNTAX ERROR: Lazy programmer, not implemented yet"},
+                    {ERR_DIM_ARRAY_DONT_MATCH, "SYNTAX ERROR: Array dimensions don't match"}
 };
 
 std::string ErrorMsg(int pID) {

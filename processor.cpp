@@ -185,6 +185,7 @@ void Processor::Clear() {
 int Processor::Run() {
     CurrentLine=0;
     Variables.Clear();
+    Arrays.Clear();
     ProgramRunning=true;
     ResumeInstructionFlag=false;
     int CommandResult=0;
@@ -203,8 +204,90 @@ int Processor::Run() {
             return CommandResult;
         }
     }
-    return CMD_OK;
+    return NO_ERROR;
 }
+
+int Processor::SetVariable(CommandNode &Node, float FltValue, std::string StrValue) {
+    int r=0;
+    int IntValue=int(FltValue);
+    // Check to see if variable is variable or array item (subarguments.size()>0)
+    if (Node.SubArguments.size()==0) {
+        switch (Node.ID) {
+            case cvInteger:
+                MyProcessor.Variables.Store(Node.Value, cvInteger, 0,IntValue,  "");
+                return NO_ERROR;
+                break;
+            case cvSingle:
+            case cvDouble:
+                MyProcessor.Variables.Store(Node.Value, Node.ID, FltValue, 0, "");
+                return NO_ERROR;
+                break;
+            case cvString:
+                MyProcessor.Variables.Store(Node.Value, cvString, 0, 0, StrValue);
+                return NO_ERROR;
+                break;
+            default:
+                return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+        }
+    } else {
+        // check to see if array exists
+        if (MyProcessor.Arrays.Exists(Node.Value)) {
+            std::vector<int> Dimensions;
+            for (int i=0; i<Node.SubArguments.size(); i++) {
+                int ResultType;
+                float FltResult;
+                std::string StrResult;
+                r = Node.SubArguments[i].Evaluate(ResultType, FltResult,StrResult);
+                if (r!=NO_ERROR) {
+                    return r;
+                }
+                int DimensionPosition=int(FltResult);
+                Dimensions.push_back(DimensionPosition);
+            }
+            int r=MyProcessor.Arrays.Store(Node.Value, Dimensions, FltValue, IntValue, StrValue);
+            return r;
+        } else {
+            return ERR_ARRAY_ITEM_NOT_FOUND;
+        }
+    }
+    return ERR_LAZY_PROGRAMMER;
+}
+
+
+int Processor::GetVariable(CommandNode &Node, float &FltValue, int &IntValue, std::string &StrValue) {
+    int r=0;
+    int VarType=0;
+    FltValue=0;
+    IntValue=0;
+    StrValue="";
+    // Check to see if variable is variable or array item (subarguments.size()>0)
+    if (Node.SubArguments.size()==0) {
+        r=MyProcessor.Variables.Get(Node.Value, VarType, FltValue, IntValue, StrValue);
+        return r;
+    } else {
+        // check to see if array exists
+        if (MyProcessor.Arrays.Exists(Node.Value)) {
+            std::vector<int> Dimensions;
+            for (int i=0; i<Node.SubArguments.size(); i++) {
+                int ResultType;
+                float FltResult;
+                std::string StrResult;
+                r = Node.SubArguments[i].Evaluate(ResultType, FltResult,StrResult);
+                if (r!=NO_ERROR) {
+                    return r;
+                }
+                int DimensionPosition=int(FltResult);
+                Dimensions.push_back(DimensionPosition);
+            }
+            int r=MyProcessor.Arrays.Get(Node.Value, Dimensions, FltValue, IntValue, StrValue);
+            return r;
+        } else {
+            return ERR_ARRAY_ITEM_NOT_FOUND;
+        }
+    }
+    return ERR_LAZY_PROGRAMMER;
+}
+
 
 int Processor::GotoLine(int LineNo) {
     for (int i=0; i<Program.size(); i++) {
@@ -247,9 +330,7 @@ void MyVariable::Set(std::string pName, int pVarType, float pFValue, int pIValue
  }
 
 
-void MyVariable::Update(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue){
-        VariableType=pVarType;   
-        Name=pName;
+void MyVariable::Update(float pFValue, int pIValue, std::string pSValue){
         switch (VariableType) {
             case cvDouble:
             case cvSingle:
@@ -266,8 +347,7 @@ void MyVariable::Update(std::string pName, int pVarType, float pFValue, int pIVa
         }
 }
 
-void MyVariable::Get(std::string pName, int &pVarType, float &pFValue, int &pIValue, std::string &pSValue){
-    pVarType=VariableType; 
+void MyVariable::Get(float &pFValue, int &pIValue, std::string &pSValue){
     switch (VariableType) {
         case cvDouble:
         case cvSingle:
@@ -327,6 +407,19 @@ MyVariable::~MyVariable() {
         }
     }
 }
+
+bool MyArray::DimensionsMatch(std::vector<int> &DimensionsToTest) {
+    if (DimensionsToTest.size()!=Dimensions.size()) {
+        return false;
+    }
+    for (int i=0; i<Dimensions.size(); i++) {
+        if (DimensionsToTest[i]>=0 && DimensionsToTest[i]<Dimensions[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 MyArray::MyArray() {
     VariablePtr=NULL;
@@ -409,7 +502,7 @@ int VariableList::Store (std::string Name, int VariableType, float FltValue, int
         VarList[Name].Set (Name, VariableType, FltValue, IntValue, StrValue);
         return NO_ERROR;
     } else {
-        item->second.Update(Name, VariableType, FltValue, IntValue, StrValue);    
+        item->second.Update(FltValue, IntValue, StrValue);    
         return NO_ERROR;
     }
 }
@@ -419,7 +512,7 @@ int VariableList::Get (std::string Name, int &VariableType, float &FltValue, int
     if (item==VarList.end()) {
         return ERR_VARIABLE_NOT_FOUND;
     } else {
-        item->second.Get(Name, VariableType, FltValue, IntValue, StrValue);
+        item->second.Get(FltValue, IntValue, StrValue);
         return NO_ERROR;
     }
 }
@@ -477,21 +570,25 @@ int ArrayList::Store (std::string Name, std::vector<int> &Dimensions, float FltV
             Index+=Dimensions[i]*Multiplier;
             Multiplier*=item->second.Dimensions[i];
         }
-        switch (item->second.VariableType) {
-            case cvDouble:
-            case cvSingle:
-                ((float*)item->second.VariablePtr)[Index]=FltValue;
-                break;
-            case cvInteger:
-                ((int*)item->second.VariablePtr)[Index]=IntValue;
-                break;
-            case cvString:
-                ((std::string*)item->second.VariablePtr)[Index]=StrValue; 
-                break;
-            default:
-                break;
+        if (item->second.DimensionsMatch(Dimensions)) {
+            switch (item->second.VariableType) {
+                case cvDouble:
+                case cvSingle:
+                    ((float*)item->second.VariablePtr)[Index]=FltValue;
+                    break;
+                case cvInteger:
+                    ((int*)item->second.VariablePtr)[Index]=IntValue;
+                    break;
+                case cvString:
+                    ((std::string*)item->second.VariablePtr)[Index]=StrValue; 
+                    break;
+                default:
+                    break;
+            }
+            return NO_ERROR;
+        } else {
+            return ERR_DIM_ARRAY_DONT_MATCH;
         }
-        return NO_ERROR;
     }
 }
 
@@ -507,23 +604,28 @@ int ArrayList::Get (std::string Name, std::vector<int> &Dimensions, float &FltVa
             Index+=Dimensions[i]*Multiplier;
             Multiplier*=item->second.Dimensions[i];
         }
-        switch (item->second.VariableType) {
-            case cvDouble:
-            case cvSingle:
-                FltValue=((float*)item->second.VariablePtr)[Index];
-                break;
-            case cvInteger:
-                IntValue=((int*)item->second.VariablePtr)[Index];
-                break;
-            case cvString:
-                StrValue=((std::string*)item->second.VariablePtr)[Index]; 
-                break;
-            default:
-                break;
+        if (item->second.DimensionsMatch(Dimensions)) {
+            switch (item->second.VariableType) {
+                case cvDouble:
+                case cvSingle:
+                    FltValue=((float*)item->second.VariablePtr)[Index];
+                    break;
+                case cvInteger:
+                    IntValue=((int*)item->second.VariablePtr)[Index];
+                    break;
+                case cvString:
+                    StrValue=((std::string*)item->second.VariablePtr)[Index]; 
+                    break;
+                default:
+                    break;
+            }
+            return NO_ERROR;
+        } else {
+            return ERR_DIM_ARRAY_DONT_MATCH;
         }
-        return NO_ERROR;
     }
 }
+
 
 std::string ArrayList::ListArrays() {
     std::string s="";
