@@ -112,6 +112,7 @@ bool IsStringInt(const char *sTxt);
 #define coNODELIST CmdSep+9
 #define coEDIT DirectCmdSep+10
 #define coEDITOR DirectCmdSep+11
+#define coPWD DirectCmdSep+12
 
 #define FuncSep 400
 

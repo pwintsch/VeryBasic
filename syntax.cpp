@@ -23,6 +23,7 @@ tTokenType tTokens[]={
 	{ "NODELIST", tDirectCommand, coNODELIST, 0},
 	{ "EDIT", tDirectCommand, coEDIT,0},
 	{ "EDITOR", tDirectCommand, coEDITOR,0},
+	{ "PWD", tDirectCommand, coPWD},
 	{ "LET", tCommand, coLET, 0},
 	{ "INPUT", tCommand, coINPUT, 0},
 	{ "REM", tCommand, coREM, 0},
@@ -315,6 +316,13 @@ std::vector <tSyntaxNode> OPTIONSyntax = {
 					{ tValue, 0}
 };
 
+
+std::vector <tSyntaxNode> PWDSyntax = {
+				 	{ tDirectCommand, coPWD} 
+					};
+
+
+
 // ------------------------------
 
 
@@ -413,6 +421,7 @@ std::vector<tSyntax> tGrammar ={
 		{ coREM, 0, REMSyntax},
 		{ coREM, 1, REMSyntax2},
 		{ coEVAL, 0, EVALSyntax},
+		{ coPWD, 0, PWDSyntax},
 		{ coPRINT, 0, PRINTSyntax},
 		{ coPRINT, 1, PRINTSyntax2},
 		{ coINPUT, 0, INPUTSyntax},

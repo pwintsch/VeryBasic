@@ -3,6 +3,7 @@
 #include "processor.hpp"
 #include "error.hpp"
 #include "syntax.hpp"
+#include "filemgmt.hpp"
 
 
 
@@ -125,7 +126,16 @@ int EditorCmd(Command MyCommand)
 }
 
 
-int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd } ;
+int PwdCmd(Command MyCommand)
+{
+    std::string s;
+    WorkingDirectory(s);
+    Terminal.WriteFStringLn ("Current working directory: %s", s.c_str());
+    return CMD_OK;
+}
+
+
+int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd, PwdCmd } ;
 
 
 
