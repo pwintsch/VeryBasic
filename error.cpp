@@ -37,7 +37,8 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_ARRAY_ITEM_NOT_FOUND, "SYNTAX ERROR: Array item not found, possibly not declared"},
                     {ERR_LAZY_PROGRAMMER, "SYNTAX ERROR: Lazy programmer, not implemented yet"},
                     {ERR_DIM_ARRAY_DONT_MATCH, "SYNTAX ERROR: Array dimensions don't match"},
-                    {ERR_CMD_OPTION_BASE_OUT_OF_RANGE, "SYNTAX ERROR: Option Base out of range, must be 0 or 1"}
+                    {ERR_CMD_OPTION_BASE_OUT_OF_RANGE, "SYNTAX ERROR: Option Base out of range, must be 0 or 1"},
+                    {ERR_FILE_NOT_FOUND, "SYNTAX ERROR: File not found"}
 };
 
 std::string ErrorMsg(int pID) {

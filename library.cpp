@@ -96,8 +96,27 @@ int EvalCmd(Command MyCommand)
 
 int LoadCmd(Command MyCommand)
 {
-    Terminal.WriteLn("LoadCmd");
-    return CMD_OK;
+    int ResultType;
+    float NumResult;
+    std::string StrResult;  
+    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
+    if (r==NO_ERROR) {
+        if (ResultType==tString) {
+            if (FileExists(StrResult)) {
+                std::vector<std::string> lines= ReadFileLines(StrResult);
+                for (int i=0; i<lines.size();i++) {
+                   Terminal.WriteFStringLn("Line %d:  ---  %s", i, lines[i].c_str());     
+                }
+                return CMD_OK;
+            } else {
+                return ERR_FILE_NOT_FOUND;
+            }
+        } else {
+            return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+        } 
+    } else {
+        return r;
+    }
 }
 
 
