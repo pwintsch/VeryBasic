@@ -24,6 +24,8 @@ tTokenType tTokens[]={
 	{ "EDIT", tDirectCommand, coEDIT,0},
 	{ "EDITOR", tDirectCommand, coEDITOR,0},
 	{ "PWD", tDirectCommand, coPWD},
+	{ "CHDIR", tDirectCommand, coCHDIR},
+	{ "DIR", tDirectCommand, coDIR},
 	{ "LET", tCommand, coLET, 0},
 	{ "INPUT", tCommand, coINPUT, 0},
 	{ "REM", tCommand, coREM, 0},
@@ -310,6 +312,18 @@ std::vector <tSyntaxNode> LOADSyntax = {
 					{ tExpression, tString}
 };
 
+
+std::vector <tSyntaxNode> CHDIRSyntax = {
+				 	{ tDirectCommand, coCHDIR}, 
+					{ tExpression, tString}
+};
+
+
+std::vector <tSyntaxNode> DIRSyntax = {
+				 	{ tDirectCommand, coDIR}
+};
+
+
 std::vector <tSyntaxNode> OPTIONSyntax = {
 				 	{ tCommand, coOPTION},
 					{ tComplement, coBASE},
@@ -409,7 +423,7 @@ tSyntaxNode tDEFSyntax2[] = { 	{ tCommand, coDEF},
 
 
 
-std::vector<tSyntax> tGrammar ={	
+std::vector<tSyntax> tGrammar = {	
 		{ coVariable, 0, AssignSyntax},		
 		{ coLET, 0, LETSyntax },
 		{ coIF, 0, IFSyntax },
@@ -437,6 +451,8 @@ std::vector<tSyntax> tGrammar ={
 		{ coDIM, 0, DIMSyntax},
 		{ coLOAD, 0, LOADSyntax},
 		{ coSAVE, 0, SAVESyntax},
+		{ coCHDIR, 0, CHDIRSyntax},
+		{ coDIR, 0, DIRSyntax},
 		{ coTMPCMD, 0, TMPCMDSyntax},
 		{ coOPTION, 0, OPTIONSyntax}
 		/*,

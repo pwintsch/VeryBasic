@@ -1,0 +1,3 @@
+10   ABB = 9
+20   PRINT ABB
+

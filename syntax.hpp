@@ -113,6 +113,8 @@ bool IsStringInt(const char *sTxt);
 #define coEDIT DirectCmdSep+10
 #define coEDITOR DirectCmdSep+11
 #define coPWD DirectCmdSep+12
+#define coCHDIR DirectCmdSep+13
+#define coDIR DirectCmdSep+14 
 
 #define FuncSep 400
 

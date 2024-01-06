@@ -104,9 +104,24 @@ int LoadCmd(Command MyCommand)
         if (ResultType==tString) {
             if (FileExists(StrResult)) {
                 std::vector<std::string> lines= ReadFileLines(StrResult);
+                int LinesAdded=0;
                 for (int i=0; i<lines.size();i++) {
-                   Terminal.WriteFStringLn("Line %d:  ---  %s", i, lines[i].c_str());     
+                    if (lines[i].length()>0) {
+                        Instruction MyInstruction;
+                        TokenCollection MyTokens;
+                        int tokenizeResult=MyTokens.Tokenise(lines[i]);
+                        tokenizeResult=tokenizeResult==NO_ERROR ? MyTokens.CheckBrackets():tokenizeResult;
+                        tokenizeResult=tokenizeResult==NO_ERROR ? MyInstruction.Initialise(MyTokens):tokenizeResult;
+                        tokenizeResult=tokenizeResult==NO_ERROR ? MyProcessor.Addline(MyInstruction):tokenizeResult;
+                        if (tokenizeResult!=NO_ERROR) {
+                            Terminal.WriteFStringLn("Unable to load following line:\n\r     %s", lines[i].c_str());
+                            Terminal.WriteFStringLn("     %s",ErrorMsg(tokenizeResult).c_str());
+                        } else {
+                            LinesAdded++;   
+                        }
+                    }
                 }
+                Terminal.WriteFStringLn("Lines loaded: %d from a total of  %d", LinesAdded, lines.size());     
                 return CMD_OK;
             } else {
                 return ERR_FILE_NOT_FOUND;
@@ -122,7 +137,38 @@ int LoadCmd(Command MyCommand)
 
 int SaveCmd(Command MyCommand)
 {
-    Terminal.WriteLn("SaveCmd");
+    // build strng from program
+    std::string s=MyProcessor.ListFull();
+    // Check if file exists
+    int ResultType;
+    float NumResult;
+    std::string StrResult;
+    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
+    if (r==NO_ERROR) {
+        if (ResultType==tString) {
+            if (FileExists(StrResult)) {
+                // Ask user if they want to overwrite
+                if (Terminal.GetYNConfirmation("File already exists, do you want to overwrite it ")) {
+                    // overwrite file
+                    WriteContentsToFile(StrResult, s);
+                    Terminal.WriteLn("File overwritten");
+                    return CMD_OK;
+                } else {
+                    Terminal.WriteLn("File not overwritten");
+                    return CMD_OK;
+                }                
+            } else {
+                // write file
+                    WriteContentsToFile(StrResult, s);
+                    Terminal.WriteLn("File saved");
+                return CMD_OK;
+            }
+        } else {
+            return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+        } 
+    } else {
+        return r;
+    }
     return CMD_OK;
 }
 
@@ -154,7 +200,67 @@ int PwdCmd(Command MyCommand)
 }
 
 
-int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd, PwdCmd } ;
+
+int ChDirCmd(Command MyCommand)
+{
+
+    int ResultType;
+    float NumResult;
+    std::string StrResult;
+    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
+    if (r==NO_ERROR) {
+        if (ResultType==tString) {
+            if (DirectoryExists(StrResult)) {
+                ChangeCurrentDirectory(StrResult);
+            } else {
+                Terminal.WriteLn("Not a valid directory");
+                return CMD_OK;
+            }
+        } else {
+            return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+        } 
+    } else {
+        return r;
+    }
+    return CMD_OK;
+
+}
+
+
+int DirCmd(Command MyCommand)
+{
+
+    std::vector<std::string> FileList=DirectoryContents();
+    int MaxX=Terminal.get_width();
+    int MaxFileNameSize=0;
+    for (int i=0; i<FileList.size(); i++) {
+        if (FileList[i].length()>MaxFileNameSize) {
+            MaxFileNameSize=FileList[i].length();
+        }
+    }
+    int Width=0;
+    std::string line="";
+    for (int i=0; i<FileList.size(); i++) {
+        Width+=MaxFileNameSize+5;
+        std::string Padding="";
+        for (int j=0; j<MaxFileNameSize-FileList[i].length(); j++) {
+            Padding+=" ";
+        }
+        line=line+FileList[i]+Padding+"     ";
+        if (Width+MaxFileNameSize+5>MaxX) {
+            Terminal.WriteLn(line.c_str());
+            line="";
+            Width=0;
+        }
+    }
+    if (line.length()>0) {
+        Terminal.WriteLn(line.c_str());
+    }
+    return CMD_OK;
+}
+
+
+int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd, PwdCmd, ChDirCmd, DirCmd } ;
 
 
 
@@ -352,7 +458,6 @@ int InputCmd(Command MyCommand)
 
 int RemCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Rem Cmd");
     return CMD_OK;
 }
 
@@ -669,10 +774,10 @@ int DefCmd(Command MyCommand)
 
 int TmpCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Tmp Cmd");
-    Terminal.WriteLn(MyProcessor.Arrays.ListArrays().c_str());
+    Terminal.WriteLn("Temp Cmd");
     return CMD_OK;
 }
+
 
 
 int (*CommandPtr[])(Command MyCommand) = { LetCmd, InputCmd, RemCmd, PrintCmd, IfCmd, GotoCmd, GosubCmd, ReturnCmd, StopCmd, ForCmd, NextCmd, ClearCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, OptionCmd, ContinueCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, DefCmd, TmpCmd } ;
