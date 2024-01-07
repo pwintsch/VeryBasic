@@ -55,6 +55,7 @@ public:
   void MoveCursorToColumn(int iColumn);
   void GetCursorPos(int &iY, int &iX);
   void MoveCursor(int iY, int iX);
+  void SetNextConsoleInput(std::string sInput);
   ~Console();
 };
 

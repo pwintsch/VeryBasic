@@ -61,8 +61,14 @@ bool bMachineLoop = true;
 	while (MyProcessor.Active) {
         sInput="";
         while (sInput=="") {
+/*            if (MyProcessor.GetEditString()!="") {
+                sInput=MyProcessor.GetEditString();
+                MyProcessor.ResetEditString();
+            } else { 
+                sInput="";
+            }*/
             Terminal.GetConsoleInput (sInput, MAX_STRING_LENGTH);
-    		}
+    	}
         if (sInput=="?") {
             Terminal.WriteLn("Help");
 		}

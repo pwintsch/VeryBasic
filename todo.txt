@@ -1,3 +1,11 @@
+To get VeryBasic to the level above TinyBasic I need to add :
+    ( ) FOR NEXT STEP TO DOWNTO
+    ( ) READ DATA RESTORE
+    ( ) Some of the improvements left below (in particular Type checking of Expressions)
+    And then we will look at Maths functions
+
+
+
 To get current interpreter to Tiny Basic level I need to:
     (X) Write the IF xxx THEN command control flow and sort out return codes for commands
     (X) Create the MyProcessor RUN command and functionality which require program pointers etc..
@@ -9,6 +17,7 @@ To get current interpreter to Tiny Basic level I need to:
     (X) add the LOAD command
     (X) add Arrays
         (X) In Arrays.Store check dimensions size and range
-    ( ) Create PWD command
-    ( ) Create ChangeDirectory command
+    (X) Create PWD command
+    (X) Create ChangeDirectory command
+        ( ) Decide if you can chgdir without quotes
     ( ) test Expression when creating for return type

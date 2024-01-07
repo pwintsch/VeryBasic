@@ -430,6 +430,11 @@ int i=GetStr(&sIn,0,0,0);
 }
 
 
+void Console::SetNextConsoleInput(std::string sInput) {
+  strcpy(gsConsoleStr,sInput.c_str());
+}
+
+
 void Console::GetConsoleInput (std::string &sInput, int iNoOfChar) {
 
 char *sIn=NULL;

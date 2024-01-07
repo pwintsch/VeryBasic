@@ -180,7 +180,10 @@ int NodelistCmd(Command MyCommand)
 
 int EditCmd(Command MyCommand)
 {
-    Terminal.WriteLn("EditCmd");
+    int LineNo= stoi(MyCommand.Arguments[0].Value);
+    std::string s=MyProcessor.Listline(LineNo);
+    Terminal.SetNextConsoleInput(s);
+    //MyProcessor.SetEditString(s);   //MyCommand.Arguments[0].GetString();
     return CMD_OK;
 }
 

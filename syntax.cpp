@@ -253,23 +253,28 @@ std::vector <tSyntaxNode> STOPSyntax = {
 				 	{ tCommand, coSTOP} 
 					};
 
+
 std::vector <tSyntaxNode> ENDSyntax = {
 				 	{ tCommand, coEND} 
 					};
 
+
 std::vector <tSyntaxNode> RUNSyntax = {
 				 	{ tDirectCommand, coRUN} 
 					};
+
 
 std::vector <tSyntaxNode> GOTOSyntax = {
 				 	{ tCommand, coGOTO},
 	   				{ tExpression, tValue} 
 					};
 
+
 std::vector <tSyntaxNode> GOSUBSyntax = {
 				 	{ tCommand, coGOSUB},
 	   				{ tExpression, tValue} 
 					};
+
 
 std::vector <tSyntaxNode> RETURNSyntax = {
 				 	{ tCommand, coRETURN} 
@@ -295,6 +300,7 @@ std::vector <tSyntaxNode> DIMSyntax = {
 				 	{ tCommand, coDIM}, 
 					{ tUserDefined, 0}
 					};
+
 
 std::vector <tSyntaxNode> TMPCMDSyntax = {
 				 	{ tCommand, coTMPCMD} 
@@ -336,14 +342,15 @@ std::vector <tSyntaxNode> PWDSyntax = {
 					};
 
 
+std::vector <tSyntaxNode> EDITSyntax = {
+				 	{ tDirectCommand, coEDIT}, 
+					{ tValue, coInteger}
+					};
+
 
 // ------------------------------
 
 
-tSyntaxNode tOPTIONSyntax[] = { 	{ tCommand, coOPTION}, 
-					{ tComplement, coBASE},
-					{ tValue, 0},  
-					{ SYNTAX_END, 0} };
 
 
 tSyntaxNode tFORSyntax[] = { 	{ tCommand, coFOR}, 
@@ -453,6 +460,7 @@ std::vector<tSyntax> tGrammar = {
 		{ coSAVE, 0, SAVESyntax},
 		{ coCHDIR, 0, CHDIRSyntax},
 		{ coDIR, 0, DIRSyntax},
+		{ coEDIT, 0, EDITSyntax},
 		{ coTMPCMD, 0, TMPCMDSyntax},
 		{ coOPTION, 0, OPTIONSyntax}
 		/*,
