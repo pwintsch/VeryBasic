@@ -33,6 +33,49 @@ int CallStack::Pop(int &LineNo, int &CommandNo) {
     }
 }
 
+ForStack::ForStack() {
+   Stack.clear();
+}
+
+
+ForStack::~ForStack() {
+   Stack.clear();
+}
+
+int ForStack::Push(int LineNo, int CommandNo, std::string VariableName, float StartValue, float EndValue, float StepValue) {
+    ForLoop NewItem;
+    NewItem.LineNo=LineNo;
+    NewItem.CommandNo=CommandNo;
+    NewItem.VariableName=VariableName;
+    NewItem.StartValue=StartValue;
+    NewItem.EndValue=EndValue;
+    NewItem.StepValue=StepValue;
+    NewItem.CurrentValue=StartValue;
+    Stack.push_back(NewItem);
+    return NO_ERROR;
+}
+
+
+int ForStack::NextStep (std::string VariableName, int &LineNo, int &CommandNo) {
+    if (Stack.size()==0) {
+        return ERR_FORSTACK_EMPTY;
+    } else {
+        if (Stack[Stack.size()-1].VariableName==VariableName) {
+            Stack[Stack.size()-1].CurrentValue+=Stack[Stack.size()-1].StepValue;
+            if (Stack[Stack.size()-1].CurrentValue<=Stack[Stack.size()-1].EndValue) {
+                LineNo=Stack[Stack.size()-1].LineNo;
+                CommandNo=Stack[Stack.size()-1].CommandNo;
+                return NO_ERROR;
+            } else {
+                Stack.pop_back();
+                return NO_ERROR;
+            }
+        } else {
+            return ERR_FORSTACK_MISMATCH;
+        }
+    }
+}
+
 
 Processor MyProcessor;
 
@@ -206,6 +249,7 @@ int Processor::Run() {
     }
     return NO_ERROR;
 }
+
 
 int Processor::SetVariable(CommandNode &Node, float FltValue, std::string StrValue) {
     int r=0;

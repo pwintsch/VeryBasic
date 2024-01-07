@@ -151,6 +151,7 @@ bool IsStringInt(const char *sTxt);
 #define coTO 35
 #define coSTEP 38
 #define coFN 39
+#define coDOWNTO 40
 
 #define coNumber 44
 #define coNumberExpression 45

@@ -1,6 +1,8 @@
 To get VeryBasic to the level above TinyBasic I need to add :
     ( ) FOR NEXT STEP TO DOWNTO
     ( ) READ DATA RESTORE
+    (X) EDIT command
+        ( ) Write a slimmed down version of GetLine so there are less trailing spaces
     ( ) Some of the improvements left below (in particular Type checking of Expressions)
     And then we will look at Maths functions
 

@@ -52,6 +52,7 @@ tTokenType tTokens[]={
 	{ "THEN", tComplement, coTHEN, 0},
 	{ "TO", tComplement, coTO, 0},
 	{ "STEP", tComplement, coSTEP, 0},
+	{ "DOWNTO",tComplement, coDOWNTO, 0},
 	{ "BASE", tComplement, coBASE, 0},
 	{ "FN", tComplement, coFN, 0},
 	{ "ABS", tFunction, coABS, 0},
@@ -348,34 +349,52 @@ std::vector <tSyntaxNode> EDITSyntax = {
 					};
 
 
-// ------------------------------
 
-
-
-
-tSyntaxNode tFORSyntax[] = { 	{ tCommand, coFOR}, 
+std::vector <tSyntaxNode> FORSyntax = { 	
+					{ tCommand, coFOR}, 
 					{ tUserDefined, cvNumeric}, 
 					{ tComparison, coEqual}, 
 					{ tExpression ,0},
 					{ tComplement ,coTO},
-					{ tExpression ,0},					
-					{ SYNTAX_END, 0} };
+					{ tExpression ,0}
+					 };
 
 
-tSyntaxNode tFORSyntax2[] = { 	{ tCommand, coFOR}, 
+std::vector <tSyntaxNode> FORSyntax2 = { 	
+					{ tCommand, coFOR}, 
+					{ tUserDefined, cvNumeric}, 
+					{ tComparison, coEqual}, 
+					{ tExpression ,0},
+					{ tComplement ,coDOWNTO},
+					{ tExpression ,0}
+					 };
+
+
+std::vector <tSyntaxNode> FORSyntax3 = { 	
+					{ tCommand, coFOR}, 
 					{ tUserDefined, cvNumeric}, 
 					{ tComparison, coEqual}, 
 					{ tExpression ,0},
 					{ tComplement ,coTO},
 					{ tExpression ,0},
 					{ tComplement ,coSTEP},
-					{ tExpression ,0},					
-					{ SYNTAX_END, 0} };
+					{ tExpression ,0}
+					};
 
 
-tSyntaxNode tNEXTSyntax[] = { 	{ tCommand, coNEXT}, 
-					{ tUserDefined, cvNumeric}, 
-					{ SYNTAX_END, 0} };
+std::vector <tSyntaxNode> NEXTSyntax = { 	
+					{ tCommand, coNEXT}, 
+					{ tUserDefined, cvNumeric}
+					};
+
+
+
+// ------------------------------
+
+
+
+
+
 
 
 
@@ -456,6 +475,10 @@ std::vector<tSyntax> tGrammar = {
 		{ coCLEAR, 0, CLEARSyntax},
 		{ coNEW, 0, NEWSyntax},
 		{ coDIM, 0, DIMSyntax},
+		{ coFOR, 0, FORSyntax},
+		{ coFOR, 1, FORSyntax2},
+		{ coFOR, 2, FORSyntax3},
+		{ coNEXT, 0, NEXTSyntax},
 		{ coLOAD, 0, LOADSyntax},
 		{ coSAVE, 0, SAVESyntax},
 		{ coCHDIR, 0, CHDIRSyntax},

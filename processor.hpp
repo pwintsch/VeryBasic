@@ -75,6 +75,7 @@ struct StackItem {
     int CommandNo;
 };
 
+
 class CallStack {
     public:
     std::vector<StackItem> Stack;
@@ -83,6 +84,28 @@ class CallStack {
     int Push(int LineNo, int CommandNo);
     int Pop(int &LineNo, int &CommandNo);
 };
+
+
+struct ForLoop {
+    int LineNo;
+    int CommandNo;
+    std::string VariableName;
+    float StartValue;
+    float EndValue;
+    float StepValue;
+    float CurrentValue;
+};
+
+
+class ForStack {
+    public:
+    std::vector<ForLoop> Stack;
+    ForStack();
+    ~ForStack();
+    int Push(int LineNo, int CommandNo, std::string VariableName, float StartValue, float EndValue, float StepValue);
+    int NextStep (std::string VariableName, int &LineNo, int &CommandNo);
+};
+
 
 
 class Processor {
@@ -100,6 +123,7 @@ public:
     VariableList Variables;
     ArrayList Arrays;
     CallStack ReturnStack;
+    ForStack ForLoopStack;
     bool Active=true;
     int Addline(Instruction MyInstruction);
     int ChangeLine(Instruction MyInstruction);
