@@ -1,12 +1,27 @@
 To get VeryBasic to the level above TinyBasic I need to add :
-    ( ) FOR NEXT STEP TO DOWNTO
+    (X) FOR NEXT STEP TO DOWNTO
     ( ) READ DATA RESTORE
     (X) EDIT command
         ( ) Write a slimmed down version of GetLine so there are less trailing spaces
+        ( ) Clean up if edit on last line of screen
     ( ) Some of the improvements left below (in particular Type checking of Expressions)
     And then we will look at Maths functions
 
+And then to get it to Nanobasic level
+    ( ) RANDOMIZE Command
+    ( ) CONTINUE Command
+    ( ) DEF FN Command 
+    ( ) NODELIST Command (take line number as parametre)
+    ( ) RND function
+    ( ) MAX function
+    ( ) TEST function
+    ( ) LEFT function
+    ( ) INKEY function
+    ( ) SQRT function
+    ( ) MEM function
 
+
+Previously ...
 
 To get current interpreter to Tiny Basic level I need to:
     (X) Write the IF xxx THEN command control flow and sort out return codes for commands

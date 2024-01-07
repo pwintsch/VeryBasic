@@ -683,7 +683,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
         }
         bool RuleSearchError=false;
         while (RuleFound==false && TokenIndex<Nodes.size() && SyntaxIndex<SyntaxRules[i].Syntax.size() && RuleSearchError==false) {     
-            if (Nodes[TokenIndex].Type==SyntaxRules[i].Syntax[SyntaxIndex].iTType) {
+            if (Nodes[TokenIndex].Type==SyntaxRules[i].Syntax[SyntaxIndex].iTType && (Nodes[TokenIndex].ID==SyntaxRules[i].Syntax[SyntaxIndex].iTId || SyntaxRules[i].Syntax[SyntaxIndex].iTId==0)) {
                 CommandNode Argument;
                 Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
                 Arguments.push_back(Argument);

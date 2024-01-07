@@ -40,7 +40,8 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_CMD_OPTION_BASE_OUT_OF_RANGE, "SYNTAX ERROR: Option Base out of range, must be 0 or 1"},
                     {ERR_FILE_NOT_FOUND, "SYNTAX ERROR: File not found"},
                     {ERR_FORSTACK_EMPTY, "SYNTAX ERROR: NEXT without FOR"},
-                    {ERR_FORSTACK_MISMATCH, "SYNTAX ERROR: Mismatched FOR/NEXT loop"}
+                    {ERR_FORSTACK_MISMATCH, "SYNTAX ERROR: Mismatched FOR/NEXT loop"},
+                    {ERR_BAD_FOR_COMMAND, "SYNTAX ERROR: Bad FOR command syntax"}
 };
 
 std::string ErrorMsg(int pID) {

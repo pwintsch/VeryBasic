@@ -650,14 +650,58 @@ int StopCmd(Command MyCommand)
 
 int ForCmd(Command MyCommand)
 {
-    Terminal.WriteLn("For Cmd");
+    int ResultType;
+    float NumResult;
+    std::string StrResult;
+    int r=MyCommand.Arguments[2].Evaluate(ResultType, NumResult, StrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    double StartValue=NumResult;
+    r=MyCommand.Arguments[4].Evaluate(ResultType, NumResult, StrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    double EndValue=NumResult;
+    double StepValue=0;
+    switch (MyCommand.RuleNo) {
+        case 0:
+            StepValue=1;
+            break;
+        case 1:
+            StepValue=-1;
+            break;        
+        case 2:
+            r=MyCommand.Arguments[6].Evaluate(ResultType, NumResult, StrResult);
+            if (r!=NO_ERROR) {
+                return r;
+            }
+            StepValue=NumResult;
+            break;
+        default: 
+            return ERR_BAD_FOR_COMMAND;
+    }
+     r=MyProcessor.NewForLoop(MyCommand.Arguments[0], StartValue, EndValue, StepValue);
+//    MyProcessor.ForLoopStack.Push(MyProcessor.CurrentLine, MyProcessor.CurrentCommand, MyCommand.Arguments[0].Value, StartValue, EndValue, StepValue);
     return CMD_OK;
 }
 
 int NextCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Next Cmd");
-    return CMD_OK;
+    bool Loop;
+    int NewLine;
+    int NewCommand;
+    int r=MyProcessor.NextForLoop(MyCommand.Arguments[0], Loop);
+    if (r==NO_ERROR) {
+        if (Loop) {
+            MyProcessor.ResumeInstructionFlag=true;
+            return CMD_OK_POINTER_CHANGE;
+        } else {
+            return CMD_OK;
+        }
+    } else {
+        return r;
+    }
 }
 
 int ClearCmd(Command MyCommand)

@@ -93,7 +93,6 @@ struct ForLoop {
     float StartValue;
     float EndValue;
     float StepValue;
-    float CurrentValue;
 };
 
 
@@ -103,7 +102,7 @@ class ForStack {
     ForStack();
     ~ForStack();
     int Push(int LineNo, int CommandNo, std::string VariableName, float StartValue, float EndValue, float StepValue);
-    int NextStep (std::string VariableName, int &LineNo, int &CommandNo);
+    int NextStep (std::string VariableName, float &CurrentValue, bool &Loop, int &LineNo, int &CommandNo);
 };
 
 
@@ -138,6 +137,8 @@ public:
     int Run();
     int SetVariable(CommandNode &Node, float FltValue, std::string StrValue);
     int GetVariable(CommandNode &Node, float &FltValue, int &IntValue, std::string &StrValue);
+    int NewForLoop(CommandNode &Variable, float StartValue, float EndValue, float StepValue);
+    int NextForLoop(CommandNode &Variable, bool &Loop);
     int ExecuteNextInstruction();
     int ResumeInstruction();
 };

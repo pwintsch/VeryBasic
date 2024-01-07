@@ -50,24 +50,30 @@ int ForStack::Push(int LineNo, int CommandNo, std::string VariableName, float St
     NewItem.StartValue=StartValue;
     NewItem.EndValue=EndValue;
     NewItem.StepValue=StepValue;
-    NewItem.CurrentValue=StartValue;
     Stack.push_back(NewItem);
     return NO_ERROR;
 }
 
 
-int ForStack::NextStep (std::string VariableName, int &LineNo, int &CommandNo) {
+int ForStack::NextStep (std::string VariableName, float &CurrentValue, bool &Loop, int &LineNo, int &CommandNo) {
     if (Stack.size()==0) {
         return ERR_FORSTACK_EMPTY;
     } else {
         if (Stack[Stack.size()-1].VariableName==VariableName) {
-            Stack[Stack.size()-1].CurrentValue+=Stack[Stack.size()-1].StepValue;
-            if (Stack[Stack.size()-1].CurrentValue<=Stack[Stack.size()-1].EndValue) {
+            CurrentValue+=Stack[Stack.size()-1].StepValue;
+            if (Stack[Stack.size()-1].StepValue>0 &&  CurrentValue<=Stack[Stack.size()-1].EndValue) {
                 LineNo=Stack[Stack.size()-1].LineNo;
                 CommandNo=Stack[Stack.size()-1].CommandNo;
+                Loop=true;
+                return NO_ERROR;
+            } else if (Stack[Stack.size()-1].StepValue<0 &&  CurrentValue>=Stack[Stack.size()-1].EndValue) {
+                LineNo=Stack[Stack.size()-1].LineNo;
+                CommandNo=Stack[Stack.size()-1].CommandNo;
+                Loop=true;
                 return NO_ERROR;
             } else {
                 Stack.pop_back();
+                Loop=false;
                 return NO_ERROR;
             }
         } else {
@@ -345,8 +351,40 @@ int Processor::GotoLine(int LineNo) {
 }
 
 
+int Processor::NewForLoop(CommandNode &Variable, float StartValue, float EndValue, float StepValue) {
+    int r=ForLoopStack.Push(CurrentLine, CurrentCommand, Variable.Value, StartValue, EndValue, StepValue);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    r=SetVariable(Variable, StartValue, "");
+    return r;
+}
 
 
+int Processor::NextForLoop(CommandNode &Variable, bool &Loop) {
+
+    float CurrentValue=0;
+    int IntValue=0;
+    std::string s="";
+    int r=GetVariable(Variable,CurrentValue, IntValue, s);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    int TmpLineIndex=0;
+    int TmpCommandIndex=0;
+    r=ForLoopStack.NextStep(Variable.Value, CurrentValue, Loop, CurrentLine, CurrentCommand);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    if (Loop) {
+        CurrentLine=TmpLineIndex;
+        CurrentCommand=TmpCommandIndex+1;
+    } else {
+        return NO_ERROR;
+    }
+    r=SetVariable(Variable, CurrentValue, "");
+    return NO_ERROR;
+}
 
 void Processor::Exit() {
     Active=false;

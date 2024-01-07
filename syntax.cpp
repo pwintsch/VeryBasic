@@ -178,19 +178,19 @@ bool GetTokenInfoFromTxt(std::string &sParam, int *iType, int *iID) {
 
 
 std::vector<tSyntaxNode> AssignSyntax = {
-				 	{ tUserDefined, coVariable}, 
+				 	{ tUserDefined, 0}, 
 					{ tComparison, coEqual},
 				    { tExpression, 0}};
 					
 std::vector<tSyntaxNode> LETSyntax = { 	
 					{ tCommand, coLET}, 
-					{ tUserDefined, coVariable}, 
+					{ tUserDefined, 0}, 
 					{ tComparison, coEqual}, 
 					{ tExpression ,0} };
 
 std::vector<tSyntaxNode> IFSyntax = { 	
 					{ tCommand, coIF}, 
-					{ tExpression, 0},
+					{ tExpression, tValue},
 					{ tComplement, coTHEN} };
 
 std::vector<tSyntaxNode> LISTSyntax = { 	
@@ -352,7 +352,7 @@ std::vector <tSyntaxNode> EDITSyntax = {
 
 std::vector <tSyntaxNode> FORSyntax = { 	
 					{ tCommand, coFOR}, 
-					{ tUserDefined, cvNumeric}, 
+					{ tUserDefined, cvDouble}, 
 					{ tComparison, coEqual}, 
 					{ tExpression ,0},
 					{ tComplement ,coTO},
@@ -362,7 +362,7 @@ std::vector <tSyntaxNode> FORSyntax = {
 
 std::vector <tSyntaxNode> FORSyntax2 = { 	
 					{ tCommand, coFOR}, 
-					{ tUserDefined, cvNumeric}, 
+					{ tUserDefined, cvDouble}, 
 					{ tComparison, coEqual}, 
 					{ tExpression ,0},
 					{ tComplement ,coDOWNTO},
@@ -372,7 +372,7 @@ std::vector <tSyntaxNode> FORSyntax2 = {
 
 std::vector <tSyntaxNode> FORSyntax3 = { 	
 					{ tCommand, coFOR}, 
-					{ tUserDefined, cvNumeric}, 
+					{ tUserDefined, cvDouble}, 
 					{ tComparison, coEqual}, 
 					{ tExpression ,0},
 					{ tComplement ,coTO},
@@ -384,7 +384,7 @@ std::vector <tSyntaxNode> FORSyntax3 = {
 
 std::vector <tSyntaxNode> NEXTSyntax = { 	
 					{ tCommand, coNEXT}, 
-					{ tUserDefined, cvNumeric}
+					{ tUserDefined, cvDouble}
 					};
 
 

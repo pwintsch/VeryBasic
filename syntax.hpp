@@ -109,7 +109,7 @@ bool IsStringInt(const char *sTxt);
 #define coEVAL DirectCmdSep+6
 #define coLOAD DirectCmdSep+7
 #define coSAVE DirectCmdSep+8
-#define coNODELIST CmdSep+9
+#define coNODELIST DirectCmdSep+9
 #define coEDIT DirectCmdSep+10
 #define coEDITOR DirectCmdSep+11
 #define coPWD DirectCmdSep+12
