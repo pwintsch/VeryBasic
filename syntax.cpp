@@ -388,6 +388,17 @@ std::vector <tSyntaxNode> NEXTSyntax = {
 					};
 
 
+std::vector <tSyntaxNode> READSyntax = { 	
+					{ tCommand, coREAD}, 
+					{ tUserDefinedList, 0}
+					};
+
+
+std::vector <tSyntaxNode> DATASyntax = { 	
+					{ tCommand, coDATA}, 
+					{ tValueList, 0}
+					};
+
 
 // ------------------------------
 
@@ -479,6 +490,8 @@ std::vector<tSyntax> tGrammar = {
 		{ coFOR, 1, FORSyntax2},
 		{ coFOR, 2, FORSyntax3},
 		{ coNEXT, 0, NEXTSyntax},
+		{ coREAD, 0, READSyntax},
+		{ coDATA, 0, DATASyntax},
 		{ coLOAD, 0, LOADSyntax},
 		{ coSAVE, 0, SAVESyntax},
 		{ coCHDIR, 0, CHDIRSyntax},

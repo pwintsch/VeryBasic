@@ -940,6 +940,46 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 }
                 Arguments.push_back(PrintExpr);
                 SyntaxIndex++;
+            } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tUserDefinedList) {
+                bool ExpectVariable=true;
+                while (!RuleSearchError && TokenIndex<Nodes.size()) {
+                    if (Nodes[TokenIndex].Type==tUserDefined && ExpectVariable) {
+                        CommandNode Argument;
+                        Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
+                        Arguments.push_back(Argument);
+                        TokenIndex++;
+                        ExpectVariable=false;
+                    } else if (Nodes[TokenIndex].ID==coComma && !ExpectVariable) {
+                        CommandNode Argument;
+                        Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
+                        Arguments.push_back(Argument);
+                        TokenIndex++;
+                        ExpectVariable=true;
+                    } else {
+                        RuleSearchError=true;
+                    }
+                }
+                SyntaxIndex++;
+            } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tValueList) {
+                bool ExpectValue=true;
+                while (!RuleSearchError && TokenIndex<Nodes.size()) {
+                    if ((Nodes[TokenIndex].Type==tValue || Nodes[TokenIndex].Type==tString) && ExpectValue) {
+                        CommandNode Argument;
+                        Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
+                        Arguments.push_back(Argument);
+                        TokenIndex++;
+                        ExpectValue=false;
+                    } else if (Nodes[TokenIndex].ID==coComma && !ExpectValue) {
+                        CommandNode Argument;
+                        Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
+                        Arguments.push_back(Argument);
+                        TokenIndex++;
+                        ExpectValue=true;
+                    } else {
+                        RuleSearchError=true;
+                    }
+                }
+                SyntaxIndex++;
             } else {
                 break;
             }
