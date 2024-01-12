@@ -41,13 +41,16 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_FILE_NOT_FOUND, "SYNTAX ERROR: File not found"},
                     {ERR_FORSTACK_EMPTY, "SYNTAX ERROR: NEXT without FOR"},
                     {ERR_FORSTACK_MISMATCH, "SYNTAX ERROR: Mismatched FOR/NEXT loop"},
-                    {ERR_BAD_FOR_COMMAND, "SYNTAX ERROR: Bad FOR command syntax"}
+                    {ERR_BAD_FOR_COMMAND, "SYNTAX ERROR: Bad FOR command syntax"},
+                    {ERR_NO_READ_DATA, "EXECUTION ERROR: No DATA items to read"},
+                    {ERR_BAD_RESTORE_LINE, "SYNTAX ERROR: No such line number for RESTORE"}
 };
 
 std::string ErrorMsg(int pID) {
     for (int i=0; i<sizeof(errors); i++) {
         if (errors[i].ID==pID) {
-            return errors[i].Message;
+            std::string s="Error #" + std::to_string(i) + ", " + errors[i].Message;
+            return s;
         }
     }
     return "Unknown error";

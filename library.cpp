@@ -40,7 +40,7 @@ int ListCmd(Command MyCommand)
 
 int NewCmd(Command MyCommand)
 {
-    MyProcessor.Clear();
+    MyProcessor.Reset();
     Terminal.WriteLn("All program lines and Variables cleared");
     return CMD_OK;
 }
@@ -230,6 +230,14 @@ int ChDirCmd(Command MyCommand)
 }
 
 
+
+int ClearCmd(Command MyCommand)
+{
+    MyProcessor.Clear();
+    return CMD_OK;
+}
+
+
 int DirCmd(Command MyCommand)
 {
 
@@ -263,7 +271,7 @@ int DirCmd(Command MyCommand)
 }
 
 
-int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd, PwdCmd, ChDirCmd, DirCmd } ;
+int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd, PwdCmd, ChDirCmd, DirCmd, ClearCmd } ;
 
 
 
@@ -704,12 +712,6 @@ int NextCmd(Command MyCommand)
     }
 }
 
-int ClearCmd(Command MyCommand)
-{
-    MyProcessor.Variables.Clear();
-    MyProcessor.Arrays.Clear();
-    return CMD_OK;
-}
 
 int EndCmd(Command MyCommand)
 {
@@ -800,14 +802,26 @@ int ClsCmd(Command MyCommand)
 
 int ReadCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Read Cmd");
+    float NumResult;
+    std::string StrResult;
+    int ResultType;
+    int r=MyProcessor.GetNextReadCmdData (ResultType, NumResult, StrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    if (ResultType==tValue) {
+        Terminal.WriteFStringLn("Read Data: %f", NumResult);
+//        r=MyProcessor.SetVariable(MyCommand.Arguments[0],NumResult,StrResult);
+    } else {
+//        r=MyProcessor.SetVariable(MyCommand.Arguments[0],NumResult,StrResult);
+        Terminal.WriteFStringLn("Read Data: %s", StrResult.c_str());
+    }
     return CMD_OK;
 }   
 
 
 int DataCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Data Cmd");
     return CMD_OK;
 }
 
@@ -819,6 +833,30 @@ int DefCmd(Command MyCommand)
 }
 
 
+int RestoreCmd(Command MyCommand)
+{
+    if (MyCommand.RuleNo==0) {
+        MyProcessor.ResetReadCmdData();
+    } else {
+        int ResultType;
+        float NumResult;
+        std::string StrResult;
+        int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
+        if (r!=NO_ERROR) {
+            return r;
+        }
+        if (ResultType==tValue) {
+            r=MyProcessor.SetNextReadCmdData((int)NumResult);
+            if (r!=NO_ERROR) {
+                return r;
+            }
+        } else {
+            return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+        }
+    }
+    return CMD_OK;
+}
+
 int TmpCmd(Command MyCommand)
 {
     Terminal.WriteLn("Temp Cmd");
@@ -827,4 +865,4 @@ int TmpCmd(Command MyCommand)
 
 
 
-int (*CommandPtr[])(Command MyCommand) = { LetCmd, InputCmd, RemCmd, PrintCmd, IfCmd, GotoCmd, GosubCmd, ReturnCmd, StopCmd, ForCmd, NextCmd, ClearCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, OptionCmd, ContinueCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, DefCmd, TmpCmd } ;
+int (*CommandPtr[])(Command MyCommand) = { LetCmd, InputCmd, RemCmd, PrintCmd, IfCmd, GotoCmd, GosubCmd, ReturnCmd, StopCmd, ForCmd, NextCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, OptionCmd, ContinueCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, RestoreCmd, DefCmd, TmpCmd } ;

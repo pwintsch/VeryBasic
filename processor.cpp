@@ -220,8 +220,9 @@ int Processor::Stop() {
 }
 
 
+
+
 void Processor::Clear() {
-    Program.clear();
     Variables.Clear();
     Arrays.Clear();
     ReturnStack.Stack.clear();
@@ -229,7 +230,17 @@ void Processor::Clear() {
     CurrentCommand=0;
     ResumeInstructionFlag=false;
     ProgramRunning=false;
+    ReadLastInstruction=0;
+    ReadLastCommand=0;
+    ReadLastArgument=0;
+    SearchNextDataStatement=true;
 }
+
+void Processor::Reset() {
+    Clear();
+    Program.clear();
+}
+
 
 int Processor::Run() {
     CurrentLine=0;
@@ -385,6 +396,81 @@ int Processor::NextForLoop(CommandNode &Variable, bool &Loop) {
     r=SetVariable(Variable, CurrentValue, "");
     return NO_ERROR;
 }
+
+
+void Processor::ResetReadCmdData() {
+    ReadLastInstruction=0;
+    ReadLastCommand=0;
+    ReadLastArgument=0;
+    SearchNextDataStatement=true;
+}
+
+
+int Processor::SetNextReadCmdData(int DestinationLineNo) {
+    ReadLastInstruction=0;
+    ReadLastCommand=0;
+    ReadLastArgument=0;
+    SearchNextDataStatement=true;
+    for (int i=0; i<Program.size(); i++) {
+        if (Program[i].ProgramLine==DestinationLineNo) {
+            ReadLastInstruction=i;
+            return NO_ERROR;
+        }
+    }
+    return ERR_BAD_RESTORE_LINE;
+}
+
+
+int Processor::GetNextReadCmdData(int &ReturnType, float &FLtValue, std::string &StrValue) {
+bool ItemRead=false;
+    if (Program.size()>0) {
+        while (!ItemRead && ReadLastInstruction<Program.size()) {
+            if (SearchNextDataStatement) {
+                if (ReadLastCommand<Program[ReadLastInstruction].Commands.size()) {
+                    if (Program[ReadLastInstruction].Commands[ReadLastCommand].ID==coDATA) {
+                        SearchNextDataStatement=false;
+                    } else {
+                        ReadLastCommand++;
+                    }
+                } else {
+                    ReadLastCommand=0;
+                    ReadLastInstruction++;      
+                }
+            } else if (ReadLastInstruction<Program.size()) {
+                if (ReadLastCommand<Program[ReadLastInstruction].Commands.size()) {
+                    if (ReadLastArgument<Program[ReadLastInstruction].Commands[ReadLastCommand].Arguments.size()) {
+                        ReturnType=Program[ReadLastInstruction].Commands[ReadLastCommand].Arguments[ReadLastArgument].Type;
+                        if (Program[ReadLastInstruction].Commands[ReadLastCommand].Arguments[ReadLastArgument].Type==tString) {
+                            StrValue=Program[ReadLastInstruction].Commands[ReadLastCommand].Arguments[ReadLastArgument].Value;
+                        } else {
+                            FLtValue=std::stof(Program[ReadLastInstruction].Commands[ReadLastCommand].Arguments[ReadLastArgument].Value);
+                        }
+                        ItemRead=true;
+                        ReadLastArgument=ReadLastArgument+2;
+                        return NO_ERROR;
+                    } else {
+                        ReadLastArgument=0;
+                        ReadLastCommand++;
+                        SearchNextDataStatement=true;
+                    }
+                } else {
+                    ReadLastArgument=0;
+                    ReadLastCommand=0;
+                    ReadLastInstruction++;
+                    SearchNextDataStatement=true;         
+                }
+
+            } else {
+                return ERR_NO_READ_DATA;
+            }
+        }
+
+    } else {
+        return ERR_NO_READ_DATA;
+    }
+    return ERR_NO_READ_DATA;
+}
+
 
 void Processor::Exit() {
     Active=false;

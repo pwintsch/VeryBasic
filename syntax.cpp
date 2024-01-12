@@ -26,6 +26,7 @@ tTokenType tTokens[]={
 	{ "PWD", tDirectCommand, coPWD},
 	{ "CHDIR", tDirectCommand, coCHDIR},
 	{ "DIR", tDirectCommand, coDIR},
+	{ "CLEAR", tDirectCommand, coCLEAR, 0},
 	{ "LET", tCommand, coLET, 0},
 	{ "INPUT", tCommand, coINPUT, 0},
 	{ "REM", tCommand, coREM, 0},
@@ -38,7 +39,6 @@ tTokenType tTokens[]={
 	{ "END", tCommand, coEND, 0},
 	{ "FOR", tCommand, coFOR, 0},
 	{ "NEXT", tCommand, coNEXT, 0},
-	{ "CLEAR", tCommand, coCLEAR, 0},
 	{ "OPTION", tCommand, coOPTION},
 	{ "TMPCMD", tCommand, coTMPCMD},	
 	{ "DIM", tCommand, coDIM, 0},
@@ -48,6 +48,7 @@ tTokenType tTokens[]={
 	{ "CLS", tCommand, coCLS, 0},
 	{ "READ", tCommand, coREAD, 0},
 	{ "DATA", tCommand, coDATA, 0},
+	{ "RESTORE", tCommand, coRESTORE},
 	{ "DEF", tCommand, coDEF,0},
 	{ "THEN", tComplement, coTHEN, 0},
 	{ "TO", tComplement, coTO, 0},
@@ -287,6 +288,18 @@ std::vector <tSyntaxNode> CLSSyntax = {
 					};
 
 
+std::vector <tSyntaxNode> RESTORESyntax = {
+				 	{ tCommand, coRESTORE} 
+					};
+					
+
+
+std::vector <tSyntaxNode> RESTORESyntax2 = {
+				 	{ tCommand, coRESTORE},
+					{ tExpression, tValue} 
+					};
+
+
 std::vector <tSyntaxNode> CLEARSyntax = {
 				 	{ tCommand, coCLEAR} 
 					};
@@ -492,6 +505,8 @@ std::vector<tSyntax> tGrammar = {
 		{ coNEXT, 0, NEXTSyntax},
 		{ coREAD, 0, READSyntax},
 		{ coDATA, 0, DATASyntax},
+		{ coRESTORE, 0, RESTORESyntax},
+		{ coRESTORE, 1, RESTORESyntax2},
 		{ coLOAD, 0, LOADSyntax},
 		{ coSAVE, 0, SAVESyntax},
 		{ coCHDIR, 0, CHDIRSyntax},

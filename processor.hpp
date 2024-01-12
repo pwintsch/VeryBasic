@@ -111,6 +111,10 @@ class Processor {
 private:
     std::vector<Instruction> Program;
     bool ProgramRunning;
+    int ReadLastInstruction=0;
+    int ReadLastCommand=0;
+    int ReadLastArgument=0;
+    bool SearchNextDataStatement=true;
 public:
     int LastLine;
     int CurrentLine;
@@ -134,11 +138,15 @@ public:
     int Stop();
     void Exit();
     void Clear();
+    void Reset();
     int Run();
     int SetVariable(CommandNode &Node, float FltValue, std::string StrValue);
     int GetVariable(CommandNode &Node, float &FltValue, int &IntValue, std::string &StrValue);
     int NewForLoop(CommandNode &Variable, float StartValue, float EndValue, float StepValue);
     int NextForLoop(CommandNode &Variable, bool &Loop);
+    int GetNextReadCmdData(int &ReturnType, float &FltValue, std::string &StrValue);
+    int SetNextReadCmdData(int DestinationLineNo);
+    void ResetReadCmdData();
     int ExecuteNextInstruction();
     int ResumeInstruction();
 };
