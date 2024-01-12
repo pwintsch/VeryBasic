@@ -802,19 +802,28 @@ int ClsCmd(Command MyCommand)
 
 int ReadCmd(Command MyCommand)
 {
-    float NumResult;
-    std::string StrResult;
-    int ResultType;
-    int r=MyProcessor.GetNextReadCmdData (ResultType, NumResult, StrResult);
-    if (r!=NO_ERROR) {
-        return r;
-    }
-    if (ResultType==tValue) {
-        Terminal.WriteFStringLn("Read Data: %f", NumResult);
-//        r=MyProcessor.SetVariable(MyCommand.Arguments[0],NumResult,StrResult);
-    } else {
-//        r=MyProcessor.SetVariable(MyCommand.Arguments[0],NumResult,StrResult);
-        Terminal.WriteFStringLn("Read Data: %s", StrResult.c_str());
+    int ArgNo=0;
+    while (ArgNo<MyCommand.Arguments.size()) {
+        if (MyCommand.Arguments[ArgNo].ID==coComma) {
+            ArgNo++;
+        } else {
+            float NumResult;
+            std::string StrResult;
+            int ResultType;
+            int r=MyProcessor.GetNextReadCmdData (ResultType, NumResult, StrResult);
+            if (r!=NO_ERROR) {
+                return r;
+            }
+            if ((ResultType==tValue && (MyCommand.Arguments[ArgNo].ID==cvDouble || MyCommand.Arguments[ArgNo].ID==cvInteger || MyCommand.Arguments[ArgNo].ID==cvSingle)) || (ResultType==tString && MyCommand.Arguments[ArgNo].ID==cvString)) {
+                r=MyProcessor.SetVariable(MyCommand.Arguments[ArgNo],NumResult,StrResult);
+                if (r!=NO_ERROR) {
+                    return r;
+                }
+                ArgNo++;
+            } else {
+                return ERR_MISMATCH_EXPRESSION_TO_VARIABLE_TYPE;
+            }            
+        }
     }
     return CMD_OK;
 }   
