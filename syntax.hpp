@@ -133,9 +133,9 @@ bool IsStringInt(const char *sTxt);
 #define coABS FuncSep+0
 #define coRND FuncSep+1
 #define coMAX FuncSep+2
-#define coLEFT FuncSep+3
-#define coINKEY FuncSep+4
-#define coSQRT FuncSep+5
+#define coSQRT FuncSep+3
+#define coLEFT FuncSep+4
+#define coINKEY FuncSep+5
 #define coTEST FuncSep+6
 
 

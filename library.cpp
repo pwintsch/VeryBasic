@@ -877,9 +877,7 @@ int TmpCmd(Command MyCommand)
 int (*CommandPtr[])(Command MyCommand) = { LetCmd, InputCmd, RemCmd, PrintCmd, IfCmd, GotoCmd, GosubCmd, ReturnCmd, StopCmd, ForCmd, NextCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, OptionCmd, ContinueCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, RestoreCmd, DefCmd, TmpCmd } ;
 
 
-int MaxFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult)
-{
-    Terminal.WriteLn("Evaluate First Argument");
+int MAXFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
     int ParamReturnType=0;
     std::string ParamStrResult="";
     float FirstParamResult=0;
@@ -888,17 +886,53 @@ int MaxFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
     if (r!=NO_ERROR) {
         return r;
     }
-    Terminal.WriteLn("Evaluate Second Argument");
     r=Node.SubArguments[1].Evaluate(ParamReturnType, SecondParamResult, ParamStrResult);
     if (r!=NO_ERROR) {
         return r;
     }
-    Terminal.WriteLn("Evaluate Max");
     float MaxValue=FirstParamResult>SecondParamResult ? FirstParamResult : SecondParamResult;
     ReturnType=tValue;
     NumResult=MaxValue;
     return NO_ERROR;
 }
 
+int ABSFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    float AbsValue=ParamResult<0 ? -ParamResult : ParamResult;
+    ReturnType=tValue;
+    NumResult=AbsValue;
+    return NO_ERROR;
+}
 
-int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { MaxFnct, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+int RNDFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    float RndValue=(float)rand()/(float)RAND_MAX;
+    ReturnType=tValue;
+    StrResult="";
+    NumResult=RndValue;
+    return NO_ERROR;
+}
+
+
+int SQRTFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    float SqrtValue=sqrt(ParamResult);
+    ReturnType=tValue;
+    StrResult="";
+    NumResult=SqrtValue;
+    return NO_ERROR;
+}
+
+
+int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };

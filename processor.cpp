@@ -474,7 +474,7 @@ bool ItemRead=false;
 
 int Processor::ExecuteFunction(CommandNode &Node,int &ReturnType, float &FltValue, std::string &StrValue) {
 
-    int r=FunctionPtr [0](Node, ReturnType, FltValue, StrValue);
+    int r=FunctionPtr [Node.ID-FuncSep](Node, ReturnType, FltValue, StrValue);
     return r;
 }
 

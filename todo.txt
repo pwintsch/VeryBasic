@@ -1,5 +1,5 @@
 To get VeryBasic to the level above TinyBasic I need to add :
-    ( ) Function integration into Expression evaluation
+    (X) Function integration into Expression evaluation
     ( ) Function parsing check of right number of parametres (in Instruction::Initialise)
     ( ) Check return type of Expressions
     ( ) Function parsing check of right return type of parametre expression (in Instruction::Initialise)
