@@ -166,9 +166,9 @@ bool bPrintRPN=false;
                 case tValue:
                 case tString:
                 case tUserDefined:
+                case tFunction:
                     EvalQueue.push_back(element);
                     break;
-                case tFunction:
                 case tUserFunction:
                     return ERR_NOT_AVAILABLE;
                     break;
@@ -209,7 +209,7 @@ bool bPrintRPN=false;
 		if (bPrintRPN) {
             int Qsize=EvalQueue.size();
 			for (int i=0; i<Qsize; i++) {
-				sRPN=sRPN+EvalQueue[i].Value;
+				sRPN=sRPN+EvalQueue[i].GetString();
                 if (i<Qsize-1) sRPN=sRPN+", ";
 			}
 			Terminal.WriteLn(sRPN.c_str());
@@ -264,8 +264,26 @@ bool bPrintRPN=false;
                         Value.push_back(TmpValue);
                     }
                     break;
-                case tUserFunction:
                 case tFunction:
+                    r=MyProcessor.ExecuteFunction(EvalQueue[i], VarType, VarFltValue, VarStrValue);
+                    if (r!=NO_ERROR) {
+                        return r;
+                    }
+                    if (VarType==tValue) {
+                        TmpValue.iType = tValue;
+                        TmpValue.fValue = VarFltValue;
+                        TmpValue.sValue = "";
+                        Value.push_back(TmpValue);
+                    } else if (VarType==tString) {
+                        TmpValue.iType = tString;
+                        TmpValue.sValue = VarStrValue;
+                        TmpValue.fValue = 0;
+                        Value.push_back(TmpValue);
+                    } else {
+                        return ERR_UNKNOWN_EXPRESSION_DATA_TYPE;
+                    }
+                    break;
+                case tUserFunction:
                     return ERR_NOT_AVAILABLE;
                     break;
                 case tOperator:

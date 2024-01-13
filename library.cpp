@@ -875,3 +875,30 @@ int TmpCmd(Command MyCommand)
 
 
 int (*CommandPtr[])(Command MyCommand) = { LetCmd, InputCmd, RemCmd, PrintCmd, IfCmd, GotoCmd, GosubCmd, ReturnCmd, StopCmd, ForCmd, NextCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, OptionCmd, ContinueCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, RestoreCmd, DefCmd, TmpCmd } ;
+
+
+int MaxFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult)
+{
+    Terminal.WriteLn("Evaluate First Argument");
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float FirstParamResult=0;
+    float SecondParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, FirstParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    Terminal.WriteLn("Evaluate Second Argument");
+    r=Node.SubArguments[1].Evaluate(ParamReturnType, SecondParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    Terminal.WriteLn("Evaluate Max");
+    float MaxValue=FirstParamResult>SecondParamResult ? FirstParamResult : SecondParamResult;
+    ReturnType=tValue;
+    NumResult=MaxValue;
+    return NO_ERROR;
+}
+
+
+int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { MaxFnct, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };

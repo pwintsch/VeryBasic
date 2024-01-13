@@ -19,6 +19,17 @@ struct tSyntax {
 	std::vector<tSyntaxNode> Syntax;
 };
 
+
+ struct tFunctionSyntax {
+	int iFunctionCode;
+	int tReturnType;
+	std::vector<int> ArgumentTypes;
+};
+
+
+// extern const tFunctionSyntax tFunctionGrammar[];
+
+
 //extern const tSyntax tGrammar[];
 
 std::vector<tSyntax> GetSyntaxRules(int iCommandCode);

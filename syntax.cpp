@@ -413,62 +413,51 @@ std::vector <tSyntaxNode> DATASyntax = {
 					};
 
 
-// ------------------------------
+std::vector <tSyntaxNode> RANDOMIZESyntax = { 	
+				 	{ tCommand, coRANDOMIZE}
+					};
 
 
 
+std::vector <tSyntaxNode> CONTINUESyntax = { 	
+				 	{ tCommand, coCONTINUE}
+					};
 
 
+std::vector <tSyntaxNode> RANDOMIZESyntax2 = { 	
+				 	{ tCommand, coRANDOMIZE}, 
+					{ tExpression, tValue}
+					};
 
 
-
-tSyntaxNode tCONTINUESyntax[] = { 	{ tCommand, coCONTINUE}, 
-					{ SYNTAX_END, 0} };
-
-
-tSyntaxNode tNODELISTyntax[] = { 	{ tDirectCommand, coNODELIST},
-       					{ tValue, coInteger},	
-					{ SYNTAX_END, 0} };
-
-
-
-
-tSyntaxNode tRANDOMIZESyntax[] = { 	{ tCommand, coRANDOMIZE}, 
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tRANDOMIZESyntax2[] = { 	{ tCommand, coRANDOMIZE}, 
-					{ tExpression, tValue},
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tEDITSyntax[] = { 	{ tDirectCommand, coEDIT},
-       				{ tValue, coInteger},	
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tEDITORSyntax[] = { 	{ tDirectCommand, coEDITOR}, 
-					{ SYNTAX_END, 0} };
-
-
-tSyntaxNode tREADSyntax[] = { 	{ tCommand, coREAD}, 
-					{ tUserDefinedList, 0}, 
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tDATASyntax[] = { 	{ tCommand, coDATA}, 
-					{ tValueList, 0}, 
-					{ SYNTAX_END, 0} };
-
-tSyntaxNode tDEFSyntax[] = { 	{ tCommand, coDEF}, 
-//					{ tComplement, coFN},
+std::vector <tSyntaxNode> DEFSyntax = { 	
+					{ tCommand, coDEF},
 					{ tUserFunction, 0}, 
 					{ tComparison, coEqual}, 
-					{ tExpression ,0},
-					{ SYNTAX_END, 0} };
+					{ tExpression ,0}
+					};
 
-tSyntaxNode tDEFSyntax2[] = { 	{ tCommand, coDEF}, 
+
+std::vector <tSyntaxNode> DEFSyntax2 = { 	
+					{ tCommand, coDEF}, 
 					{ tComplement, coFN},
 					{ tUserFunction, 0}, 
 					{ tComparison, coEqual}, 
-					{ tExpression ,0},
-					{ SYNTAX_END, 0} };
+					{ tExpression ,0}
+					};
+
+
+
+std::vector <tSyntaxNode> EDITORSyntax = { 	
+				 	{ tDirectCommand, coEDITOR}
+					};
+
+
+std::vector <tSyntaxNode> NODELISTyntax = { 	
+						{ tDirectCommand, coNODELIST},
+       					{ tValue, coInteger},	
+						};
+
 
 
 
@@ -514,22 +503,40 @@ std::vector<tSyntax> tGrammar = {
 		{ coEDIT, 0, EDITSyntax},
 		{ coTMPCMD, 0, TMPCMDSyntax},
 		{ coOPTION, 0, OPTIONSyntax}
+
 		/*,
 
-		{ coFOR, 0, tFORSyntax2},
-		{ coFOR, 1, tFORSyntax},
-		{ coNEXT, 0, tNEXTSyntax},
+
 		{ coRANDOMIZE, 0, tRANDOMIZESyntax},
 		{ coRANDOMIZE, 1, tRANDOMIZESyntax2},
-		{ coEDIT, 0, tEDITSyntax},
 		{ coEDITOR, 0, tEDITORSyntax},
 		{ coCONTINUE, 0, tCONTINUESyntax},
-		{ coREAD, 0, tREADSyntax},
-		{ coDATA, 0, tDATASyntax},
 		{ coDEF, 0, tDEFSyntax},
 		{ coDEF, 0, tDEFSyntax2},
 		*/
 		};
+
+
+std::vector<int> ABSSyntax =  { tValue};
+std::vector<int> SQRTSyntax=  { tValue};
+std::vector<int> RNDSyntax= {};
+std::vector<int> MAXSyntax= {tValue, tValue};
+std::vector<int> TESTSyntax= {tValue, tValue, tValue};
+std::vector<int> LEFTSyntax= {tString, tValue};
+std::vector<int> INKEYSyntax={};
+std::vector<int> NoParamSyntax= {};
+
+
+std::vector<tFunctionSyntax> tFunctionGrammar = {
+	{ coABS, tValue, ABSSyntax},
+	{ coSQRT, tValue, SQRTSyntax},
+	{ coRND, tValue, RNDSyntax},
+	{ coMAX, tValue, MAXSyntax},
+	{ coTEST, tValue, TESTSyntax},
+	{ coLEFT, tValue, LEFTSyntax},
+	{ coINKEY,  tValue,INKEYSyntax},
+	{ coMEM,  tValue,NoParamSyntax}
+};
 
 
 std::vector<tSyntax> GetSyntaxRules(int iCommandCode) {
@@ -571,9 +578,11 @@ std::map <int, std::string> SyntaxNodeStrings =  {
   { tUserFunction, "USER FUNCTION" }  
 };
 
+
 std::string GetSyntaxNodeString(int iSyntaxNode) {
 	return SyntaxNodeStrings[iSyntaxNode];
 }
+
 
 std::string StringFromSyntaxRule(std::vector<tSyntaxNode> tRule) {
 	std::string s="";

@@ -149,6 +149,7 @@ public:
     void ResetReadCmdData();
     int ExecuteNextInstruction();
     int ResumeInstruction();
+    int ExecuteFunction(CommandNode &Node,int &ReturnType, float &FltValue, std::string &StrValue);
 };
 
 extern Processor MyProcessor;
