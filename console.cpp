@@ -150,7 +150,7 @@ int ReadKeyPress() {
 }
 
 
-char CheckKeyPress() {
+char ConsoleCheckKeyPress() {
   int nread;
   char c;
   nread = read(STDIN_FILENO, &c, 1);
@@ -418,6 +418,11 @@ void Console::WriteLn(const char *sTxt) {
     PrintLn(sStr);
   }
 }
+
+char Console::CheckKeyPress() {
+  return ConsoleCheckKeyPress();
+}
+
 
 int Console::GetString (std::string &sInput) {
 char *sIn=NULL;

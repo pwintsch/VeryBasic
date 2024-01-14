@@ -978,4 +978,17 @@ int LEFTFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &
 }
 
 
-int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+int INKEYFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    StrResult="";
+    NumResult=0;
+    char c;
+    c=Terminal.CheckKeyPress();
+    if (c!='\0') {
+        StrResult=c;
+    }
+    ReturnType=tString;
+    return NO_ERROR;
+}
+
+
+int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };

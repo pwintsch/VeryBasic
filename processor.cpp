@@ -175,6 +175,12 @@ int Processor::ExecuteNextInstruction(){
         } else { 
             r=CommandPtr[(MyInstruction.Commands[i].ID-CmdSep)](MyInstruction.Commands[i]);
         }
+        NoOfInstructionsExecuted++;
+        if (BreakEnabled) {
+            if (NoOfInstructionsExecuted%1000 == 0) {
+                if (Terminal.CheckKeyPress()==CTRL_KEY('z')) return CMD_BREAK;
+            }
+        }
         if (r!=CMD_OK) {
             if (r==CMD_OK_Cond_Fail) {
                 ConditionFailed=true;

@@ -115,6 +115,8 @@ private:
     int ReadLastCommand=0;
     int ReadLastArgument=0;
     bool SearchNextDataStatement=true;
+    int NoOfInstructionsExecuted=0;
+    bool BreakEnabled=true;
 public:
     int LastLine;
     int CurrentLine;

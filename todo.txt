@@ -21,12 +21,12 @@ And then to get it to Nanobasic level
     (X) RANDOMIZE Command
     ( ) CONTINUE Command
     ( ) DEF FN Command 
-    ( ) NODELIST Command (take line number as parametre)
+    (X) NODELIST Command (take line number as parametre)
     (X) RND function
     (X) MAX function
     ( ) TEST function
-    ( ) LEFT function
-        ( ) Finalise Truncate of string
+    (X) LEFT function
+        (X) Finalise Truncate of string
     ( ) INKEY function
     (X) SQRT function
     ( ) MEM function

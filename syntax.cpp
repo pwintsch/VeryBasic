@@ -529,8 +529,8 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coMAX, tValue, MAXSyntax},
 	{ coSQRT, tValue, SQRTSyntax},
 	{ coLEFT, tString, LEFTSyntax},
-	{ coTEST, tValue, TESTSyntax},
 	{ coINKEY, tString,INKEYSyntax},
+	{ coTEST, tValue, TESTSyntax},
 	{ coMEM,  tValue,NoParamSyntax}
 };
 

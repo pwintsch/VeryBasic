@@ -88,9 +88,35 @@ bool bMachineLoop = true;
                 if (MyInstruction.ProgramLine==0) {
                     bool ConditionFailed=false;
                     if (MyInstruction.Commands[0].Type==tDirectCommand) {
+                        bool NoBreakOrError=true;
                         int r=DirectCommandPtr[(MyInstruction.Commands[0].ID-DirectCmdSep)](MyInstruction.Commands[0]);
-                        if (r!=CMD_OK) {
+                        if (r<CMD_OK) {
                             Terminal.WriteLn(ErrorMsg(r).c_str());
+                            NoBreakOrError=false;
+                        } else {
+                            switch (r) {
+                                case CMD_OK:
+                                    break;
+                                case CMD_OK_Cond_Fail:
+                                    ConditionFailed=true;
+                                    break;
+                                case CMD_STOP:
+                                    Terminal.WriteLn("STOP");
+                                    NoBreakOrError=false;
+                                    break;
+                                case CMD_BREAK:
+                                    Terminal.WriteLn("BREAK Requested by user");
+                                    NoBreakOrError=false;
+                                    break;
+                                case CMD_ENDRUN:
+                                    Terminal.WriteLn("END RUN");
+                                    NoBreakOrError=false;
+                                    break;
+                                default:
+                                    Terminal.WriteLn("Unknown command return code");
+                                    NoBreakOrError=false;
+                                    break;
+                            }
                         }
                     } else {
                         int r=NO_ERROR;

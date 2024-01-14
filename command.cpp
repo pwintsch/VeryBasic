@@ -767,16 +767,16 @@ std::string CommandNode::GetString() {
     if (Type==tString) {
         s=s + "\"";
     }
+    if (Type==tFunction) s=s+"(";
     if (SubArguments.size()>0) {
-        if (Type==tFunction) s=s+"(";
         for (int j=0; j<SubArguments.size(); j++) {
             if (j>0 && Type==tFunction) {
                 s=s + ", ";
             }
             s=s + SubArguments[j].GetString();
         }
-        if (Type==tFunction) s=s+")";
     }
+    if (Type==tFunction) s=s+")";
     return s;
 }
 

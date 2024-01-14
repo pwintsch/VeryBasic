@@ -49,6 +49,7 @@ public:
   void Write(const char *sTxt);
   void WriteLn(const char *sTxt);
   void GetConsoleInput (std::string &sInput, int iNoOfChar);
+  char CheckKeyPress();
   int GetString (std::string &sInput);
   bool GetYNConfirmation(const char *sQuestion);
   void MoveCursorToNextTab();
