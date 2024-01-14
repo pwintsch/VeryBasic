@@ -95,6 +95,25 @@ std::string Instruction::GetString() {
     return s;
 }
 
+std::string Instruction::GetDetailedString() {
+    std::string s="";
+    if (ProgramLine>0) {
+        s=std::to_string(ProgramLine) + "   ";
+    } 
+    for (int i=0; i<Commands.size(); i++){
+        if (i>0) {
+            if (Commands[i-1].ID!=coIF) { 
+                s= s + " : ";
+            } else { 
+                s= s + " ";
+            }
+        }
+        s=s+Commands[i].GetDetailedString();
+    }
+    return s;
+}
+
+
 
 Instruction::~Instruction() {
     // destructor

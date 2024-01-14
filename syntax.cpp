@@ -418,7 +418,6 @@ std::vector <tSyntaxNode> RANDOMIZESyntax = {
 					};
 
 
-
 std::vector <tSyntaxNode> CONTINUESyntax = { 	
 				 	{ tCommand, coCONTINUE}
 					};
@@ -457,8 +456,6 @@ std::vector <tSyntaxNode> NODELISTyntax = {
 						{ tDirectCommand, coNODELIST},
        					{ tValue, coInteger},	
 						};
-
-
 
 
 
@@ -502,13 +499,12 @@ std::vector<tSyntax> tGrammar = {
 		{ coDIR, 0, DIRSyntax},
 		{ coEDIT, 0, EDITSyntax},
 		{ coTMPCMD, 0, TMPCMDSyntax},
-		{ coOPTION, 0, OPTIONSyntax}
+		{ coOPTION, 0, OPTIONSyntax},
+		{ coRANDOMIZE, 0, RANDOMIZESyntax},
+		{ coRANDOMIZE, 1, RANDOMIZESyntax2},
+		{ coNODELIST, 0, NODELISTyntax}
 
 		/*,
-
-
-		{ coRANDOMIZE, 0, tRANDOMIZESyntax},
-		{ coRANDOMIZE, 1, tRANDOMIZESyntax2},
 		{ coEDITOR, 0, tEDITORSyntax},
 		{ coCONTINUE, 0, tCONTINUESyntax},
 		{ coDEF, 0, tDEFSyntax},
@@ -532,8 +528,8 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coRND, tValue, RNDSyntax},
 	{ coMAX, tValue, MAXSyntax},
 	{ coSQRT, tValue, SQRTSyntax},
-	{ coTEST, tValue, TESTSyntax},
 	{ coLEFT, tString, LEFTSyntax},
+	{ coTEST, tValue, TESTSyntax},
 	{ coINKEY, tString,INKEYSyntax},
 	{ coMEM,  tValue,NoParamSyntax}
 };

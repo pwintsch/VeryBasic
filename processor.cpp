@@ -350,6 +350,19 @@ int Processor::GetVariable(CommandNode &Node, float &FltValue, int &IntValue, st
 }
 
 
+int Processor::DetailedLine(int LineNo, std::string &LineText) {
+    LineText="";
+    for (int i=0; i<Program.size(); i++) {
+        if (Program[i].ProgramLine==LineNo) {
+            LineText+=Program[i].GetDetailedString();
+            return NO_ERROR;
+        }
+    }
+    return ERR_NO_LINE_NUMBER;
+}
+
+
+
 int Processor::GotoLine(int LineNo) {
     for (int i=0; i<Program.size(); i++) {
         if (Program[i].ProgramLine>=LineNo) {

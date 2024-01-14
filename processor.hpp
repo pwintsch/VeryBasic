@@ -135,6 +135,7 @@ public:
     std::string ListPartial(int StartLineNo, int EndLineNo);
     std::string Listline(int LineNo);
     int GotoLine(int LineNo);
+    int DetailedLine(int LineNo, std::string &LineText);
     int Stop();
     void Exit();
     void Clear();

@@ -172,11 +172,20 @@ int SaveCmd(Command MyCommand)
     return CMD_OK;
 }
 
-int NodelistCmd(Command MyCommand)
-{
-    Terminal.WriteLn("NodelistCmd");
+int NodelistCmd(Command MyCommand) {
+
+    int LineToDescribe=stoi(MyCommand.Arguments[0].Value);
+    Terminal.WriteFStringLn ("Full Node Description of line %d", LineToDescribe);
+    std::string s="";
+    int r=MyProcessor.DetailedLine(LineToDescribe, s);
+    if (r==NO_ERROR) {
+        Terminal.WriteLn(s.c_str());
+    } else {
+        return r;
+    }
     return CMD_OK;
 }
+
 
 int EditCmd(Command MyCommand)
 {
@@ -753,7 +762,20 @@ int DimCmd(Command MyCommand)
 
 int RandomizeCmd(Command MyCommand)
 {
-    Terminal.WriteLn("Randomize Cmd");
+    if (MyCommand.RuleNo==0) {
+        srand(0);
+    } else {
+        int ResultType;
+        float NumResult;
+        std::string StrResult;
+        int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
+        if (r!=NO_ERROR) {
+            return r;
+        }
+        NumResult= NumResult<0 ? NumResult*-1 : NumResult;
+        unsigned int NewSeed= (int) NumResult;
+        srand(NewSeed);
+    }
     return CMD_OK;
 }
 
@@ -935,4 +957,25 @@ int SQRTFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &
 }
 
 
-int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+int LEFTFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    std::string TargetStr=ParamStrResult;
+    r=Node.SubArguments[1].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    int NoOfChar=int(ParamResult);
+    ReturnType=tString;
+    // need to truncate to right number of Char
+    StrResult=TargetStr.substr(0,NoOfChar);
+    return NO_ERROR;
+}
+
+
+int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
