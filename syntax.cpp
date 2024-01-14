@@ -533,10 +533,27 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coMAX, tValue, MAXSyntax},
 	{ coSQRT, tValue, SQRTSyntax},
 	{ coTEST, tValue, TESTSyntax},
-	{ coLEFT, tValue, LEFTSyntax},
-	{ coINKEY,  tValue,INKEYSyntax},
+	{ coLEFT, tString, LEFTSyntax},
+	{ coINKEY, tString,INKEYSyntax},
 	{ coMEM,  tValue,NoParamSyntax}
 };
+
+
+
+
+int NoOfFunctions() {
+	return tFunctionGrammar.size();
+}
+
+tFunctionSyntax GetFunctionSyntax(int iFunctionCode) {
+	int ParamIndex=iFunctionCode;
+	return tFunctionGrammar[ParamIndex];
+}
+
+
+int GetFunctionType(int iFunctionCode) {
+	return tFunctionGrammar[iFunctionCode].tReturnType;
+}
 
 
 std::vector<tSyntax> GetSyntaxRules(int iCommandCode) {

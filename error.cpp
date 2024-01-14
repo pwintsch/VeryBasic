@@ -43,7 +43,9 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_FORSTACK_MISMATCH, "SYNTAX ERROR: Mismatched FOR/NEXT loop"},
                     {ERR_BAD_FOR_COMMAND, "SYNTAX ERROR: Bad FOR command syntax"},
                     {ERR_NO_READ_DATA, "EXECUTION ERROR: No DATA items to read"},
-                    {ERR_BAD_RESTORE_LINE, "SYNTAX ERROR: No such line number for RESTORE"}
+                    {ERR_BAD_RESTORE_LINE, "SYNTAX ERROR: No such line number for RESTORE"},
+                    {ERR_BAD_FUNCTION_PARAM_NO, "SYNTAX ERROR: Bad number of parameters for function call"},
+                    {ERR_BAD_FUNCTION_PARAM_TYPE, "SYNTAX ERROR: Bad parameter type for function call"}
 };
 
 std::string ErrorMsg(int pID) {

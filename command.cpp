@@ -149,6 +149,229 @@ int CommandNode::Precedence() {
 }
 
 
+int CommandNode::CheckExpressionReturnType(int &ResultType) {
+std::vector<CommandNode> EvalStack;
+std::vector<CommandNode> EvalQueue;
+int NodePrecedence=0;
+
+    if (Type!=tExpression) {
+        return ERR_NOT_EXPRESSION;
+    } else {
+        // Convert to Reverse Polish Notation
+        for (auto & element : SubArguments) {
+            switch (element.Type) {
+                case tValue:
+                case tString:
+                case tUserDefined:
+                case tFunction:
+                    EvalQueue.push_back(element);
+                    break;
+                case tUserFunction:
+                    return ERR_NOT_AVAILABLE;
+                    break;
+                case tComparison:
+                case tOperator:
+                    if (EvalStack.size()>0 && EvalStack.back().Precedence()>element.Precedence()) {
+                        EvalQueue.push_back(EvalStack.back());
+                        EvalStack.pop_back();
+                    }
+                    EvalStack.push_back(element);
+                    break;
+                case tBracket:
+                    if (element.ID==coOpenBracket) {
+                        EvalStack.push_back(element);
+                    } else if (element.ID==coCloseBracket) {
+                        // replace [0] with top
+                        while (EvalStack.size()>0 && EvalStack.back().ID!=coOpenBracket) {
+                            EvalQueue.push_back(EvalStack.back());
+                            EvalStack.pop_back();
+                        }
+                        if (EvalStack.size()==0) {
+                            return ERR_BAD_BRACKET;
+                        }
+                        EvalStack.pop_back();
+                    }
+                    break;
+                default:
+                    return ERR_UNKNOWN_EXPRESSION_NODE;
+            }
+        }
+        // while there are operators on the stack, pop them to the queue
+        while (EvalStack.size()>0) {
+            EvalQueue.push_back(EvalStack.back());
+            EvalStack.pop_back();
+        }
+// Keep clearing up code below to just check return type
+        float Flt1;
+        float Flt2;
+        std::string Str1="";
+        std::string Str2="";
+        std::vector<tVarValue> Value;
+        for (int i=0;i<EvalQueue.size();i++) {
+            Flt1=0;
+            Flt2=0;
+            tVarValue TmpValue;
+            TmpValue.iType = tUnknown;
+            TmpValue.fValue = 0;
+            TmpValue.sValue = "";
+            tVarValue Value1;
+            tVarValue Value2;
+            bool ValueListWasEmpty=false;
+            std::string VarStrValue="";
+            int VarIntValue=0;
+            float VarFltValue=0;
+            int VarType=0;
+            int r=NO_ERROR;
+            switch (EvalQueue[i].Type) {
+                case tValue:
+                    TmpValue.iType = tValue;
+                    TmpValue.fValue = 0;
+                    Value.push_back(TmpValue);
+                    break;
+                case tString:
+                    TmpValue.iType = tString;
+                    TmpValue.sValue = "";
+                    Value.push_back(TmpValue);
+                    break;
+                case tUserDefined:
+                    if (EvalQueue[i].ID==cvString) {
+                        TmpValue.iType = tString;
+                        TmpValue.sValue = "";
+                        Value.push_back(TmpValue);
+                    } else {
+                        TmpValue.iType = tValue;
+                        TmpValue.fValue = 0;
+                        Value.push_back(TmpValue);
+                    }
+                    break;
+                case tFunction:
+                    VarType=GetFunctionType(EvalQueue[i].ID-FuncSep);
+                    if (VarType==tValue) {
+                        TmpValue.iType = tValue;
+                        TmpValue.fValue = 0;
+                        TmpValue.sValue = "";
+                        Value.push_back(TmpValue);
+                    } else if (VarType==tString) {
+                        TmpValue.iType = tString;
+                        TmpValue.sValue = "";
+                        TmpValue.fValue = 0;
+                        Value.push_back(TmpValue);
+                    } else {
+                        return ERR_UNKNOWN_EXPRESSION_DATA_TYPE;
+                    }
+                    break;
+                case tUserFunction:
+                    return ERR_NOT_AVAILABLE;
+                    break;
+                case tOperator:
+                    ValueListWasEmpty=true;
+                    Value2 = Value.back();
+                    Flt2 = Value2.fValue;
+                    Value.pop_back();
+                    if (Value.size() > 0) {
+                        ValueListWasEmpty = false;
+                        Value1 = Value.back();
+                        Flt1 = Value1.fValue;
+                        if (Value1.iType != Value2.iType) {
+                            return ERR_MISMATCH_EXPRESSION_TYPES;
+                        }
+                        Value.pop_back();
+                    }
+                    if (Value2.iType == tValue) {
+                        tVarValue NewValue;
+                        NewValue.iType = tValue;
+                        switch (EvalQueue[i].ID) {
+                            case coAND:
+                                NewValue.fValue = 0;
+                                break;
+                            case coOR:
+                                NewValue.fValue = 0;
+                                break;
+                            case coPlus:
+                                NewValue.fValue = 0;
+                                break;
+                            case coMinus:
+                                NewValue.fValue = 0;
+                                break;
+                            case coMultiply:
+                                NewValue.fValue = 0;
+                                break;
+                            case coDivide:
+                                NewValue.fValue = 0;
+                                break;
+                            case coPower:
+                                NewValue.fValue = 0;
+                                break;
+                            case coUnaryMinus:
+                                if (! ValueListWasEmpty) Value.push_back(Value1);
+                                NewValue.fValue = 0;
+                                break;
+                            case coNOT:
+                                if (! ValueListWasEmpty) Value.push_back(Value1);
+                                NewValue.fValue = 0;
+                                break;
+                            default:
+                                return ERR_EXPRESSION_OPERATOR_DATATYPE;
+                                break;
+                        }
+                        Value.push_back(NewValue);
+                    } else if (Value2.iType == tString) {
+                        tVarValue NewValue;
+                        NewValue.iType = tString;
+                        switch (EvalQueue[i].ID) {
+                            case coPlus:
+                                NewValue.sValue = "";
+                                break;
+                            default:
+                                return ERR_EXPRESSION_OPERATOR_DATATYPE;
+                                break;
+                        }
+                        Value.push_back(NewValue);
+                    } else {
+                        return ERR_UNKNOWN_EXPRESSION_DATA_TYPE;
+                    }
+                    break;
+				case tComparison: {
+                    float CompResult=0;
+                    tVarValue NewValue;
+                    NewValue.iType=tValue;
+                    Value2=Value.back();
+                    Value.pop_back();
+                    Value1=Value.back();
+                    Value.pop_back();
+                    if (Value1.iType!=Value2.iType) {
+                        return ERR_MISMATCH_EXPRESSION_TYPES;
+                    }
+                    switch (EvalQueue[i].ID) {
+                        case coGreater:
+                        case coLess:
+                        case coGreaterEqual:
+                        case coLessEqual:
+                        case coEqual:
+                        case coGreaterLesser:
+                            CompResult=1;
+                            break; 
+                        default:
+                            return ERR_EXPRESSION_OPERATOR_DATATYPE;
+                    }
+
+                    NewValue.fValue=CompResult;
+                    Value.push_back(NewValue); 
+					break; 
+                }
+                default:
+                    return ERR_UNKNOWN_EXPRESSION_NODE;
+            }
+
+        }
+        ResultType=Value[0].iType;
+
+    }
+    return NO_ERROR;
+
+}
+
+
 int CommandNode::Evaluate(int &ResultType, float &NumResult, std::string &StrResult) {
 std::vector<CommandNode> EvalStack;
 std::vector<CommandNode> EvalQueue;
@@ -472,6 +695,29 @@ int CommandNode::InitialiseWithArguments(const Token &SourceToken, std::vector<C
     Type=SourceToken.Type;
     Value=SourceToken.Value;
     SubArguments=pArguments;
+    if (Type==tFunction) {
+        // Get Number of parametres from Syntax and check against number of arguments 
+        int FunctionIndex=ID-FuncSep;
+        if (FunctionIndex<0 || FunctionIndex>=NoOfFunctions()) {
+            return ERR_BAD_FUNCTION_PARAM_NO;
+        }
+        tFunctionSyntax MyFunction=GetFunctionSyntax(FunctionIndex);
+        int NoOfParam=MyFunction.ArgumentTypes.size();
+        if (SubArguments.size()!=NoOfParam) {
+            return ERR_BAD_FUNCTION_PARAM_NO;
+        }
+        for (int i=0; i<SubArguments.size(); i++) {
+            int ExpressionType=0;
+            int r=SubArguments[i].CheckExpressionReturnType(ExpressionType);
+            if (r!=NO_ERROR) {
+                return r;
+            }
+            if (ExpressionType!=MyFunction.ArgumentTypes[i] && MyFunction.ArgumentTypes[i]!=0) {
+                return ERR_BAD_FUNCTION_PARAM_TYPE;
+            }
+        }
+        // after this check each SubArgument against the type in the Syntax
+    }
     return NO_ERROR;
 }
 
@@ -576,7 +822,7 @@ int CommandNode::InitialiseAsExpressionWithTokens (std::vector<Token> tokenVecto
                 CommandNode node;
                 int r2=node.InitialiseWithArguments(tokenVector[i], argumentNodes);
                 if (r2!=NO_ERROR) {
-                    return r;
+                    return r2;
                 }
                 SubArguments.push_back(node);
                 i=argumentEnd; // Here
@@ -653,10 +899,12 @@ int Command::Lexerize(std::vector<Token> &pTokens, std::vector<CommandNode> &Lex
                 return r;
             }
             CommandNode NewNode;
-            NewNode.InitialiseWithArguments(pTokens[i], SubArgs);
+            r=NewNode.InitialiseWithArguments(pTokens[i], SubArgs);
+            if (r!=NO_ERROR) {
+                return r;
+            }
             LexResults.push_back(NewNode);
-            i=j-1;
-            
+            i=j-1;            
         } else {
             // define newnode copy content of token
             CommandNode NewNode;

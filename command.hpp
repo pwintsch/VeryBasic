@@ -18,6 +18,7 @@ public:
     int InitialiseAsExpressionWithTokens (std::vector<Token> tokenVector);
     int NodeCount();
     int Evaluate(int &ResultType, float &NumResult, std::string &StrResult);
+    int CheckExpressionReturnType(int &ResultType);
     int Precedence();
     std::string GetString();
     std::string GetDetailedString(int Padding); 

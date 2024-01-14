@@ -42,6 +42,9 @@ std::string GetTokenTextFromID (int iPassedId);
 std::string GetSyntaxNodeString(int iSyntaxNode);
 bool IsStringFloat(const char *sTxt);
 bool IsStringInt(const char *sTxt);
+tFunctionSyntax GetFunctionSyntax(int iFunctionCode);
+int NoOfFunctions();
+int GetFunctionType(int iFunctionCode);
 
 
 
