@@ -367,9 +367,9 @@ std::vector <tSyntaxNode> FORSyntax = {
 					{ tCommand, coFOR}, 
 					{ tUserDefined, cvDouble}, 
 					{ tComparison, coEqual}, 
-					{ tExpression ,0},
+					{ tExpression ,tValue},
 					{ tComplement ,coTO},
-					{ tExpression ,0}
+					{ tExpression ,tValue}
 					 };
 
 
@@ -377,9 +377,9 @@ std::vector <tSyntaxNode> FORSyntax2 = {
 					{ tCommand, coFOR}, 
 					{ tUserDefined, cvDouble}, 
 					{ tComparison, coEqual}, 
-					{ tExpression ,0},
+					{ tExpression ,tValue},
 					{ tComplement ,coDOWNTO},
-					{ tExpression ,0}
+					{ tExpression ,tValue}
 					 };
 
 
@@ -387,11 +387,11 @@ std::vector <tSyntaxNode> FORSyntax3 = {
 					{ tCommand, coFOR}, 
 					{ tUserDefined, cvDouble}, 
 					{ tComparison, coEqual}, 
-					{ tExpression ,0},
+					{ tExpression ,tValue},
 					{ tComplement ,coTO},
-					{ tExpression ,0},
+					{ tExpression ,tValue},
 					{ tComplement ,coSTEP},
-					{ tExpression ,0}
+					{ tExpression ,tValue}
 					};
 
 

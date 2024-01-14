@@ -727,6 +727,12 @@ int CommandNode::InitialiseExpression(std::vector<CommandNode> &pArguments) {
     Type=tExpression;
     Value="";
     SubArguments=pArguments;
+    int ReturnType=0;
+    int r=CheckExpressionReturnType(ReturnType);
+    if (r!=NO_ERROR) {
+        return r;
+    }   
+    ID=ReturnType;
     return NO_ERROR;
  }
 
@@ -957,6 +963,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 SyntaxIndex++;
             } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tExpression) {
 // build Expression CommanNode from following CommandNodes that are allowed in an expression
+                int ExpressionTypeRequired=SyntaxRules[i].Syntax[SyntaxIndex].iTId;
                 std::vector<CommandNode> ExpressionCommandNodes;
                 int ExpressionIndex=0;
                 while (TokenIndex<Nodes.size() && IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
@@ -973,6 +980,9 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 }
                 CommandNode Argument;
                 Argument.InitialiseExpression(ExpressionCommandNodes);
+                if (ExpressionTypeRequired!=0 && ExpressionTypeRequired!=Argument.ID) {
+                    RuleSearchError=true;
+                }
                 SyntaxIndex++;
                 Arguments.push_back(Argument);
             } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tInputExpression) {
