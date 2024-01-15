@@ -248,10 +248,12 @@ void Processor::Reset() {
 }
 
 
-int Processor::Run() {
-    CurrentLine=0;
-    Variables.Clear();
-    Arrays.Clear();
+int Processor::Run(bool Reset) {
+    if (Reset) {
+        CurrentLine=0;
+        Variables.Clear();
+        Arrays.Clear();
+    }
     ProgramRunning=true;
     ResumeInstructionFlag=false;
     int CommandResult=0;

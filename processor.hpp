@@ -142,7 +142,7 @@ public:
     void Exit();
     void Clear();
     void Reset();
-    int Run();
+    int Run(bool Reset);
     int SetVariable(CommandNode &Node, float FltValue, std::string StrValue);
     int GetVariable(CommandNode &Node, float &FltValue, int &IntValue, std::string &StrValue);
     int NewForLoop(CommandNode &Variable, float StartValue, float EndValue, float StepValue);

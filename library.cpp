@@ -62,7 +62,7 @@ int DebugCmd(Command MyCommand)
 
 int RunCmd(Command MyCommand)
 {
-    int r=MyProcessor.Run();
+    int r=MyProcessor.Run(true);
     if (r==NO_ERROR) {
         return CMD_OK;
     } else {
@@ -280,7 +280,18 @@ int DirCmd(Command MyCommand)
 }
 
 
-int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd, PwdCmd, ChDirCmd, DirCmd, ClearCmd } ;
+int ContinueCmd(Command MyCommand)
+{
+    int r=MyProcessor.Run(false);
+    if (r==NO_ERROR) {
+        return CMD_OK;
+    } else {
+        return r;
+    }
+}
+
+
+int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd, PwdCmd, ChDirCmd, DirCmd, ClearCmd, ContinueCmd } ;
 
 
 
@@ -800,13 +811,6 @@ int OptionCmd(Command MyCommand)
 }
 
 
-int ContinueCmd(Command MyCommand)
-{
-    Terminal.WriteLn("Continue Cmd");
-    return CMD_OK;
-}
-
-
 int BeepCmd(Command MyCommand)
 {
     Terminal.Beep();
@@ -896,7 +900,7 @@ int TmpCmd(Command MyCommand)
 
 
 
-int (*CommandPtr[])(Command MyCommand) = { LetCmd, InputCmd, RemCmd, PrintCmd, IfCmd, GotoCmd, GosubCmd, ReturnCmd, StopCmd, ForCmd, NextCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, OptionCmd, ContinueCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, RestoreCmd, DefCmd, TmpCmd } ;
+int (*CommandPtr[])(Command MyCommand) = { LetCmd, InputCmd, RemCmd, PrintCmd, IfCmd, GotoCmd, GosubCmd, ReturnCmd, StopCmd, ForCmd, NextCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, OptionCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, RestoreCmd, DefCmd, TmpCmd } ;
 
 
 int MAXFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {

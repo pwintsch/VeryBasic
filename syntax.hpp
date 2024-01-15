@@ -105,14 +105,13 @@ int GetFunctionType(int iFunctionCode);
 #define coDIM CmdSep+13
 #define coRANDOMIZE CmdSep+14
 #define coOPTION CmdSep+15
-#define coCONTINUE CmdSep + 16
-#define coBEEP CmdSep + 17
-#define coCLS CmdSep + 18
-#define coREAD CmdSep+19
-#define coDATA CmdSep + 20
-#define coRESTORE CmdSep + 21
-#define coDEF CmdSep+22
-#define coTMPCMD CmdSep+23
+#define coBEEP CmdSep + 16
+#define coCLS CmdSep + 17
+#define coREAD CmdSep+18
+#define coDATA CmdSep + 19
+#define coRESTORE CmdSep + 20
+#define coDEF CmdSep+21
+#define coTMPCMD CmdSep+22
 
 #define DirectCmdSep 300
 #define coLIST DirectCmdSep+1
@@ -130,6 +129,7 @@ int GetFunctionType(int iFunctionCode);
 #define coCHDIR DirectCmdSep+13
 #define coDIR DirectCmdSep+14 
 #define coCLEAR DirectCmdSep+15
+#define coCONTINUE DirectCmdSep + 16
 
 #define FuncSep 400
 

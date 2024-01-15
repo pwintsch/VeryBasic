@@ -27,6 +27,7 @@ tTokenType tTokens[]={
 	{ "CHDIR", tDirectCommand, coCHDIR},
 	{ "DIR", tDirectCommand, coDIR},
 	{ "CLEAR", tDirectCommand, coCLEAR, 0},
+	{ "CONTINUE", tDirectCommand, coCONTINUE, 0},
 	{ "LET", tCommand, coLET, 0},
 	{ "INPUT", tCommand, coINPUT, 0},
 	{ "REM", tCommand, coREM, 0},
@@ -43,7 +44,6 @@ tTokenType tTokens[]={
 	{ "TMPCMD", tCommand, coTMPCMD},	
 	{ "DIM", tCommand, coDIM, 0},
 	{ "RANDOMIZE", tCommand, coRANDOMIZE, 0},
-	{ "CONTINUE", tCommand, coCONTINUE, 0},
 	{ "BEEP", tCommand, coBEEP, 0},
 	{ "CLS", tCommand, coCLS, 0},
 	{ "READ", tCommand, coREAD, 0},
@@ -419,7 +419,7 @@ std::vector <tSyntaxNode> RANDOMIZESyntax = {
 
 
 std::vector <tSyntaxNode> CONTINUESyntax = { 	
-				 	{ tCommand, coCONTINUE}
+				 	{ tDirectCommand, coCONTINUE}
 					};
 
 
@@ -430,17 +430,9 @@ std::vector <tSyntaxNode> RANDOMIZESyntax2 = {
 
 
 std::vector <tSyntaxNode> DEFSyntax = { 	
-					{ tCommand, coDEF},
-					{ tUserFunction, 0}, 
-					{ tComparison, coEqual}, 
-					{ tExpression ,0}
-					};
-
-
-std::vector <tSyntaxNode> DEFSyntax2 = { 	
 					{ tCommand, coDEF}, 
 					{ tComplement, coFN},
-					{ tUserFunction, 0}, 
+					{ tUserFunction, 0},   // could be tUserFunction then in Lexerize check its an acceptable tUSerDefined with right parametre
 					{ tComparison, coEqual}, 
 					{ tExpression ,0}
 					};
@@ -502,11 +494,12 @@ std::vector<tSyntax> tGrammar = {
 		{ coOPTION, 0, OPTIONSyntax},
 		{ coRANDOMIZE, 0, RANDOMIZESyntax},
 		{ coRANDOMIZE, 1, RANDOMIZESyntax2},
+		{ coCONTINUE, 0, CONTINUESyntax},
+		{ coDEF, 0, DEFSyntax},
 		{ coNODELIST, 0, NODELISTyntax}
 
 		/*,
 		{ coEDITOR, 0, tEDITORSyntax},
-		{ coCONTINUE, 0, tCONTINUESyntax},
 		{ coDEF, 0, tDEFSyntax},
 		{ coDEF, 0, tDEFSyntax2},
 		*/

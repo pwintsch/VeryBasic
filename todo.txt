@@ -7,19 +7,20 @@ To get VeryBasic to the level above TinyBasic I need to add :
     (X) Check Command arguments are of right type if expression
     (X) FOR NEXT STEP TO DOWNTO
     (X) READ DATA RESTORE
-    ( ) Build in Break mechanism into Program loop
-    ( ) Build Stop in Input
-    ( ) Write Continue program
+    (X) Build in Break mechanism into Program loop
+    (X) Build Stop in Input
+    (X) Write Continue program
     (X) EDIT command
         ( ) Write a slimmed down version of GetLine so there are less trailing spaces
         ( ) Clean up if edit on last line of screen
     ( ) Some of the improvements left below (in particular Type checking of Expressions)
+    ( ) Check why DIM command returns a 0 Error
 
     And then we will look at Maths functions
 
 And then to get it to Nanobasic level
     (X) RANDOMIZE Command
-    ( ) CONTINUE Command
+    (X) CONTINUE Command
     ( ) DEF FN Command 
     (X) NODELIST Command (take line number as parametre)
     (X) RND function
@@ -27,7 +28,7 @@ And then to get it to Nanobasic level
     ( ) TEST function
     (X) LEFT function
         (X) Finalise Truncate of string
-    ( ) INKEY function
+    (X) INKEY function
     (X) SQRT function
     ( ) MEM function
 

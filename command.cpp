@@ -767,16 +767,21 @@ std::string CommandNode::GetString() {
     if (Type==tString) {
         s=s + "\"";
     }
-    if (Type==tFunction) s=s+"(";
+//    if (Type==tFunction) s=s+"(";
     if (SubArguments.size()>0) {
+        if (Type==tFunction || Type==tUserFunction || Type==tUserDefined) {
+            s=s+"(";
+        } 
         for (int j=0; j<SubArguments.size(); j++) {
             if (j>0 && Type==tFunction) {
                 s=s + ", ";
             }
             s=s + SubArguments[j].GetString();
         }
-    }
-    if (Type==tFunction) s=s+")";
+        if (Type==tFunction || Type==tUserFunction || Type==tUserDefined) {
+            s=s+")";
+        }
+    } else if (Type==tFunction) s=s+"()";
     return s;
 }
 
@@ -985,6 +990,14 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 }
                 SyntaxIndex++;
                 Arguments.push_back(Argument);
+            } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tUserFunction && Nodes[TokenIndex].Type==tUserDefined) {
+                // Check if Node Parametres are all Variables
+                Nodes[TokenIndex].Type=tUserFunction;
+                    CommandNode Argument;
+                    Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
+                    Arguments.push_back(Argument);
+                    TokenIndex++;
+                    SyntaxIndex++;
             } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tInputExpression) {
                 CommandNode InputExpr;
                 InputExpr.Type=tInputExpression;
