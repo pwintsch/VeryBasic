@@ -13,7 +13,7 @@ To get VeryBasic to the level above TinyBasic I need to add :
     (X) EDIT command
         ( ) Write a slimmed down version of GetLine so there are less trailing spaces
         ( ) Clean up if edit on last line of screen
-    ( ) Some of the improvements left below (in particular Type checking of Expressions)
+    (X) Some of the improvements left below (in particular Type checking of Expressions)
     ( ) Check why DIM command returns a 0 Error
 
     And then we will look at Maths functions

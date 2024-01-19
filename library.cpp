@@ -740,11 +740,13 @@ int EndCmd(Command MyCommand)
     return r;
 }
 
+
 int MemCmd(Command MyCommand)
 {
     Terminal.WriteLn("Mem Cmd");
     return CMD_OK;
 }
+
 
 int DimCmd(Command MyCommand)
 {
@@ -767,7 +769,10 @@ int DimCmd(Command MyCommand)
         Dimensions.push_back(IntResult);
     }
     int r=MyProcessor.Arrays.Create(MyCommand.Arguments[0].Value, MyCommand.Arguments[0].ID, Dimensions);
-    return r;
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    return CMD_OK;
 }
 
 

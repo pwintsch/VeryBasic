@@ -105,7 +105,14 @@ class ForStack {
     int NextStep (std::string VariableName, float &CurrentValue, bool &Loop, int &LineNo, int &CommandNo);
 };
 
+class DefFn {
+    public:
+        std::map<std::string, CommandNode*> FunctionMap;
 
+        int AddFunction(std::string Name, CommandNode *Node);
+        int CalcFunction(std::string Name, int &ReturnType, float &FltValue, std::string &StrValue);
+        // local variables need to be set before calling CalcFunction
+};
 
 class Processor {
 private:

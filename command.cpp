@@ -14,12 +14,16 @@ typedef struct tVarValue {
 } tVarValue;
 
 
+
+
+
 bool IsElementOKforExpression(const int pType, const int pID) {
     switch (pType)
     {
     case tValue:
     case tString:
     case tUserDefined:
+    case tUserFunction:
     case tFunction:
     case tOperator:
     case tComparison:
@@ -163,11 +167,9 @@ int NodePrecedence=0;
                 case tValue:
                 case tString:
                 case tUserDefined:
+                case tUserFunction:
                 case tFunction:
                     EvalQueue.push_back(element);
-                    break;
-                case tUserFunction:
-                    return ERR_NOT_AVAILABLE;
                     break;
                 case tComparison:
                 case tOperator:
@@ -234,6 +236,7 @@ int NodePrecedence=0;
                     Value.push_back(TmpValue);
                     break;
                 case tUserDefined:
+                case tUserFunction:
                     if (EvalQueue[i].ID==cvString) {
                         TmpValue.iType = tString;
                         TmpValue.sValue = "";
@@ -259,9 +262,6 @@ int NodePrecedence=0;
                     } else {
                         return ERR_UNKNOWN_EXPRESSION_DATA_TYPE;
                     }
-                    break;
-                case tUserFunction:
-                    return ERR_NOT_AVAILABLE;
                     break;
                 case tOperator:
                     ValueListWasEmpty=true;
@@ -389,11 +389,9 @@ bool bPrintRPN=false;
                 case tValue:
                 case tString:
                 case tUserDefined:
+                case tUserFunction:
                 case tFunction:
                     EvalQueue.push_back(element);
-                    break;
-                case tUserFunction:
-                    return ERR_NOT_AVAILABLE;
                     break;
                 case tComparison:
                 case tOperator:
@@ -507,7 +505,9 @@ bool bPrintRPN=false;
                     }
                     break;
                 case tUserFunction:
-                    return ERR_NOT_AVAILABLE;
+                    TmpValue.iType = tValue;
+                    TmpValue.fValue = 10;
+                    Value.push_back(TmpValue);
                     break;
                 case tOperator:
                     ValueListWasEmpty=true;
@@ -760,6 +760,9 @@ std::string CommandNode::GetDetailedString(int Padding) {
 
 std::string CommandNode::GetString() {
     std::string s="";
+    if (Type==tUserFunction) {
+        s=s+"FN ";
+    }
     if (Type==tString) {
         s=s + "\"";
     }
@@ -874,13 +877,28 @@ Command::~Command() {
 
 
 
-int Command::Lexerize(std::vector<Token> &pTokens, std::vector<CommandNode> &LexResults) {
+int Command::Lexerize(std::vector<Token> &Tokens, std::vector<CommandNode> &LexResults) {
 // Lexer takes Tokens and creates Command Nodes and builds Array Items and Function Call Nodes with expressions for parametres/indices
 // Results put into command's LexResults Vector of CommandNodes
+    std::vector<Token> pTokens;
+    int t=0;
+    while (t<Tokens.size()) {
+            // check for FN
+        if (t<Tokens.size()-1 && Tokens[t].ID==coFN && Tokens[t+1].Type==tUserDefined) {
+            Token NewToken=Tokens[t+1];
+            NewToken.Type=tUserFunction;
+            pTokens.push_back(NewToken);
+            t=t+2;
+        } else {
+            // not FN
+            pTokens.push_back(Tokens[t]);
+            t++;
+        }
+    }
     LexResults.clear();
     for (int i=0; i<pTokens.size(); i++) {
         int j=0;
-        if ((pTokens[i].Type==tFunction) || (pTokens[i].Type==tUserDefined && pTokens[i+1].ID==coOpenBracket && i<pTokens.size()-1)) {
+        if ((pTokens[i].Type==tFunction) || ((pTokens[i].Type==tUserDefined || pTokens[i].Type==tUserFunction) && pTokens[i+1].ID==coOpenBracket && i<pTokens.size()-1)) {
             // Capture parametres within brackets and create expression node
             // Check to see if next token is an open bracket
             int BracketCount=0;
@@ -984,7 +1002,10 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                     RuleSearchError=true;
                 }
                 CommandNode Argument;
-                Argument.InitialiseExpression(ExpressionCommandNodes);
+                int r=Argument.InitialiseExpression(ExpressionCommandNodes);
+                if (r!=NO_ERROR) {
+                    return r;
+                }
                 if (ExpressionTypeRequired!=0 && ExpressionTypeRequired!=Argument.ID) {
                     RuleSearchError=true;
                 }

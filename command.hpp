@@ -33,7 +33,7 @@ class Command {
 public:
     ~Command();
     int Initialise(std::vector<Token> &pTokens);
-    int Lexerize (std::vector<Token> &pTokens, std::vector<CommandNode> &LexResults);
+    int Lexerize (std::vector<Token> &Tokens, std::vector<CommandNode> &LexResults);
     int FindSyntaxRule(std::vector<CommandNode> &LexResults);
     std::string GetString();
     std::string GetDetailedString();
