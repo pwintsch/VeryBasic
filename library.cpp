@@ -869,6 +869,7 @@ int DataCmd(Command MyCommand)
 int DefCmd(Command MyCommand)
 {
     Terminal.WriteLn("Def Cmd");
+    MyProcessor.AddDefFn(MyCommand.Arguments[0].Value, MyCommand.Arguments[0],MyCommand.Arguments[2]);
     return CMD_OK;
 }
 

@@ -22,6 +22,12 @@ And then to get it to Nanobasic level
     (X) RANDOMIZE Command
     (X) CONTINUE Command
     ( ) DEF FN Command 
+        (X) Parse for DEF
+        (X) Parse for FN
+        ( ) DefCmd push function information on DefFN Stack
+        ( ) Adjust variable stack to create context and local stack
+        ( ) DefCmd pushes local variable values on stack with context and remove after avaluate
+        ( ) adjust evaluation
     (X) NODELIST Command (take line number as parametre)
     (X) RND function
     (X) MAX function

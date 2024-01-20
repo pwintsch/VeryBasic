@@ -45,7 +45,9 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_NO_READ_DATA, "EXECUTION ERROR: No DATA items to read"},
                     {ERR_BAD_RESTORE_LINE, "SYNTAX ERROR: No such line number for RESTORE"},
                     {ERR_BAD_FUNCTION_PARAM_NO, "SYNTAX ERROR: Bad number of parameters for function call"},
-                    {ERR_BAD_FUNCTION_PARAM_TYPE, "SYNTAX ERROR: Bad parameter type for function call"}
+                    {ERR_BAD_FUNCTION_PARAM_TYPE, "SYNTAX ERROR: Bad parameter type for function call"},
+                    {ERR_FUNCTION_ALREADY_EXISTS, "SYNTAX ERROR: Illegal function FN name - already exists"},
+                    {ERR_FUNCTION_NOT_FOUND, "SYNTAX ERROR: User Function FN not found"}
 };
 
 std::string ErrorMsg(int pID) {

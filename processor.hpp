@@ -105,12 +105,18 @@ class ForStack {
     int NextStep (std::string VariableName, float &CurrentValue, bool &Loop, int &LineNo, int &CommandNo);
 };
 
-class DefFn {
-    public:
-        std::map<std::string, CommandNode*> FunctionMap;
+struct DefFN {
+    std::string Name;
+    CommandNode FunctionHeader;
+    CommandNode FunctionBody;
+};
 
-        int AddFunction(std::string Name, CommandNode *Node);
-        int CalcFunction(std::string Name, int &ReturnType, float &FltValue, std::string &StrValue);
+
+class DefFnStack {
+    public:
+        std::map<std::string, DefFN> FunctionMap;
+        int AddFunction(std::string Name, CommandNode &Header, CommandNode &Body);
+        int CalcFunction(CommandNode &Node, int &ReturnType, float &FltValue, std::string &StrValue);
         // local variables need to be set before calling CalcFunction
 };
 
@@ -134,6 +140,7 @@ public:
 
     VariableList Variables;
     ArrayList Arrays;
+    DefFnStack Functions;
     CallStack ReturnStack;
     ForStack ForLoopStack;
     bool Active=true;
@@ -150,6 +157,8 @@ public:
     void Clear();
     void Reset();
     int Run(bool Reset);
+    int AddDefFn(std::string Name, CommandNode &Header, CommandNode &Body);
+    int EvaluateDEFFN(CommandNode &Node, int &ReturnType, float &FltValue, std::string &StrValue);
     int SetVariable(CommandNode &Node, float FltValue, std::string StrValue);
     int GetVariable(CommandNode &Node, float &FltValue, int &IntValue, std::string &StrValue);
     int NewForLoop(CommandNode &Variable, float StartValue, float EndValue, float StepValue);

@@ -505,9 +505,23 @@ bool bPrintRPN=false;
                     }
                     break;
                 case tUserFunction:
-                    TmpValue.iType = tValue;
-                    TmpValue.fValue = 10;
-                    Value.push_back(TmpValue);
+                    r=MyProcessor.EvaluateDEFFN (EvalQueue[i], VarType, VarFltValue, VarStrValue);
+                    if (r!=NO_ERROR) {
+                        return r;
+                    }
+                    if (VarType==tValue) {
+                        TmpValue.iType = tValue;
+                        TmpValue.fValue = VarFltValue;
+                        TmpValue.sValue = "";
+                        Value.push_back(TmpValue);
+                    } else if (VarType==tString) {
+                        TmpValue.iType = tString;
+                        TmpValue.sValue = VarStrValue;
+                        TmpValue.fValue = 0;
+                        Value.push_back(TmpValue);
+                    } else {
+                        return ERR_UNKNOWN_EXPRESSION_DATA_TYPE;
+                    }
                     break;
                 case tOperator:
                     ValueListWasEmpty=true;

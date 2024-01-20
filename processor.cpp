@@ -500,6 +500,18 @@ int Processor::ExecuteFunction(CommandNode &Node,int &ReturnType, float &FltValu
 }
 
 
+int Processor::AddDefFn(std::string Name, CommandNode &Header, CommandNode &Body) {
+    int r=Functions.AddFunction(Name, Header, Body);
+    return r;
+}
+
+
+int Processor::EvaluateDEFFN(CommandNode &Node, int &ReturnType, float &FltValue, std::string &StrValue) {
+    int r=Functions.CalcFunction(Node, ReturnType, FltValue, StrValue);
+    return r;
+}
+
+
 void Processor::Exit() {
     Active=false;
 
@@ -870,4 +882,29 @@ void ArrayList::SetBase(int Size) {
 
 ArrayList::~ArrayList() {
     Clear();
+}
+
+
+int DefFnStack::AddFunction(std::string Name, CommandNode &Header, CommandNode &Body) {
+    auto item=FunctionMap.find(Name);
+    if (item==FunctionMap.end()) {
+        DefFN Function;
+        Function.Name=Name;
+        Function.FunctionHeader.InitialiseFromCommandNode(Header);
+        Function.FunctionBody.InitialiseFromCommandNode(Body);
+        FunctionMap[Name]=Function;
+        return NO_ERROR;
+    } else {
+        return ERR_FUNCTION_ALREADY_EXISTS;
+    }
+}
+
+int DefFnStack::CalcFunction(CommandNode &Node, int &ReturnType, float &FltValue, std::string &StrValue) {
+    auto item=FunctionMap.find(Node.Value);
+    if (item==FunctionMap.end()) {
+        return ERR_FUNCTION_NOT_FOUND;
+    } else {
+        int r=item->second.FunctionBody.Evaluate(ReturnType, FltValue, StrValue);
+        return r;
+    }
 }
