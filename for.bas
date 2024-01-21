@@ -1,4 +1,6 @@
-10   FOR A = 1 TO 10
-20   PRINT "a is ";A
-30   NEXT A
+10   PRINT "hoho"
+20   FOR A = 1 TO 3
+30   PRINT "a is ";A
+40   NEXT A
+50   PRINT "finished ..."
 

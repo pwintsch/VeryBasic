@@ -404,7 +404,7 @@ int Processor::NextForLoop(CommandNode &Variable, bool &Loop) {
     }
     int TmpLineIndex=0;
     int TmpCommandIndex=0;
-    r=ForLoopStack.NextStep(Variable.Value, CurrentValue, Loop, CurrentLine, CurrentCommand);
+    r=ForLoopStack.NextStep(Variable.Value, CurrentValue, Loop, TmpLineIndex, TmpCommandIndex);
     if (r!=NO_ERROR) {
         return r;
     }
@@ -520,11 +520,13 @@ void Processor::Exit() {
 
 MyVariable::MyVariable () {
     VariablePtr=NULL;
+    LocalContext=0;
 }
     
-void MyVariable::Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue){
+void MyVariable::Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue, int pContext){
         VariableType=pVarType;  
         Name=pName;
+        LocalContext=pContext;
         switch (VariableType) {
             case cvDouble:
             case cvSingle:
@@ -691,6 +693,7 @@ VariableList::VariableList() {
 
 
 void VariableList::Clear() {
+    VariableContext=0;
     VarList.clear();
 }
 
@@ -711,7 +714,7 @@ int VariableList::Store (std::string Name, int VariableType, float FltValue, int
     auto item=VarList.find(Name);
     if (item==VarList.end()) {
         VarList[Name]=MyVariable();
-        VarList[Name].Set (Name, VariableType, FltValue, IntValue, StrValue);
+        VarList[Name].Set (Name, VariableType, FltValue, IntValue, StrValue, VariableContext);
         return NO_ERROR;
     } else {
         item->second.Update(FltValue, IntValue, StrValue);    
@@ -742,6 +745,22 @@ std::string VariableList::ListVariables() {
     return s;
 }
 
+void VariableList::IncreaseContext() {
+    VariableContext++;
+}
+
+void VariableList::RemoveContext() {
+
+    auto item=VarList.begin();
+    while (item!=VarList.end()) {
+        if (item->second.LocalContext==VariableContext) {
+            item=VarList.erase(item);
+        } else {
+            item++;
+        }
+    }
+    VariableContext--;
+}
 
 ArrayList::ArrayList() {
 }
@@ -904,7 +923,29 @@ int DefFnStack::CalcFunction(CommandNode &Node, int &ReturnType, float &FltValue
     if (item==FunctionMap.end()) {
         return ERR_FUNCTION_NOT_FOUND;
     } else {
+        // check to see if number of arguments match
+        if (Node.SubArguments.size()!=item->second.FunctionHeader.SubArguments.size()) {
+            return ERR_BAD_FUNCTION_PARAM_NO;
+        }
+        MyProcessor.Variables.IncreaseContext();
+        for (int i=0; i<Node.SubArguments.size(); i++) {
+            int LocalReturnType=0;
+            float LocalFltValue=0;
+            std::string LocalStrValue="";
+            int r=Node.SubArguments[i].Evaluate(LocalReturnType, LocalFltValue, LocalStrValue);
+            if (r!=NO_ERROR) {
+                return r;
+            }
+            MyProcessor.SetVariable(item->second.FunctionHeader.SubArguments[i], LocalFltValue, LocalStrValue);
+        }
+        // Check to see if argument types match
+      /*  for (int i=0; i<Node.SubArguments.size(); i++) {
+            if (Node.SubArguments[i].ReturnType!=item->second.FunctionHeader.SubArguments[i].ReturnType) {
+                return ERR_BAD_FUNCTION_PARAM_TYPE;
+            }
+        }   */
         int r=item->second.FunctionBody.Evaluate(ReturnType, FltValue, StrValue);
+        MyProcessor.Variables.RemoveContext();
         return r;
     }
 }

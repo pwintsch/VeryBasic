@@ -429,10 +429,10 @@ std::vector <tSyntaxNode> RANDOMIZESyntax2 = {
 					};
 
 
+
 std::vector <tSyntaxNode> DEFSyntax = { 	
 					{ tCommand, coDEF}, 
-//					{ tComplement, coFN},
-					{ tUserFunction, 0},   // could be tUserFunction then in Lexerize check its an acceptable tUSerDefined with right parametre
+					{ tNewUserFunction, 0},   // could be tUserFunction then in Lexerize check its an acceptable tUSerDefined with right parametre
 					{ tComparison, coEqual}, 
 					{ tExpression ,0}
 					};

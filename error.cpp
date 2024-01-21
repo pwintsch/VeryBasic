@@ -47,7 +47,8 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_BAD_FUNCTION_PARAM_NO, "SYNTAX ERROR: Bad number of parameters for function call"},
                     {ERR_BAD_FUNCTION_PARAM_TYPE, "SYNTAX ERROR: Bad parameter type for function call"},
                     {ERR_FUNCTION_ALREADY_EXISTS, "SYNTAX ERROR: Illegal function FN name - already exists"},
-                    {ERR_FUNCTION_NOT_FOUND, "SYNTAX ERROR: User Function FN not found"}
+                    {ERR_FUNCTION_NOT_FOUND, "SYNTAX ERROR: User Function FN not found"},
+                    {ERR_DEFN_PARAM_NOT_VARIABLE, "SYNTAX ERROR: DEF FN parameter must be a variable"},
 };
 
 std::string ErrorMsg(int pID) {

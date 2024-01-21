@@ -998,6 +998,24 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 Arguments.push_back(Argument);
                 TokenIndex++;
                 SyntaxIndex++;
+            } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tNewUserFunction && Nodes[TokenIndex].Type==tUserFunction) {
+                CommandNode Argument;
+                Argument.ID=Nodes[TokenIndex].ID;
+                Argument.Type=tUserFunction;
+                Argument.Value=Nodes[TokenIndex].Value;
+                Argument.SubArguments.clear();
+                for (int j=0; j<Nodes[TokenIndex].SubArguments.size(); j++) {
+                    if (Nodes[TokenIndex].SubArguments[j].SubArguments.size()==1 && Nodes[TokenIndex].SubArguments[j].SubArguments[0].Type==tUserDefined) {
+                        CommandNode SubArgument;
+                        SubArgument.InitialiseFromCommandNode(Nodes[TokenIndex].SubArguments[j].SubArguments[0]);
+                        Argument.SubArguments.push_back(SubArgument);
+                    } else {
+                        return ERR_DEFN_PARAM_NOT_VARIABLE;
+                    }
+                }
+                Arguments.push_back(Argument);
+                TokenIndex++;
+                SyntaxIndex++;
             } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tExpression) {
 // build Expression CommanNode from following CommandNodes that are allowed in an expression
                 int ExpressionTypeRequired=SyntaxRules[i].Syntax[SyntaxIndex].iTId;

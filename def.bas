@@ -1,4 +1,5 @@
-10   DEF FN X = 10
-20   A = 10*FN X
-30   PRINT "a is ";A
+10   DEF FN X(A) = A*10
+30   LET B = FN X(2)
+35   REM Should now print 20
+40   PRINT "b is ";B
 

@@ -24,10 +24,11 @@ And then to get it to Nanobasic level
     ( ) DEF FN Command 
         (X) Parse for DEF
         (X) Parse for FN
-        ( ) DefCmd push function information on DefFN Stack
+        (X) DefCmd push function information on DefFN Stack
+        ( ) Add control to parser to ensure SubParam of FunctionName only variables
         ( ) Adjust variable stack to create context and local stack
         ( ) DefCmd pushes local variable values on stack with context and remove after avaluate
-        ( ) adjust evaluation
+        (X) adjust evaluation
     (X) NODELIST Command (take line number as parametre)
     (X) RND function
     (X) MAX function

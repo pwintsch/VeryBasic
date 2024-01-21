@@ -12,11 +12,12 @@ public:
     std::string Name;
     // Variable type must be one of cvSingle, cvInteger, cvString, cvDouble
     int VariableType;
+    int LocalContext;
     void *VariablePtr;
     MyVariable ();
     ~MyVariable();
 
-    void Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue);
+    void Set(std::string pName, int pVarType, float pFValue, int pIValue, std::string pSValue, int pContext);
     void Update(float pFValue, int pIValue, std::string pSValue);
     void Get( float &pFValue, int &pIValue, std::string &pSValue);
     std::string StringDesc();
@@ -43,12 +44,15 @@ public:
 class VariableList {
 public:
     std::map<std::string, MyVariable> VarList;
+    int VariableContext=0;
     VariableList();
     ~VariableList();
     int Store (std::string Name, int VariableType, float FltValue, int IntValue, std::string StrValue);
     int Get (std::string Name, int &VariableType, float &FltValue, int &IntValue, std::string &StrValue);
     bool Exists(std::string Name);
     void Clear();
+    void IncreaseContext();
+    void RemoveContext();
     std::string ListVariables();
 };
 

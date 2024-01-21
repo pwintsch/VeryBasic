@@ -76,6 +76,7 @@ int GetFunctionType(int iFunctionCode);
 #define tPrintExpression 22
 #define tInputExpression 23
 #define tUserFunction 24
+#define tNewUserFunction 25
 
 
 
