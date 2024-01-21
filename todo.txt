@@ -1,3 +1,46 @@
+Lots done so lets recap, the next step for my terminal basic:
+    ( ) Clean up line editing
+        ( ) Write a slimmed down version of GetLine so there are less trailing spaces
+        ( ) Clean up if edit on last line of screen
+    ( ) Add Basic functions
+        ( ) LEN function
+        ( ) STR$ function
+        ( ) VAL function
+        ( ) SGN function
+        ( ) ABS function
+        ( ) INT function
+        ( ) SQR function
+    ( ) Add the Microsoft String Manipulation functions
+        ( ) LEFT$ function
+        ( ) MID$ function
+        ( ) RIGHT$ function
+        ( ) INSTR function
+    ( ) Add Maths functions
+        ( ) To the power of (^?)
+        ( ) PI function
+        ( ) EXP function
+        ( ) LN function
+        ( ) SIN function
+        ( ) COS function
+        ( ) TAN function
+        ( ) ASN function
+        ( ) ACS function
+        ( ) ATN function
+    ( ) ON xxx GOTO yyy command
+    ( ) ON xxx GOSUB yyy command
+    ( ) Clean up the SAVE command particularly with Quotes in strings
+    ( ) See if parser can take a literal option for load, save and changedir so no quotes are required
+    ( ) Find some/lots of test basic programs
+    ( ) Think of adding BBC BASIC or SINCLAIR SUPERBASIC structured basic commands 
+        ( ) LABELS
+        ( ) REPEAT .... UNTIL xxxxx
+        ( ) User defined PROCEDURES
+        ( ) User define FUNCTIONS
+
+
+
+
+
 To get VeryBasic to the level above TinyBasic I need to add :
     (X) Function parsing mechanism
     (X) Function integration into Expression evaluation
@@ -11,33 +54,31 @@ To get VeryBasic to the level above TinyBasic I need to add :
     (X) Build Stop in Input
     (X) Write Continue program
     (X) EDIT command
-        ( ) Write a slimmed down version of GetLine so there are less trailing spaces
-        ( ) Clean up if edit on last line of screen
     (X) Some of the improvements left below (in particular Type checking of Expressions)
-    ( ) Check why DIM command returns a 0 Error
+    (X) Check why DIM command returns a 0 Error
 
     And then we will look at Maths functions
 
 And then to get it to Nanobasic level
     (X) RANDOMIZE Command
     (X) CONTINUE Command
-    ( ) DEF FN Command 
+    (X) DEF FN Command 
         (X) Parse for DEF
         (X) Parse for FN
         (X) DefCmd push function information on DefFN Stack
-        ( ) Add control to parser to ensure SubParam of FunctionName only variables
-        ( ) Adjust variable stack to create context and local stack
-        ( ) DefCmd pushes local variable values on stack with context and remove after avaluate
+        (X) Add control to parser to ensure SubParam of FunctionName only variables
+        (X) Adjust variable stack to create context and local stack
+        (X) DefCmd pushes local variable values on stack with context and remove after avaluate
         (X) adjust evaluation
     (X) NODELIST Command (take line number as parametre)
     (X) RND function
     (X) MAX function
-    ( ) TEST function
+    (-) TEST function
     (X) LEFT function
         (X) Finalise Truncate of string
     (X) INKEY function
     (X) SQRT function
-    ( ) MEM function
+    (-) MEM function
 
 
 Previously ...
@@ -49,11 +90,11 @@ To get current interpreter to Tiny Basic level I need to:
     (X) add the STOP and END commands
     (X) add the GOSUB and RETURN command
     (X) add the SAVE command
-        ( ) Decide what to do when double quotes in string
+        (-) Decide what to do when double quotes in string
     (X) add the LOAD command
     (X) add Arrays
         (X) In Arrays.Store check dimensions size and range
     (X) Create PWD command
     (X) Create ChangeDirectory command
-        ( ) Decide if you can chgdir without quotes
+        (-) Decide if you can chgdir without quotes
     (X) test Expression when creating for return type
