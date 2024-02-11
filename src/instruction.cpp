@@ -5,6 +5,7 @@
 
 
 int Instruction::Initialise(TokenCollection &InputTokens) {
+    
     int iPosition=0;
     // if first token is a number, then it's a program line
     if (InputTokens.Tokens[0].ID == coInteger) {

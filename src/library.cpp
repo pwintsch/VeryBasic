@@ -1000,7 +1000,7 @@ int INKEYFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string 
     return NO_ERROR;
 }
 
-/*
+
 int LENFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
     int ParamReturnType=0;
     std::string ParamStrResult="";
@@ -1013,6 +1013,6 @@ int LENFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
     NumResult=ParamStrResult.length();
     return NO_ERROR;
 }  
-*/
 
-int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+
+int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
