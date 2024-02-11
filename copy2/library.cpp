@@ -1000,5 +1000,19 @@ int INKEYFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string 
     return NO_ERROR;
 }
 
+/*
+int LENFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    NumResult=ParamStrResult.length();
+    return NO_ERROR;
+}  
+*/
 
 int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };

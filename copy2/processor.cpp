@@ -519,7 +519,7 @@ void Processor::Exit() {
 
 
 MyVariable::MyVariable () {
-    VariablePtr=NULL;
+//    VariablePtr=NULL;
     LocalContext=0;
 }
     
@@ -530,13 +530,16 @@ void MyVariable::Set(std::string pName, int pVarType, float pFValue, int pIValue
         switch (VariableType) {
             case cvDouble:
             case cvSingle:
-                VariablePtr=new float(pFValue);
+//                VariablePtr=new float(pFValue);
+                Value=pFValue;
                 break;
             case cvInteger:
-                VariablePtr=new int(pIValue);
+//                VariablePtr=new int(pIValue);
+                Value=pIValue;
                 break;
             case cvString:
-                VariablePtr=new std::string(pSValue); 
+//                VariablePtr=new std::string(pSValue); 
+                Value=pSValue;
                 break;
             default:
                 break;
@@ -548,13 +551,16 @@ void MyVariable::Update(float pFValue, int pIValue, std::string pSValue){
         switch (VariableType) {
             case cvDouble:
             case cvSingle:
-                *(float*)VariablePtr=pFValue;
+//                *(float*)VariablePtr=pFValue;
+                Value=pFValue;
                 break;
             case cvInteger:
-                *(int*)VariablePtr=pIValue;
+//                *(int*)VariablePtr=pIValue;
+                Value=pIValue;
                 break;
             case cvString:
-                *(std::string*)VariablePtr=pSValue; 
+//                *(std::string*)VariablePtr=pSValue; 
+                Value=pSValue;
                 break;
             default:
                 break;
@@ -565,13 +571,16 @@ void MyVariable::Get(float &pFValue, int &pIValue, std::string &pSValue){
     switch (VariableType) {
         case cvDouble:
         case cvSingle:
-            pFValue=*(float*)VariablePtr;
+//            pFValue=*(float*)VariablePtr;
+            pFValue=std::any_cast<float>(Value);
             break;
         case cvInteger:
-            pIValue=*(int*)VariablePtr;
+//            pIValue=*(int*)VariablePtr;
+            pIValue=std::any_cast<int>(Value);
             break;
         case cvString:
-            pSValue=*(std::string*)VariablePtr; 
+//            pSValue=*(std::string*)VariablePtr; 
+            pSValue=std::any_cast<std::string>(Value);
             break;
         default:
             break;
@@ -585,15 +594,18 @@ std::string MyVariable::StringDesc() {
         case cvDouble:
         case cvSingle:
             s+="Float : ";
-            s+=std::to_string(*(float*)VariablePtr);
+//            s+=std::to_string(*(float*)VariablePtr); 
+            s+=std::to_string(std::any_cast<float>(Value));
             break;
         case cvInteger:
             s+="Integer : ";
-            s+=std::to_string(*(int*)VariablePtr);
+//            s+=std::to_string(*(int*)VariablePtr);
+            s+=std::to_string(std::any_cast<int>(Value));
             break;
         case cvString:
             s+="String : ";
-            s+=*(std::string*)VariablePtr; 
+//            s+=*(std::string*)VariablePtr;
+            s+=std::any_cast<std::string>(Value); 
             break;
         default:
             break;
@@ -603,23 +615,23 @@ std::string MyVariable::StringDesc() {
 
 
 MyVariable::~MyVariable() {
-
+/*
     if (VariablePtr!=NULL) {    
         switch (VariableType) {
             case cvDouble:
             case cvSingle:
-                delete (float *)VariablePtr;
+//                delete (float *)VariablePtr;
                 break;
             case cvInteger:
-                delete (int *)VariablePtr;
+//                delete (int *)VariablePtr;
                 break;
             case cvString:
-                delete (std::string *)VariablePtr;
+//                delete (std::string *)VariablePtr;
                 break;
             default:
                 break;
         }
-    }
+    }*/
 }
 
 bool MyArray::DimensionsMatch(std::vector<int> &DimensionsToTest, int Base) {

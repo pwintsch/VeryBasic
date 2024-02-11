@@ -65,6 +65,7 @@ tTokenType tTokens[]={
 	{ "INKEY", tFunction, coINKEY},
 	{ "SQRT", tFunction, coSQRT},
 	{ "SQR", tFunction, coSQRT},
+//	{ "LEN", tFunction, coLEN},
 	{ "AT", tPrintArgument, coAT},
 	{ "TAB", tPrintArgument, coTAB},
 	{ "=", tComparison, coEqual, 0},
@@ -512,6 +513,7 @@ std::vector<int> RNDSyntax= {};
 std::vector<int> MAXSyntax= {tValue, tValue};
 std::vector<int> TESTSyntax= {tValue, tValue, tValue};
 std::vector<int> LEFTSyntax= {tString, tValue};
+std::vector<int> LENSyntax= {tString};
 std::vector<int> INKEYSyntax={};
 std::vector<int> NoParamSyntax= {};
 
@@ -523,6 +525,7 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coSQRT, tValue, SQRTSyntax},
 	{ coLEFT, tString, LEFTSyntax},
 	{ coINKEY, tString,INKEYSyntax},
+//	{ coLEN, tValue, LENSyntax},
 	{ coTEST, tValue, TESTSyntax},
 	{ coMEM,  tValue,NoParamSyntax}
 };

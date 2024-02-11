@@ -141,6 +141,7 @@ int GetFunctionType(int iFunctionCode);
 #define coLEFT FuncSep+4
 #define coINKEY FuncSep+5
 #define coTEST FuncSep+6
+//#define coLEN FuncSep+7
 
 
 

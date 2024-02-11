@@ -66,5 +66,12 @@
         "map": "cpp",
         "charconv": "cpp"
     },
-    "C_Cpp.default.compilerPath": "/usr/bin/clang++"
+    "C_Cpp.default.compilerPath": "/usr/bin/clang++",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/Users/pwintsch/Projects/VeryBasic/bin",
+            "binaryPath": "/Users/pwintsch/Projects/VeryBasic/bin/verybasic",
+            "binaryArgs": []
+        }
+    ]
 }

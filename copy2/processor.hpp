@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <any>
 #include "instruction.hpp"
 
 
@@ -13,7 +14,9 @@ public:
     // Variable type must be one of cvSingle, cvInteger, cvString, cvDouble
     int VariableType;
     int LocalContext;
-    void *VariablePtr;
+//    void *VariablePtr;
+    std::any Value;
+
     MyVariable ();
     ~MyVariable();
 
