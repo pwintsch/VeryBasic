@@ -56,7 +56,6 @@ bool bMachineLoop = true;
     }
     // temp message whilst building
     Terminal.WriteLn("Enter q to quit");
-
     Program.clear();
 	while (MyProcessor.Active) {
         sInput="";
@@ -181,7 +180,7 @@ int main() {
     Terminal.Initialise();
     Terminal.Clear();
     Terminal.WriteLn("Hello, world!");
-    Terminal.WriteLn("I am using my new console class! v0.0009a");
+    Terminal.WriteLn("I am using my new console class! v0.0010c");
     Terminal.WriteFStringLn ("Terminal Size: Rows: %d Columns: %d ", Terminal.get_height(), Terminal.get_width());
     Terminal.WriteLn("");
     PromptLoop();

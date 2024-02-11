@@ -10,10 +10,10 @@
 TARGET     = verybasic
 
 CXX        = clang++
-CXXFLAGS   = -std=c++17 
+CXXFLAGS   = -std=c++17 -g
 
 LD         = clang++ -o
-LDFLAGS    = -Wall -pedantic -fcolor-diagnostics -fansi-escape-codes
+LDFLAGS    = -Wall -pedantic -fcolor-diagnostics -fansi-escape-codes 
 
 SRCDIR     = src
 OBJDIR     = obj
