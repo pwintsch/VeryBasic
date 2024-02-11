@@ -1015,4 +1015,69 @@ int LENFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
 }  
 
 
-int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+int STRFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    std::string StrValue=std::to_string(ParamResult);
+    int StringLength=StrValue.length();
+    int i=0;
+    for (i=StringLength-1; i>=0; i--) {
+        if (StrValue[i]=='.') {
+            i--;
+            break;
+        } else if (StrValue[i]!='0') {
+            break;
+        }
+    }
+    StrValue=StrValue.substr(0,i+1);
+    ReturnType=tString;
+    StrResult=StrValue;
+    return NO_ERROR;
+}  
+
+bool IsStringValue (const char *sTxt) {
+	
+	if (*sTxt=='\0') {
+		return false;
+	}
+    if (*sTxt=='+' || *sTxt=='-') {
+        sTxt++;
+    }
+	while(*sTxt != '\0') {
+		if(*sTxt < '0' || *sTxt > '9') {
+			if (*sTxt!='.') {
+				return false;
+			}
+		}		
+		sTxt++;
+	}
+	return true;
+}
+
+
+
+int VALFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    // Convert string to number
+    if (IsStringValue(ParamStrResult.c_str())) {
+        NumResult=stof(ParamStrResult);
+    } else {
+        NumResult=0;
+    }
+    return NO_ERROR;
+}  
+
+
+int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, STRFnct, VALFnct, NULL, NULL, NULL, NULL, NULL, NULL };

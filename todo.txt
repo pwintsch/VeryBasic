@@ -4,8 +4,8 @@ Lots done so lets recap, the next step for my terminal basic:
         ( ) Clean up if edit on last line of screen
     ( ) Move variables to std::any
     ( ) Add Basic functions
-        ( ) LEN function
-        ( ) STR$ function
+        (X) LEN function
+        (X) STR$ function
         ( ) VAL function
         ( ) SGN function
         ( ) ABS function
