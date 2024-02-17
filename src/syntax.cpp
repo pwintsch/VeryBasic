@@ -71,6 +71,7 @@ tTokenType tTokens[]={
 	{ "VAL", tFunction, coVAL},
 	{ "TIMER", tFunction, coTIMER},
 	{ "INT", tFunction, coINT},
+	{ "SGN", tFunction, coSGN},
 	{ "AT", tPrintArgument, coAT},
 	{ "TAB", tPrintArgument, coTAB},
 	{ "=", tComparison, coEqual, 0},
@@ -525,7 +526,8 @@ std::vector<int> VALSyntax= {tString};
 std::vector<int> INKEYSyntax={};
 std::vector<int> NoParamSyntax= {};
 std::vector<int> TIMERSyntax= {};
-std::vector<int> INTSyntax =  { tValue};
+std::vector<int> INTSyntax =  {tValue};
+std::vector<int> SGNSyntax = {tValue};
 
 
 std::vector<tFunctionSyntax> tFunctionGrammar = {
@@ -541,6 +543,7 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coTIMER, tValue, TIMERSyntax},
 	{ coINT, tValue, INTSyntax},
 	{ coRIGHT, tString, RIGHTSyntax},
+	{ coSGN, tValue, SGNSyntax},
 	{ coTEST, tValue, TESTSyntax}
 };
 
