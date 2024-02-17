@@ -90,6 +90,8 @@ bool bMachineLoop = true;
                         bool NoBreakOrError=true;
                         int r=DirectCommandPtr[(MyInstruction.Commands[0].ID-DirectCmdSep)](MyInstruction.Commands[0]);
                         if (r<CMD_OK) {
+                            Terminal.WriteLn("");
+                            Terminal.WriteFStringLn("Error at Line %d", MyProcessor.LastProgramLine());
                             Terminal.WriteLn(ErrorMsg(r).c_str());
                             NoBreakOrError=false;
                         } else {
@@ -128,6 +130,7 @@ bool bMachineLoop = true;
                                 r=CommandPtr[(MyInstruction.Commands[i].ID-CmdSep)](MyInstruction.Commands[i]);
                             }
                             if (r<CMD_OK) {
+                                Terminal.WriteLn("");
                                 Terminal.WriteLn(ErrorMsg(r).c_str());
                                 NoBreakOrError=false;
                             } else {

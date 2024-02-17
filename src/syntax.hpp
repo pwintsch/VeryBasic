@@ -143,7 +143,10 @@ int GetFunctionType(int iFunctionCode);
 #define coLEN FuncSep+6
 #define coSTR FuncSep+7
 #define coVAL FuncSep+8
-#define coTEST FuncSep+9
+#define coTIMER FuncSep+9
+#define coINT FuncSep+10
+#define coRIGHT FuncSep+11
+#define coTEST FuncSep+12
 
 
 

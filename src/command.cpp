@@ -865,7 +865,7 @@ int CommandNode::InitialiseAsExpressionWithTokens (std::vector<Token> tokenVecto
             }
         } else {
             if (tokenVector[i].ID==coMinus) {
-                if (i==0 || (tokenVector[i-1].Type!=tUserDefined && tokenVector[i-1].Type!=tValue && tokenVector[i-1].ID!=coCloseBracket)) {
+                if (i==0 || (tokenVector[i-1].Type!=tUserDefined && tokenVector[i-1].Type!=tFunction && tokenVector[i-1].Type!=tValue && tokenVector[i-1].ID!=coCloseBracket)) {
                     // unary minus
                     tokenVector[i].ID=coUnaryMinus;
                 }
@@ -1022,7 +1022,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 std::vector<CommandNode> ExpressionCommandNodes;
                 int ExpressionIndex=0;
                 while (TokenIndex<Nodes.size() && IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                    if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                    if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tFunction && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                         // unary minus
                         Nodes[TokenIndex].ID=coUnaryMinus;
                     }
@@ -1073,7 +1073,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                     } else if (Nodes[TokenIndex].ID==coOpenBracket) {
                         int ExpressionIndex=0;
                         while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tFunction  && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                                 // unary minus
                                 Nodes[TokenIndex].ID=coUnaryMinus;
                             }
@@ -1096,7 +1096,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                         std::vector<CommandNode> TabArgument;
                         int ExpressionIndex=0;
                         while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined  && Nodes[TokenIndex-1].Type!=tFunction && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                                 // unary minus
                                 Nodes[TokenIndex].ID=coUnaryMinus;
                             }
@@ -1120,7 +1120,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                         std::vector<CommandNode> AtArgument;
                         int ExpressionIndex=0;
                         while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined  && Nodes[TokenIndex-1].Type!=tFunction && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                                 // unary minus
                                 Nodes[TokenIndex].ID=coUnaryMinus;
                             }
@@ -1146,7 +1146,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                         }
                         ExpressionIndex=0;
                         while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tFunction && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                                 // unary minus
                                 Nodes[TokenIndex].ID=coUnaryMinus;
                             }
@@ -1182,8 +1182,8 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 while (TokenIndex<Nodes.size()) {
                     // adapt for if below to become a while function (while token for expression make expression if not and control char then add token for control char and continue till end of line)
                     int ExpressionIndex=0;
-                    while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                        if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                    while (IsCommandNodeOKForExpression(Nodes[TokenIndex]) && TokenIndex<Nodes.size()) {
+                        if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tFunction && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                             // unary minus
                             Nodes[TokenIndex].ID=coUnaryMinus;
                         }
@@ -1209,7 +1209,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                         std::vector<CommandNode> TabArgument;
                         int ExpressionIndex=0;
                         while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tFunction && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                                 // unary minus
                                 Nodes[TokenIndex].ID=coUnaryMinus;
                             }
@@ -1233,7 +1233,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                         std::vector<CommandNode> AtArgument;
                         int ExpressionIndex=0;
                         while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tFunction && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                                 // unary minus
                                 Nodes[TokenIndex].ID=coUnaryMinus;
                             }
@@ -1259,7 +1259,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                         }
                         ExpressionIndex=0;
                         while (IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
-                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
+                            if (Nodes[TokenIndex].ID==coMinus && (ExpressionIndex==0 || (Nodes[TokenIndex-1].Type!=tUserDefined && Nodes[TokenIndex-1].Type!=tFunction && Nodes[TokenIndex-1].Type!=tValue && Nodes[TokenIndex-1].ID!=coCloseBracket))) {
                                 // unary minus
                                 Nodes[TokenIndex].ID=coUnaryMinus;
                             }

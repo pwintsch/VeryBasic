@@ -1,4 +1,6 @@
 Lots done so lets recap, the next step for my terminal basic:
+    ( ) Bug fixing
+        ( ) When saving OR operator no spaces either side
     ( ) Clean up line editing
         ( ) Write a slimmed down version of GetLine so there are less trailing spaces
         ( ) Clean up if edit on last line of screen

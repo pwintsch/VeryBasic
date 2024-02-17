@@ -136,7 +136,7 @@ private:
     int ReadLastArgument=0;
     bool SearchNextDataStatement=true;
     int NoOfInstructionsExecuted=0;
-    bool BreakEnabled=true;
+    bool BreakEnabled=false;
 public:
     int LastLine;
     int CurrentLine;
@@ -176,6 +176,7 @@ public:
     int ExecuteNextInstruction();
     int ResumeInstruction();
     int ExecuteFunction(CommandNode &Node,int &ReturnType, float &FltValue, std::string &StrValue);
+    int LastProgramLine();
 };
 
 extern Processor MyProcessor;

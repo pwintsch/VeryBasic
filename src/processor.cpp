@@ -512,6 +512,15 @@ int Processor::EvaluateDEFFN(CommandNode &Node, int &ReturnType, float &FltValue
 }
 
 
+int Processor::LastProgramLine() {
+    if (Program.size()>CurrentLine) {
+        return Program[CurrentLine].ProgramLine;
+    } else {
+        return 0;
+    }
+}
+
+
 void Processor::Exit() {
     Active=false;
 

@@ -60,7 +60,8 @@ tTokenType tTokens[]={
 	{ "RND", tFunction, coRND, 0},
 	{ "MEM", tFunction, coMEM, 0},
 	{ "MAX", tFunction, coMAX, 0},
-	{ "LEFT", tFunction, coLEFT, 0},
+	{ "LEFT$", tFunction, coLEFT, 0},
+	{ "RIGHT$", tFunction, coRIGHT},
 	{ "TEST", tFunction, coTEST, 0},
 	{ "INKEY", tFunction, coINKEY},
 	{ "SQRT", tFunction, coSQRT},
@@ -68,6 +69,8 @@ tTokenType tTokens[]={
 	{ "LEN", tFunction, coLEN},
 	{ "STR$", tFunction, coSTR},
 	{ "VAL", tFunction, coVAL},
+	{ "TIMER", tFunction, coTIMER},
+	{ "INT", tFunction, coINT},
 	{ "AT", tPrintArgument, coAT},
 	{ "TAB", tPrintArgument, coTAB},
 	{ "=", tComparison, coEqual, 0},
@@ -515,11 +518,14 @@ std::vector<int> RNDSyntax= {};
 std::vector<int> MAXSyntax= {tValue, tValue};
 std::vector<int> TESTSyntax= {tValue, tValue, tValue};
 std::vector<int> LEFTSyntax= {tString, tValue};
+std::vector<int> RIGHTSyntax= {tString, tValue};
 std::vector<int> LENSyntax= {tString};
 std::vector<int> STRSyntax= {tValue};
 std::vector<int> VALSyntax= {tString};
 std::vector<int> INKEYSyntax={};
 std::vector<int> NoParamSyntax= {};
+std::vector<int> TIMERSyntax= {};
+std::vector<int> INTSyntax =  { tValue};
 
 
 std::vector<tFunctionSyntax> tFunctionGrammar = {
@@ -532,6 +538,9 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coLEN, tValue, LENSyntax},
 	{ coSTR, tValue, STRSyntax},
 	{ coVAL, tString, VALSyntax},
+	{ coTIMER, tValue, TIMERSyntax},
+	{ coINT, tValue, INTSyntax},
+	{ coRIGHT, tString, RIGHTSyntax},
 	{ coTEST, tValue, TESTSyntax}
 };
 

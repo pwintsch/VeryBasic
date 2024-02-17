@@ -4,6 +4,23 @@
 #include "error.hpp"
 #include "syntax.hpp"
 #include "filemgmt.hpp"
+#include <cmath>
+#include <ctime>
+
+float duration_since_midnight() {
+    auto now = std::chrono::system_clock::now();
+
+    time_t tnow = std::chrono::system_clock::to_time_t(now);
+    tm *date = std::localtime(&tnow);
+    date->tm_hour = 0;
+    date->tm_min = 0;
+    date->tm_sec = 0;
+    auto midnight = std::chrono::system_clock::from_time_t(std::mktime(date));
+
+    auto difference= now-midnight;
+    return std::chrono::duration<float>(difference).count();
+}
+
 
 
 
@@ -988,6 +1005,30 @@ int LEFTFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &
 }
 
 
+int RIGHTFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    std::string TargetStr=ParamStrResult;
+    r=Node.SubArguments[1].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    int NoOfChar=int(ParamResult);
+    ReturnType=tString;
+    // need to truncate to right number of Char
+    if (NoOfChar>TargetStr.size()) {
+        NoOfChar=TargetStr.size();
+    }
+    StrResult=TargetStr.substr(TargetStr.size()-NoOfChar, NoOfChar);
+    return NO_ERROR;
+}
+
+
 int INKEYFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
     StrResult="";
     NumResult=0;
@@ -1041,7 +1082,6 @@ int STRFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
 }  
 
 bool IsStringValue (const char *sTxt) {
-	
 	if (*sTxt=='\0') {
 		return false;
 	}
@@ -1080,4 +1120,26 @@ int VALFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
 }  
 
 
-int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, STRFnct, VALFnct, NULL, NULL, NULL, NULL, NULL, NULL };
+int TIMERFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+
+    ReturnType=tValue;
+    NumResult=duration_since_midnight();
+    return NO_ERROR;
+}  
+
+
+int INTFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    NumResult=round(ParamResult);
+    return NO_ERROR;
+}  
+
+
+int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, STRFnct, VALFnct, TIMERFnct, INTFnct, RIGHTFnct, NULL, NULL, NULL };
