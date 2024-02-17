@@ -1206,4 +1206,123 @@ int INSTRFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string 
 }
 
 
-int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, STRFnct, VALFnct, TIMERFnct, INTFnct, RIGHTFnct, SGNFnct, MIDFnct, INSTRFnct };
+int PIFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    ReturnType=tValue;
+    NumResult=3.14159265358979323846;
+    return NO_ERROR;
+}
+
+
+int EXPFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    NumResult=exp(ParamResult);
+    return NO_ERROR;
+}  
+
+
+int LNFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    NumResult=log(ParamResult);
+    return NO_ERROR;
+}
+
+
+int COSFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    NumResult=cos(ParamResult);
+    return NO_ERROR;
+}
+
+
+int SINFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    NumResult=sin(ParamResult);
+    return NO_ERROR;
+}
+
+
+int TANFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    NumResult=tan(ParamResult);
+    return NO_ERROR;
+}
+
+
+int ATNFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    NumResult=atan(ParamResult);
+    return NO_ERROR;
+}
+
+
+int ACSFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    NumResult=acos(ParamResult);
+    return NO_ERROR;
+}
+
+
+int ASNFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    NumResult=asin(ParamResult);
+    return NO_ERROR;
+}
+
+
+int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, STRFnct, VALFnct, TIMERFnct, INTFnct, RIGHTFnct, SGNFnct, MIDFnct, INSTRFnct, PIFnct, EXPFnct, LNFnct, COSFnct, SINFnct, TANFnct, ATNFnct, ASNFnct, ACSFnct } ;

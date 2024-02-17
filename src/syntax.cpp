@@ -64,7 +64,7 @@ tTokenType tTokens[]={
 	{ "RIGHT$", tFunction, coRIGHT},
 	{ "MID$", tFunction, coMID},
 	{ "INSTR", tFunction, coINSTR},
-	{ "TEST", tFunction, coTEST, 0},
+//	{ "TEST", tFunction, coTEST, 0},
 	{ "INKEY", tFunction, coINKEY},
 	{ "SQRT", tFunction, coSQRT},
 	{ "SQR", tFunction, coSQRT},
@@ -74,6 +74,15 @@ tTokenType tTokens[]={
 	{ "TIMER", tFunction, coTIMER},
 	{ "INT", tFunction, coINT},
 	{ "SGN", tFunction, coSGN},
+	{ "PI", tFunction, coPI},
+	{ "EXP", tFunction, coEXP},
+	{ "COS", tFunction, coCOS},
+	{ "SIN", tFunction, coSIN},
+	{ "TAN", tFunction, coTAN},
+	{ "ATN", tFunction, coATN},
+	{ "ACS", tFunction, coACS},
+	{ "ASN", tFunction, coASN},
+	{ "LN", tFunction, coLN},
 	{ "AT", tPrintArgument, coAT},
 	{ "TAB", tPrintArgument, coTAB},
 	{ "=", tComparison, coEqual, 0},
@@ -529,8 +538,17 @@ std::vector<int> VALSyntax= {tString};
 std::vector<int> INKEYSyntax={};
 std::vector<int> NoParamSyntax= {};
 std::vector<int> TIMERSyntax= {};
+std::vector<int> PISyntax={};
 std::vector<int> INTSyntax =  {tValue};
 std::vector<int> SGNSyntax = {tValue};
+std::vector<int> EXPSyntax = {tValue};
+std::vector<int> COSyntax = {tValue};
+std::vector<int> SINSyntax = {tValue};
+std::vector<int> TANSyntax = {tValue};
+std::vector<int> ATNSyntax = {tValue};
+std::vector<int> ACSSyntax = {tValue};
+std::vector<int> ASNSyntax = {tValue};
+std::vector<int> LNSyntax = {tValue};
 std::vector<int> INSTRyntax= {tString, tString};
 
 
@@ -550,7 +568,15 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coSGN, tValue, SGNSyntax},
 	{ coMID, tString, MIDSyntax},
 	{ coINSTR, tValue, INSTRyntax},
-	{ coTEST, tValue, TESTSyntax}
+	{ coPI, tValue, PISyntax},
+	{ coEXP, tValue, EXPSyntax},
+	{ coLN, tValue, LNSyntax},
+	{ coCOS, tValue, COSyntax},
+	{ coSIN, tValue, SINSyntax},
+	{ coTAN, tValue, TANSyntax},
+	{ coATN, tValue, ATNSyntax},
+	{ coACS, tValue, ACSSyntax},
+	{ coASN, tValue, ASNSyntax}
 };
 
 
