@@ -8,16 +8,17 @@ Lots done so lets recap, the next step for my terminal basic:
     ( ) Add Basic functions
         (X) LEN function
         (X) STR$ function
-        ( ) VAL function
+        (X) VAL function
         ( ) SGN function
         ( ) ABS function
-        ( ) INT function
+        (X) INT function
         ( ) SQR function
     ( ) Add the Microsoft String Manipulation functions
-        ( ) LEFT$ function
+        (X) LEFT$ function
         ( ) MID$ function
-        ( ) RIGHT$ function
+        (X) RIGHT$ function
         ( ) INSTR function
+        (X) TIMER function
     ( ) Add Maths functions
         ( ) To the power of (^?)
         ( ) PI function

@@ -152,7 +152,7 @@ std::string Processor::Listline(int LineNo) {
     std::string s="";
     for (int i=0; i<Program.size(); i++) {
         if (Program[i].ProgramLine==LineNo) {
-            s+=Program[i].GetString()+"\n\r";
+            s+=Program[i].GetString();
             return s;
         }       
     }

@@ -1,6 +1,7 @@
 #include "instruction.hpp"
 #include "syntax.hpp"
 #include "error.hpp"
+#include "bobs.hpp"
 #include <string>
 
 
@@ -93,7 +94,7 @@ std::string Instruction::GetString() {
         }
         s=s+Commands[i].GetString();
     }
-    return s;
+    return trim(s);
 }
 
 std::string Instruction::GetDetailedString() {

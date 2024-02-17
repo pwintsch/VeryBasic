@@ -4,6 +4,7 @@
 #include "syntax.hpp"
 #include "console.hpp"
 #include "processor.hpp"
+#include "bobs.hpp"
 
 #include <stdio.h>
 
@@ -780,9 +781,15 @@ std::string CommandNode::GetString() {
     if (Type==tString) {
         s=s + "\"";
     }
+    if (Type==tOperator) {
+        s=s + " ";
+    }
     s=s + Value;
     if (Type==tString) {
         s=s + "\"";
+    }
+    if (Type==tOperator) {
+        s=s + " ";
     }
 //    if (Type==tFunction) s=s+"(";
     if (SubArguments.size()>0) {
