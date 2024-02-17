@@ -1144,4 +1144,66 @@ int SGNFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
 }
 
 
-int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, STRFnct, VALFnct, TIMERFnct, INTFnct, RIGHTFnct, SGNFnct, NULL, NULL };
+int MIDFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    std::string TargetStr=ParamStrResult;
+    r=Node.SubArguments[1].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    int StartChar=int(ParamResult);
+    if (StartChar>TargetStr.size()) {
+        ReturnType=tString;
+        StrResult="";
+        return NO_ERROR;
+    }
+    r=Node.SubArguments[2].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    int NoOfChar=int(ParamResult);
+    ReturnType=tString;
+   
+    if (NoOfChar>TargetStr.size()) {
+        NoOfChar=TargetStr.size();
+    }
+    StrResult=TargetStr.substr(StartChar, NoOfChar);
+    return NO_ERROR;
+}
+
+
+int INSTRFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    std::string SourceStr=ParamStrResult;
+    r=Node.SubArguments[1].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    std::string TargetStr=ParamStrResult;
+
+    std::size_t found = SourceStr.find(TargetStr);
+    if (found!=std::string::npos) {
+        ReturnType=tValue;
+        NumResult=found+1;
+    } else {
+        ReturnType=tValue;
+        NumResult=0;
+    }
+    ReturnType=tValue;
+    return NO_ERROR;
+}
+
+
+int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, STRFnct, VALFnct, TIMERFnct, INTFnct, RIGHTFnct, SGNFnct, MIDFnct, INSTRFnct };

@@ -62,6 +62,8 @@ tTokenType tTokens[]={
 	{ "MAX", tFunction, coMAX, 0},
 	{ "LEFT$", tFunction, coLEFT, 0},
 	{ "RIGHT$", tFunction, coRIGHT},
+	{ "MID$", tFunction, coMID},
+	{ "INSTR", tFunction, coINSTR},
 	{ "TEST", tFunction, coTEST, 0},
 	{ "INKEY", tFunction, coINKEY},
 	{ "SQRT", tFunction, coSQRT},
@@ -520,6 +522,7 @@ std::vector<int> MAXSyntax= {tValue, tValue};
 std::vector<int> TESTSyntax= {tValue, tValue, tValue};
 std::vector<int> LEFTSyntax= {tString, tValue};
 std::vector<int> RIGHTSyntax= {tString, tValue};
+std::vector<int> MIDSyntax= {tString, tValue, tValue};
 std::vector<int> LENSyntax= {tString};
 std::vector<int> STRSyntax= {tValue};
 std::vector<int> VALSyntax= {tString};
@@ -528,6 +531,7 @@ std::vector<int> NoParamSyntax= {};
 std::vector<int> TIMERSyntax= {};
 std::vector<int> INTSyntax =  {tValue};
 std::vector<int> SGNSyntax = {tValue};
+std::vector<int> INSTRyntax= {tString, tString};
 
 
 std::vector<tFunctionSyntax> tFunctionGrammar = {
@@ -544,6 +548,8 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coINT, tValue, INTSyntax},
 	{ coRIGHT, tString, RIGHTSyntax},
 	{ coSGN, tValue, SGNSyntax},
+	{ coMID, tString, MIDSyntax},
+	{ coINSTR, tValue, INSTRyntax},
 	{ coTEST, tValue, TESTSyntax}
 };
 
