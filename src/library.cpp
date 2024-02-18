@@ -901,6 +901,109 @@ int RestoreCmd(Command MyCommand)
     return CMD_OK;
 }
 
+
+int RepeatCmd(Command MyCommand)
+{
+    MyProcessor.RepeatLoopStack.Push(MyProcessor.CurrentLine, MyProcessor.CurrentCommand);
+    return CMD_OK;
+}
+
+
+int UntilCmd(Command MyCommand)
+{
+    int ResultType;
+    float NumResult;
+    std::string StrResult;
+    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
+    if (r==NO_ERROR) {
+        if (ResultType==tValue) {
+            if (NumResult==0) {
+                int RepeatStartLine=0;
+                int RepeatStartCommand=0;
+                int r=MyProcessor.RepeatLoopStack.CurrentRepeatStart (RepeatStartLine, RepeatStartCommand);
+                if (r==NO_ERROR) {
+                    MyProcessor.CurrentLine=RepeatStartLine;
+                    MyProcessor.CurrentCommand=RepeatStartCommand;
+                    MyProcessor.ResumeInstructionFlag=true;
+                    return CMD_OK;
+                } else {
+                    return r;
+                }
+            } else {
+                MyProcessor.RepeatLoopStack.Pop();  
+                return CMD_OK;
+            }
+        } else {
+            return ERR_CMD_IF_EXPRESSION_NOT_VALUE;
+        } 
+    } else {
+        return r;
+    }
+
+    return CMD_OK;
+}
+
+
+int WhileCmd(Command MyCommand)
+{
+    int ResultType;
+    float NumResult;
+    std::string StrResult;
+    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
+    if (r==NO_ERROR) {
+        if (ResultType==tValue) {
+            if (NumResult!=0) {
+                // adapt to push expression for condition to while stack, that way Wend tests and acts just like until
+                int r=MyProcessor.WhileLoopStack.Push(MyProcessor.CurrentLine, MyProcessor.CurrentCommand, MyCommand.Arguments[0]);
+                if (r!=NO_ERROR) {
+                    return r;
+                }
+            } else { 
+                // Find the matching WEND
+                int r=MyProcessor.SetProgramPointersToNextWEND();
+                if (r!=NO_ERROR) {
+                    return r;
+                }
+                return CMD_OK;
+            }
+        } else {
+            return ERR_CMD_IF_EXPRESSION_NOT_VALUE;
+        } 
+    } else {
+        return r;
+    }
+    return CMD_OK;
+}
+
+
+int WendCmd(Command MyCommand)
+{
+    Terminal.WriteLn("WEND Cmd");
+    float ExprResult=0;
+    int r=MyProcessor.WhileLoopStack.CurrentWhileExpression(ExprResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    if (ExprResult!=0) {
+        int WhileStartLine=0;
+        int WhileStartCommand=0;
+        int r=MyProcessor.WhileLoopStack.CurrentWhileStart(WhileStartLine, WhileStartCommand);
+        if (r==NO_ERROR) {
+            MyProcessor.CurrentLine=WhileStartLine;
+            MyProcessor.CurrentCommand=WhileStartCommand;
+            MyProcessor.ResumeInstructionFlag=true;
+            return CMD_OK;
+        } 
+        MyProcessor.ResumeInstructionFlag=true;
+        return CMD_OK_POINTER_CHANGE;
+    } else {
+        MyProcessor.WhileLoopStack.Pop();
+        return CMD_OK;
+    }
+    return CMD_OK;
+}
+
+
 int TmpCmd(Command MyCommand)
 {
     Terminal.WriteLn("Temp Cmd");
@@ -909,7 +1012,7 @@ int TmpCmd(Command MyCommand)
 
 
 
-int (*CommandPtr[])(Command MyCommand) = { LetCmd, InputCmd, RemCmd, PrintCmd, IfCmd, GotoCmd, GosubCmd, ReturnCmd, StopCmd, ForCmd, NextCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, OptionCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, RestoreCmd, DefCmd, TmpCmd } ;
+int (*CommandPtr[])(Command MyCommand) = { LetCmd, InputCmd, RemCmd, PrintCmd, IfCmd, GotoCmd, GosubCmd, ReturnCmd, StopCmd, ForCmd, NextCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, OptionCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, RestoreCmd, DefCmd, RepeatCmd, UntilCmd, WhileCmd, WendCmd, TmpCmd} ;
 
 
 int MAXFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {

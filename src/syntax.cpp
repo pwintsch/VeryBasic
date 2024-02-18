@@ -40,6 +40,10 @@ tTokenType tTokens[]={
 	{ "END", tCommand, coEND, 0},
 	{ "FOR", tCommand, coFOR, 0},
 	{ "NEXT", tCommand, coNEXT, 0},
+	{ "REPEAT", tCommand, coREPEAT, 0},
+	{ "UNTIL", tCommand, coUNTIL, 0},
+	{ "WHILE", tCommand, coWHILE, 0},
+	{ "WEND", tCommand, coWEND, 0},
 	{ "OPTION", tCommand, coOPTION},
 	{ "TMPCMD", tCommand, coTMPCMD},	
 	{ "DIM", tCommand, coDIM, 0},
@@ -418,6 +422,27 @@ std::vector <tSyntaxNode> NEXTSyntax = {
 					{ tUserDefined, cvDouble}
 					};
 
+std::vector <tSyntaxNode> REPEATSyntax = { 	
+					{ tCommand, coREPEAT}
+					};
+
+
+std::vector <tSyntaxNode> UNTILSyntax = { 	
+					{ tCommand, coUNTIL}, 
+					{ tExpression, tValue}
+					};
+
+
+std::vector <tSyntaxNode> WHILESyntax = { 	
+					{ tCommand, coWHILE}, 
+					{ tExpression, tValue}
+					};
+
+
+std::vector <tSyntaxNode> WENDSyntax = { 	
+					{ tCommand, coWEND}
+					};
+
 
 std::vector <tSyntaxNode> READSyntax = { 	
 					{ tCommand, coREAD}, 
@@ -514,7 +539,11 @@ std::vector<tSyntax> tGrammar = {
 		{ coRANDOMIZE, 1, RANDOMIZESyntax2},
 		{ coCONTINUE, 0, CONTINUESyntax},
 		{ coDEF, 0, DEFSyntax},
-		{ coNODELIST, 0, NODELISTyntax}
+		{ coNODELIST, 0, NODELISTyntax},
+		{ coREPEAT, 0, REPEATSyntax},
+		{ coUNTIL, 0, UNTILSyntax},
+		{ coWHILE, 0, WHILESyntax},
+		{ coWEND, 0, WENDSyntax}
 
 		/*,
 		{ coEDITOR, 0, tEDITORSyntax},

@@ -112,7 +112,11 @@ int GetFunctionType(int iFunctionCode);
 #define coDATA CmdSep + 19
 #define coRESTORE CmdSep + 20
 #define coDEF CmdSep+21
-#define coTMPCMD CmdSep+22
+#define coREPEAT CmdSep+22
+#define coUNTIL CmdSep+23
+#define coWHILE CmdSep+24
+#define coWEND CmdSep+25
+#define coTMPCMD CmdSep+26
 
 #define DirectCmdSep 300
 #define coLIST DirectCmdSep+1

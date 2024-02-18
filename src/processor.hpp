@@ -112,6 +112,41 @@ class ForStack {
     int NextStep (std::string VariableName, float &CurrentValue, bool &Loop, int &LineNo, int &CommandNo);
 };
 
+struct RepeatLoop {
+    int LineNo;
+    int CommandNo;
+};
+
+class RepeatStack {
+    public:
+    std::vector<RepeatLoop> Stack;
+    RepeatStack();
+    ~RepeatStack();
+    int Push(int LineNo, int CommandNo);
+    int CurrentRepeatStart(int &LineNo, int &CommandNo);
+    int Pop();
+};
+
+
+struct WhileLoop {
+    int LineNo;
+    int CommandNo;
+    CommandNode Expression;
+};
+
+class WhileStack {
+    public:
+    std::vector<WhileLoop> Stack;
+    WhileStack();
+    ~WhileStack();
+    int Push(int LineNo, int CommandNo, CommandNode &WhileExpression);
+    int CurrentWhileStart(int &LineNo, int &CommandNo);
+    int CurrentWhileExpression(float &FltValue);
+    int Pop();
+};
+
+
+
 struct DefFN {
     std::string Name;
     CommandNode FunctionHeader;
@@ -136,7 +171,7 @@ private:
     int ReadLastArgument=0;
     bool SearchNextDataStatement=true;
     int NoOfInstructionsExecuted=0;
-    bool BreakEnabled=false;
+    bool BreakEnabled=true;
 public:
     int LastLine;
     int CurrentLine;
@@ -150,6 +185,8 @@ public:
     DefFnStack Functions;
     CallStack ReturnStack;
     ForStack ForLoopStack;
+    RepeatStack RepeatLoopStack;
+    WhileStack WhileLoopStack;
     bool Active=true;
     int Addline(Instruction MyInstruction);
     int ChangeLine(Instruction MyInstruction);
@@ -172,6 +209,7 @@ public:
     int NextForLoop(CommandNode &Variable, bool &Loop);
     int GetNextReadCmdData(int &ReturnType, float &FltValue, std::string &StrValue);
     int SetNextReadCmdData(int DestinationLineNo);
+    int SetProgramPointersToNextWEND();
     void ResetReadCmdData();
     int ExecuteNextInstruction();
     int ResumeInstruction();

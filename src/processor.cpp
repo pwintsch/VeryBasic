@@ -55,6 +55,97 @@ int ForStack::Push(int LineNo, int CommandNo, std::string VariableName, float St
 }
 
 
+RepeatStack::RepeatStack() {
+   Stack.clear();
+}
+
+RepeatStack::~RepeatStack() {
+   Stack.clear();
+}
+
+int RepeatStack::Push(int LineNo, int CommandNo) {
+    RepeatLoop NewItem;
+    NewItem.LineNo=LineNo;
+    NewItem.CommandNo=CommandNo;
+    Stack.push_back(NewItem);
+    return NO_ERROR;
+}
+
+int RepeatStack::CurrentRepeatStart(int &LineNo, int &CommandNo) {
+    if (Stack.size()==0) {
+        return ERR_REPEATSTACK_EMPTY;
+    } else {
+        LineNo=Stack[Stack.size()-1].LineNo;
+        CommandNo=Stack[Stack.size()-1].CommandNo;
+        return NO_ERROR;
+    }
+}
+
+int RepeatStack::Pop() {
+    if (Stack.size()==0) {
+        return ERR_REPEATSTACK_EMPTY;
+    } else {
+        Stack.pop_back();
+        return NO_ERROR;
+    }
+}
+
+WhileStack::WhileStack() {
+   Stack.clear();
+}
+
+int WhileStack::Push(int LineNo, int CommandNo, CommandNode &WhileExpression) {
+    WhileLoop NewItem;
+    NewItem.LineNo=LineNo;
+    NewItem.CommandNo=CommandNo;
+    NewItem.Expression=WhileExpression;
+    Stack.push_back(NewItem);
+    return NO_ERROR;
+}
+
+int WhileStack::CurrentWhileStart(int &LineNo, int &CommandNo) {
+    if (Stack.size()==0) {
+        return ERR_WHILESTACK_EMPTY;
+    } else {
+
+            LineNo=Stack[Stack.size()-1].LineNo;
+            CommandNo=Stack[Stack.size()-1].CommandNo;
+        return NO_ERROR;
+    }
+}
+
+int WhileStack::CurrentWhileExpression( float &FltValue) {
+    if (Stack.size()==0) {
+        return ERR_WHILESTACK_EMPTY;
+    } else {
+        CommandNode WhileExpression=Stack[Stack.size()-1].Expression;
+        int ResultType;
+        float FltResult;
+        std::string StrResult;
+        int r=WhileExpression.Evaluate(ResultType, FltResult, StrResult);
+        if (r!=NO_ERROR) {
+            return r;
+        }
+        FltValue=FltResult;
+        return NO_ERROR;
+    }
+}
+
+int WhileStack::Pop() {
+    if (Stack.size()==0) {
+        return ERR_REPEATSTACK_EMPTY;
+    } else {
+        Stack.pop_back();
+        return NO_ERROR;
+    }
+}
+
+
+WhileStack::~WhileStack() {
+   Stack.clear();
+}
+
+
 int ForStack::NextStep (std::string VariableName, float &CurrentValue, bool &Loop, int &LineNo, int &CommandNo) {
     if (Stack.size()==0) {
         return ERR_FORSTACK_EMPTY;
@@ -87,6 +178,7 @@ Processor MyProcessor;
 
 
 Processor::Processor() {
+    Active=true;
 }
 
 Processor::~Processor() {
@@ -520,6 +612,27 @@ int Processor::LastProgramLine() {
     }
 }
 
+
+int Processor::SetProgramPointersToNextWEND() {
+    int i=CurrentLine;
+    int j=CurrentCommand;
+    bool Found=false;
+    while (i<Program.size() && !Found) {
+        while (j<Program[i].Commands.size() && !Found) {
+            if (Program[i].Commands[j].ID==coWEND) {
+                Found=true;
+                CurrentLine=i;
+                CurrentCommand=j;
+                ResumeInstructionFlag=true;
+                return NO_ERROR;
+            }
+            j++;
+        }
+        j=0;
+        i++;
+    }
+    return ERR_WEND_NOT_FOUND;
+}
 
 void Processor::Exit() {
     Active=false;

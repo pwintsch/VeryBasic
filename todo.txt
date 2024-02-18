@@ -1,35 +1,6 @@
 Lots done so lets recap, the next step for my terminal basic:
     ( ) Bug fixing
-        (X) When saving OR operator no spaces either side
-    ( ) Clean up line editing
-        (X) Write a slimmed down version of GetLine so there are less trailing spaces
-        (X) Clean up if edit on last line of screen
-    ( ) Move variables to std::any
-    (X) Add Basic functions
-        (X) LEN function
-        (X) STR$ function
-        (X) VAL function
-        (X) SGN function
-        (X) ABS function
-        (X) INT function
-        (X) SQR function
-    (X) Add the Microsoft String Manipulation functions
-        (X) LEFT$ function
-        (X) MID$ function
-        (X) RIGHT$ function
-        (X) INSTR function
-        (X) TIMER function
-    (X) Add Maths functions
-        (X) To the power of (^?)
-        (X) PI function
-        (X) EXP function
-        (X) LN function
-        (X) SIN function
-        (X) COS function
-        (X) TAN function
-        (X) ASN function
-        (X) ACS function
-        (X) ATN function
+        ( ) 
     ( ) ON xxx GOTO yyy command
     ( ) ON xxx GOSUB yyy command
     ( ) Clean up the SAVE command particularly with Quotes in strings
@@ -37,7 +8,8 @@ Lots done so lets recap, the next step for my terminal basic:
     ( ) Find some/lots of test basic programs
     ( ) Think of adding BBC BASIC or SINCLAIR SUPERBASIC structured basic commands 
         ( ) LABELS
-        ( ) REPEAT .... UNTIL xxxxx
+        (X) REPEAT .... UNTIL xxxxx
+        (X) WHILE xxx ... WEND
         ( ) User defined PROCEDURES
         ( ) User define FUNCTIONS
 
@@ -102,3 +74,36 @@ To get current interpreter to Tiny Basic level I need to:
     (X) Create ChangeDirectory command
         (-) Decide if you can chgdir without quotes
     (X) test Expression when creating for return type
+
+
+    ( ) Bug fixing
+        (X) When saving OR operator no spaces either side
+    ( ) Clean up line editing
+        (X) Write a slimmed down version of GetLine so there are less trailing spaces
+        (X) Clean up if edit on last line of screen
+    ( ) Move variables to std::any
+    (X) Add Basic functions
+        (X) LEN function
+        (X) STR$ function
+        (X) VAL function
+        (X) SGN function
+        (X) ABS function
+        (X) INT function
+        (X) SQR function
+    (X) Add the Microsoft String Manipulation functions
+        (X) LEFT$ function
+        (X) MID$ function
+        (X) RIGHT$ function
+        (X) INSTR function
+        (X) TIMER function
+    (X) Add Maths functions
+        (X) To the power of (^?)
+        (X) PI function
+        (X) EXP function
+        (X) LN function
+        (X) SIN function
+        (X) COS function
+        (X) TAN function
+        (X) ASN function
+        (X) ACS function
+        (X) ATN function

@@ -57,7 +57,7 @@ bool bMachineLoop = true;
     // temp message whilst building
     Terminal.WriteLn("Enter q to quit");
     Program.clear();
-	while (MyProcessor.Active) {
+	while (MyProcessor.Active==true) {
         sInput="";
         while (sInput=="") {
 /*            if (MyProcessor.GetEditString()!="") {
