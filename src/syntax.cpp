@@ -54,6 +54,7 @@ tTokenType tTokens[]={
 	{ "DATA", tCommand, coDATA, 0},
 	{ "RESTORE", tCommand, coRESTORE},
 	{ "DEF", tCommand, coDEF,0},
+	{ "ON", tCommand, coON, 0},
 	{ "THEN", tComplement, coTHEN, 0},
 	{ "TO", tComplement, coTO, 0},
 	{ "STEP", tComplement, coSTEP, 0},
@@ -493,6 +494,21 @@ std::vector <tSyntaxNode> NODELISTyntax = {
 						};
 
 
+std::vector <tSyntaxNode> ONGOTOSyntax = {
+						{ tCommand, coON},
+						{ tExpression, 0},
+						{ tCommand, coGOTO},
+						{ tValueList, 0}
+						};
+
+
+std::vector <tSyntaxNode> ONGOSUBSyntax = {
+						{ tCommand, coON},
+						{ tExpression, 0},
+						{ tCommand, coGOSUB},
+						{ tValueList, 0}
+						};
+
 
 std::vector<tSyntax> tGrammar = {	
 		{ coVariable, 0, AssignSyntax},		
@@ -543,7 +559,9 @@ std::vector<tSyntax> tGrammar = {
 		{ coREPEAT, 0, REPEATSyntax},
 		{ coUNTIL, 0, UNTILSyntax},
 		{ coWHILE, 0, WHILESyntax},
-		{ coWEND, 0, WENDSyntax}
+		{ coWEND, 0, WENDSyntax},
+		{ coON, 0, ONGOTOSyntax},
+		{ coON, 1, ONGOSUBSyntax}
 
 		/*,
 		{ coEDITOR, 0, tEDITORSyntax},

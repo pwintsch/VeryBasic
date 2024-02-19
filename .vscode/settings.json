@@ -64,7 +64,10 @@
         "algorithm": "cpp",
         "__tree": "cpp",
         "map": "cpp",
-        "charconv": "cpp"
+        "charconv": "cpp",
+        "any": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp"
     },
     "C_Cpp.default.compilerPath": "/usr/bin/clang++",
     "makefile.launchConfigurations": [

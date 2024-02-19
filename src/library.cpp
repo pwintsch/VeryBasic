@@ -1004,6 +1004,38 @@ int WendCmd(Command MyCommand)
 }
 
 
+int OnCmd(Command MyCommand)
+{
+    Terminal.WriteLn("On Cmd");
+    int ResultType;
+    float NumResult;
+    std::string StrResult;
+    int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    int Choice=((int)NumResult-1)*2;
+    int NumCases=MyCommand.Arguments.size()-2;
+    if (Choice+1>=0 && NumCases>=(Choice+1)) {
+        int DestinationLine=std::stoi(MyCommand.Arguments[Choice+2].Value);
+        Terminal.WriteFStringLn("Destination Line: %d", DestinationLine);
+        if (MyCommand.Arguments[1].ID==coGOSUB) {
+            r=MyProcessor.ReturnStack.Push(MyProcessor.CurrentLine, MyProcessor.CurrentCommand);
+            if (r!=NO_ERROR) {
+                return r;
+            }
+        } 
+        r=MyProcessor.GotoLine(DestinationLine);
+        if (r==NO_ERROR) {
+            return CMD_OK;
+        } else {
+            return r;
+        }
+    }
+    return CMD_OK;
+}
+
+
 int TmpCmd(Command MyCommand)
 {
     Terminal.WriteLn("Temp Cmd");
@@ -1012,7 +1044,12 @@ int TmpCmd(Command MyCommand)
 
 
 
-int (*CommandPtr[])(Command MyCommand) = { LetCmd, InputCmd, RemCmd, PrintCmd, IfCmd, GotoCmd, GosubCmd, ReturnCmd, StopCmd, ForCmd, NextCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, OptionCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, RestoreCmd, DefCmd, RepeatCmd, UntilCmd, WhileCmd, WendCmd, TmpCmd} ;
+int (*CommandPtr[])(Command MyCommand) = {  LetCmd, InputCmd, RemCmd, PrintCmd, IfCmd, 
+                                            GotoCmd, GosubCmd, ReturnCmd, StopCmd, ForCmd, 
+                                            NextCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, 
+                                            OptionCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, 
+                                            RestoreCmd, DefCmd, RepeatCmd, UntilCmd, WhileCmd, 
+                                            WendCmd, OnCmd, TmpCmd} ;
 
 
 int MAXFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {

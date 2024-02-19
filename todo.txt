@@ -1,8 +1,8 @@
 Lots done so lets recap, the next step for my terminal basic:
     ( ) Bug fixing
         ( ) 
-    ( ) ON xxx GOTO yyy command
-    ( ) ON xxx GOSUB yyy command
+    (X) ON xxx GOTO yyy command
+    (X) ON xxx GOSUB yyy command
     ( ) Clean up the SAVE command particularly with Quotes in strings
     ( ) See if parser can take a literal option for load, save and changedir so no quotes are required
     ( ) Find some/lots of test basic programs
