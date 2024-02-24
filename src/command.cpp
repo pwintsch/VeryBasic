@@ -837,16 +837,17 @@ int CommandNode::InitialiseAsExpressionWithTokens (std::vector<Token> tokenVecto
                 argumentStart=i+2;
                 argumentEnd=argumentStart;
                 while (bracketCount>0 && argumentEnd<tokenVector.size()) {
-                    argumentEnd++;
                     if (tokenVector[argumentEnd].ID==coOpenBracket) {
                         bracketCount++;
                     } else if (tokenVector[argumentEnd].ID==coCloseBracket) {
                         bracketCount--;
-                    }                    
+                    }   
+                    argumentEnd++;                 
                 }
-                if (bracketCount>0) {
+                if (bracketCount!=0) {
                     return ERR_BAD_FUNCTION_BRACKET;
                 }
+                --argumentEnd;
                 // arguments are in argumentStart to argumentEnd-1
                 std::vector<Token> argumentTokens=std::vector<Token>(tokenVector.begin()+argumentStart, tokenVector.begin()+argumentEnd);
                 std::vector<CommandNode> argumentNodes;
@@ -1023,7 +1024,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 Arguments.push_back(Argument);
                 TokenIndex++;
                 SyntaxIndex++;
-            } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tExpression) {
+            } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tExpression && IsCommandNodeOKForExpression(Nodes[TokenIndex])) {
 // build Expression CommanNode from following CommandNodes that are allowed in an expression
                 int ExpressionTypeRequired=SyntaxRules[i].Syntax[SyntaxIndex].iTId;
                 std::vector<CommandNode> ExpressionCommandNodes;
@@ -1041,6 +1042,7 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                     RuleSearchError=true;
                 }
                 CommandNode Argument;
+                /// problem here if the expression is empty such as with GOTO GOTO
                 int r=Argument.InitialiseExpression(ExpressionCommandNodes);
                 if (r!=NO_ERROR) {
                     return r;
@@ -1373,7 +1375,7 @@ std::string Command::GetString() {
         s=s+" ";
     } 
     for (int i=0; i<Arguments.size(); i++) {
-        if (i>0) {
+        if (Arguments[i].ID==coTHEN) {
             s=s+" ";
         }
         s=s+Arguments[i].GetString();

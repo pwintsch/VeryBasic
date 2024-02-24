@@ -258,8 +258,7 @@ int Processor::ExecuteNextInstruction(){
     bool NoBreakOrError=true;
     int i=0;
     Instruction MyInstruction=Program[CurrentLine];
-    bool ConditionFailed=false;
-    while (NoBreakOrError && i<MyInstruction.Commands.size() && !ConditionFailed) {   
+    while (NoBreakOrError && i<MyInstruction.Commands.size()) {   
         LastLine=MyInstruction.ProgramLine;
         CurrentCommand=i;                   
         if (MyInstruction.Commands[i].Type==tUserDefined) {
@@ -275,11 +274,19 @@ int Processor::ExecuteNextInstruction(){
         }
         if (r!=CMD_OK) {
             if (r==CMD_OK_Cond_Fail) {
-                ConditionFailed=true;
+                r=CMD_OK;
+                // check to find an ELSE command in instruction
+                while (i<MyInstruction.Commands.size() && MyInstruction.Commands[i].ID!=coELSE) {
+                    i++;
+                }
             } else {
                 return r;
             }
-        }        
+        }  else {
+            if (i+1<MyInstruction.Commands.size() && MyInstruction.Commands[i+1].ID==coELSE) {
+                i=MyInstruction.Commands.size();
+            }
+        }       
         i++;
     }
     return CMD_OK;

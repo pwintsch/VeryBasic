@@ -117,7 +117,8 @@ int GetFunctionType(int iFunctionCode);
 #define coWHILE CmdSep+24
 #define coWEND CmdSep+25
 #define coON CmdSep+26
-#define coTMPCMD CmdSep+27
+#define coELSE CmdSep + 27
+#define coTMPCMD CmdSep+28
 
 #define DirectCmdSep 300
 #define coLIST DirectCmdSep+1

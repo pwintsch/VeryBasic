@@ -55,6 +55,7 @@ tTokenType tTokens[]={
 	{ "RESTORE", tCommand, coRESTORE},
 	{ "DEF", tCommand, coDEF,0},
 	{ "ON", tCommand, coON, 0},
+	{ "ELSE", tCommand, coELSE, 0},
 	{ "THEN", tComplement, coTHEN, 0},
 	{ "TO", tComplement, coTO, 0},
 	{ "STEP", tComplement, coSTEP, 0},
@@ -217,6 +218,13 @@ std::vector<tSyntaxNode> IFSyntax = {
 					{ tExpression, tValue},
 					{ tComplement, coTHEN} };
 
+std::vector<tSyntaxNode> IFSyntax2 = { 	
+					{ tCommand, coIF}, 
+					{ tExpression, tValue},
+					{ tComplement, coTHEN},
+					{ tValue, coInteger} };
+
+
 std::vector<tSyntaxNode> LISTSyntax = { 	
 					{ tDirectCommand, coLIST} };
 
@@ -305,6 +313,10 @@ std::vector <tSyntaxNode> RETURNSyntax = {
 				 	{ tCommand, coRETURN} 
 					};
 
+
+std::vector <tSyntaxNode> ELSESyntax = {
+				 	{ tCommand, coELSE} 
+					};
 
 std::vector <tSyntaxNode> CLSSyntax = {
 				 	{ tCommand, coCLS} 
@@ -513,7 +525,8 @@ std::vector <tSyntaxNode> ONGOSUBSyntax = {
 std::vector<tSyntax> tGrammar = {	
 		{ coVariable, 0, AssignSyntax},		
 		{ coLET, 0, LETSyntax },
-		{ coIF, 0, IFSyntax },
+		{ coIF, 0, IFSyntax2},
+		{ coIF, 1, IFSyntax },
 		{ coLIST, 0, LISTSyntax },
 		{ coLIST, 1, LISTSyntax2 },
 		{ coLIST, 2, LISTSyntax3 }, 
@@ -561,7 +574,8 @@ std::vector<tSyntax> tGrammar = {
 		{ coWHILE, 0, WHILESyntax},
 		{ coWEND, 0, WENDSyntax},
 		{ coON, 0, ONGOTOSyntax},
-		{ coON, 1, ONGOSUBSyntax}
+		{ coON, 1, ONGOSUBSyntax},
+		{ coELSE, 0, ELSESyntax}
 
 		/*,
 		{ coEDITOR, 0, tEDITORSyntax},
@@ -607,7 +621,7 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coLEFT, tString, LEFTSyntax},
 	{ coINKEY, tString,INKEYSyntax},
 	{ coLEN, tValue, LENSyntax},
-	{ coSTR, tValue, STRSyntax},
+	{ coSTR, tString, STRSyntax},
 	{ coVAL, tString, VALSyntax},
 	{ coTIMER, tValue, TIMERSyntax},
 	{ coINT, tValue, INTSyntax},

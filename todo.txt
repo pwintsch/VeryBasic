@@ -1,12 +1,16 @@
 Lots done so lets recap, the next step for my terminal basic:
     ( ) Bug fixing
-        ( ) 
+        (X) Track down why (5 goto goto 10) crashes 
+        ( ) Correct STR$ StrFnct output and Syntax
     (X) ON xxx GOTO yyy command
     (X) ON xxx GOSUB yyy command
+    ( ) Develop ELSE functionality
+    ( ) System variable and constants (PI Timer)
     ( ) Clean up the SAVE command particularly with Quotes in strings
     ( ) See if parser can take a literal option for load, save and changedir so no quotes are required
     ( ) Find some/lots of test basic programs
     ( ) Think of adding BBC BASIC or SINCLAIR SUPERBASIC structured basic commands 
+        ( ) Allow multiple syntaxes for Functions (eg RND)
         ( ) LABELS
         (X) REPEAT .... UNTIL xxxxx
         (X) WHILE xxx ... WEND

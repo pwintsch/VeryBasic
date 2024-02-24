@@ -30,8 +30,28 @@ int Instruction::Initialise(TokenCollection &InputTokens) {
                 return ERR_DIRECTCOMMAND_IN_PROGRAM;
             }
             iPosition=i+1;
+       }  else if (InputTokens.Tokens[i].ID == coELSE && i>iPosition) {   
+            int r=AddCommand (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.begin() + i)); // copy all tokens except the first one
+            if (r!=NO_ERROR)  {
+                return r;
+            } else if  (ProgramLine!=0 && iCommandType==tDirectCommand) {
+                return ERR_DIRECTCOMMAND_IN_PROGRAM;
+            }
+            iPosition=i;
+            i++;
+            r=AddCommand (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.begin() + i)); // copy all tokens except the first one
+            if (r!=NO_ERROR)  {
+                return r;
+            }
+            iPosition=i;
         } else if (InputTokens.Tokens[i].ID == coTHEN && i>iPosition) {
-            int r=AddCommand (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.begin() + i +1)); // copy all tokens except the first one
+            int r=0;
+            if (i+1<InputTokens.Tokens.size()   && InputTokens.Tokens[i+1].Type == tValue) {
+                i++;
+                r=AddCommand (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.begin() + i +1)); // copy all tokens except the first one               
+            } else {
+                r=AddCommand (std::vector<Token>(InputTokens.Tokens.begin() + iPosition, InputTokens.Tokens.begin() + i +1)); // copy all tokens except the first one
+            }            
             if (r!=NO_ERROR)  {
                 return r;
             }
@@ -86,9 +106,9 @@ std::string Instruction::GetString() {
     } 
     for (int i=0; i<Commands.size(); i++){
         if (i>0) {
-            if (Commands[i-1].ID!=coIF) { 
+            if (Commands[i-1].ID!=coIF && Commands[i].ID!=coELSE  && Commands[i-1].ID!=coELSE ) { 
                 s= s + " : ";
-            } else { 
+            } else if (Commands[i-1].ID!=coELSE) { 
                 s= s + " ";
             }
         }

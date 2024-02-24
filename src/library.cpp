@@ -596,10 +596,21 @@ int IfCmd(Command MyCommand)
     int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
     if (r==NO_ERROR) {
         if (ResultType==tValue) {
-            if (NumResult!=0) {
-                return CMD_OK;
+            if (MyCommand.RuleNo==1) {
+                if (NumResult!=0) {
+                    return CMD_OK;
+                } else {
+                    return CMD_OK_Cond_Fail;
+                }
             } else {
-                return CMD_OK_Cond_Fail;
+                if (NumResult!=0) {
+                    int DestinationLine=std::stoi(MyCommand.Arguments[2].Value);
+                    r=MyProcessor.GotoLine(DestinationLine);
+                    MyProcessor.ResumeInstructionFlag=true;
+                    return CMD_OK_POINTER_CHANGE;
+                 } else {
+                    return CMD_OK_Cond_Fail;
+                }
             }
         } else {
             return ERR_CMD_IF_EXPRESSION_NOT_VALUE;
@@ -1006,7 +1017,7 @@ int WendCmd(Command MyCommand)
 
 int OnCmd(Command MyCommand)
 {
-    Terminal.WriteLn("On Cmd");
+
     int ResultType;
     float NumResult;
     std::string StrResult;
@@ -1018,7 +1029,6 @@ int OnCmd(Command MyCommand)
     int NumCases=MyCommand.Arguments.size()-2;
     if (Choice+1>=0 && NumCases>=(Choice+1)) {
         int DestinationLine=std::stoi(MyCommand.Arguments[Choice+2].Value);
-        Terminal.WriteFStringLn("Destination Line: %d", DestinationLine);
         if (MyCommand.Arguments[1].ID==coGOSUB) {
             r=MyProcessor.ReturnStack.Push(MyProcessor.CurrentLine, MyProcessor.CurrentCommand);
             if (r!=NO_ERROR) {
@@ -1036,6 +1046,11 @@ int OnCmd(Command MyCommand)
 }
 
 
+int ElseCmd(Command MyCommand)
+{
+    return CMD_OK;
+}
+
 int TmpCmd(Command MyCommand)
 {
     Terminal.WriteLn("Temp Cmd");
@@ -1049,7 +1064,7 @@ int (*CommandPtr[])(Command MyCommand) = {  LetCmd, InputCmd, RemCmd, PrintCmd, 
                                             NextCmd, EndCmd, MemCmd, DimCmd, RandomizeCmd, 
                                             OptionCmd, BeepCmd, ClsCmd, ReadCmd, DataCmd, 
                                             RestoreCmd, DefCmd, RepeatCmd, UntilCmd, WhileCmd, 
-                                            WendCmd, OnCmd, TmpCmd} ;
+                                            WendCmd, OnCmd, ElseCmd, TmpCmd} ;
 
 
 int MAXFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
