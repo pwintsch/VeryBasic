@@ -781,17 +781,17 @@ std::string CommandNode::GetString() {
     if (Type==tString) {
         s=s + "\"";
     }
-    if (Type==tOperator) {
+   if (ID==coAND || ID==coOR || ID==coXOR) {
         s=s + " ";
     }
     s=s + Value;
     if (Type==tString) {
         s=s + "\"";
     }
-    if (Type==tOperator) {
+    if (ID==coAND || ID==coOR || ID==coXOR) {
         s=s + " ";
     }
-//    if (Type==tFunction) s=s+"(";
+
     if (SubArguments.size()>0) {
         if (Type==tFunction || Type==tUserFunction || Type==tUserDefined) {
             s=s+"(";
@@ -1375,10 +1375,13 @@ std::string Command::GetString() {
         s=s+" ";
     } 
     for (int i=0; i<Arguments.size(); i++) {
-        if (Arguments[i].ID==coTHEN) {
+        if (Arguments[i].Type==tComplement || Arguments[i].Type==tCommand) {
             s=s+" ";
         }
         s=s+Arguments[i].GetString();
+        if (Arguments[i].Type==tComplement || Arguments[i].Type==tCommand) {
+            s=s+" ";
+        }
     }
     return s;
 }

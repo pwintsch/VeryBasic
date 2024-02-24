@@ -333,6 +333,7 @@ int InputCmd(Command MyCommand)
     if (MyCommand.Arguments.size()>0 && MyCommand.Arguments[0].SubArguments.size()>0) {
         for (auto &Argument : MyCommand.Arguments[0].SubArguments) {
             if (Argument.ID==cvString) {
+                LastExpressionWasVariable=true;
                 std::string StrInput="";
                 int i=Terminal.GetString(StrInput);
                 if (i==0 || i==CTRL_KEY('z')) {
