@@ -106,7 +106,8 @@ bool bMachineLoop = true;
                                     NoBreakOrError=false;
                                     break;
                                 case CMD_BREAK:
-                                    Terminal.WriteLn("BREAK Requested by user");
+                                    Terminal.Write("BREAK Requested by user");
+                                    Terminal.WriteFStringLn(" at Line %d", MyProcessor.LastProgramLine());
                                     NoBreakOrError=false;
                                     break;
                                 case CMD_ENDRUN:

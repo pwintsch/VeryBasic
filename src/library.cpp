@@ -1241,7 +1241,27 @@ bool IsStringValue (const char *sTxt) {
 	return true;
 }
 
+bool IsCharNumeric(char cCurrent){
 
+	switch (cCurrent){ 
+		case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case '.':
+        case '+':
+        case '-':
+            return true;
+        default:
+            return false;
+    }
+}
 
 int VALFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
     int ParamReturnType=0;
@@ -1252,9 +1272,26 @@ int VALFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
         return r;
     }
     ReturnType=tValue;
+    // STRIP STRING OF LEADINGSPACES 
+    StrResult=ParamStrResult;   
+    for (int i=0; i<StrResult.length(); i++) {
+        if (StrResult[i]==' ') {
+            StrResult.erase(i,1);
+            i--;
+        } else {
+            break;
+        }
+    }
+    // find first non numeric character and truncate string
+    for (int i=0; i<StrResult.length(); i++) {
+        if (!IsCharNumeric(StrResult[i])) {
+            StrResult=StrResult.substr(0,i);
+            break;
+        }
+    }
     // Convert string to number
-    if (IsStringValue(ParamStrResult.c_str())) {
-        NumResult=stof(ParamStrResult);
+    if (IsStringValue(StrResult.c_str())) {
+        NumResult=stof(StrResult);
     } else {
         NumResult=0;
     }
@@ -1313,7 +1350,7 @@ int MIDFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
     if (r!=NO_ERROR) {
         return r;
     }
-    int StartChar=int(ParamResult);
+    int StartChar=int(ParamResult-1);
     if (StartChar>TargetStr.size()) {
         ReturnType=tString;
         StrResult="";
