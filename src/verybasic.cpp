@@ -168,7 +168,11 @@ bool bMachineLoop = true;
                         std::string s="Line already exists, do you want to replace it?";
                         bool ChangeLine=Terminal.GetYNConfirmation(s.c_str());
                         if (ChangeLine) {
-                            r=MyProcessor.ChangeLine(MyInstruction);
+                            if (MyInstruction.Commands.size()>0) {
+                                r=MyProcessor.ChangeLine(MyInstruction);
+                            } else {
+                                r=MyProcessor.RemoveLine(MyInstruction.ProgramLine);
+                            }
                         }
                     }
                 }

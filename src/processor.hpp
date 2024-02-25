@@ -190,7 +190,7 @@ public:
     bool Active=true;
     int Addline(Instruction MyInstruction);
     int ChangeLine(Instruction MyInstruction);
-    int RemoveLine(int i);
+    int RemoveLine(int LineNo);
     std::string ListFull();
     std::string ListPartial(int StartLineNo, int EndLineNo);
     std::string Listline(int LineNo);

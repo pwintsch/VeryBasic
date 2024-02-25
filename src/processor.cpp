@@ -222,6 +222,17 @@ int Processor::ChangeLine(Instruction MyInstruction) {
     return ERR_NO_LINE_NUMBER;
 }
 
+int Processor::RemoveLine(int LineNo) {
+    for (int i=0; i<Program.size(); i++) {
+        if (Program[i].ProgramLine==LineNo) {
+            Program.erase(Program.begin()+i);
+            return NO_ERROR;
+        }
+    }
+    return ERR_NO_LINE_NUMBER;
+}
+
+
 std::string Processor::ListFull() {
     std::string s="";
     for (int i=0; i<Program.size(); i++) {
