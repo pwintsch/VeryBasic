@@ -352,7 +352,7 @@ std::vector <tSyntaxNode> NEWSyntax = {
 
 std::vector <tSyntaxNode> DIMSyntax = {
 				 	{ tCommand, coDIM}, 
-					{ tUserDefined, 0}
+					{ tUserDefinedList, 0}
 					};
 
 
