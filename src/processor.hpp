@@ -85,7 +85,7 @@ struct StackItem {
 
 class CallStack {
     public:
-    std::vector<StackItem> Stack;
+    std::vector<StackItem> CStack;
     CallStack();
     ~CallStack();
     int Push(int LineNo, int CommandNo);
@@ -105,7 +105,7 @@ struct ForLoop {
 
 class ForStack {
     public:
-    std::vector<ForLoop> Stack;
+    std::vector<ForLoop> FStack;
     ForStack();
     ~ForStack();
     int Push(int LineNo, int CommandNo, std::string VariableName, float StartValue, float EndValue, float StepValue);
@@ -119,7 +119,7 @@ struct RepeatLoop {
 
 class RepeatStack {
     public:
-    std::vector<RepeatLoop> Stack;
+    std::vector<RepeatLoop> RStack;
     RepeatStack();
     ~RepeatStack();
     int Push(int LineNo, int CommandNo);
@@ -136,7 +136,7 @@ struct WhileLoop {
 
 class WhileStack {
     public:
-    std::vector<WhileLoop> Stack;
+    std::vector<WhileLoop> WStack;
     WhileStack();
     ~WhileStack();
     int Push(int LineNo, int CommandNo, CommandNode &WhileExpression);
@@ -172,7 +172,9 @@ private:
     bool SearchNextDataStatement=true;
     int NoOfInstructionsExecuted=0;
     bool BreakEnabled=true;
+
 public:
+    bool TraceExecs=false;
     int LastLine;
     int CurrentLine;
     int CurrentCommand;

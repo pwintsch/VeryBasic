@@ -51,7 +51,8 @@ Error errors[] = {  {NO_ERROR, "OK"},
                     {ERR_DEFN_PARAM_NOT_VARIABLE, "SYNTAX ERROR: DEF FN parameter must be a variable"},
                     {ERR_REPEATSTACK_EMPTY, "SYNTAX ERROR: UNTIL without REPEAT"},
                     {ERR_WEND_NOT_FOUND, "SYNTAX ERROR: No Matching WEND for WHILE statement"},
-                    {ERR_WHILESTACK_EMPTY, "SYNTAX ERROR: WEND without WHILE"}
+                    {ERR_WHILESTACK_EMPTY, "SYNTAX ERROR: WEND without WHILE"},
+                    {ERR_FUNC_PARAM_EMPTYSTRING, "SYNTAX ERROR: Empty string in function parameter"}
 };
 
 std::string ErrorMsg(int pID) {

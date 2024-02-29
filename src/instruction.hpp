@@ -17,6 +17,7 @@ public:
     std::string GetString();
     std::string GetDetailedString();
     int NodeCount();
+    void Trace(int CommandNo);
 
 
 private:

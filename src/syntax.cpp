@@ -28,6 +28,7 @@ tTokenType tTokens[]={
 	{ "DIR", tDirectCommand, coDIR},
 	{ "CLEAR", tDirectCommand, coCLEAR, 0},
 	{ "CONTINUE", tDirectCommand, coCONTINUE, 0},
+	{ "TRACE", tDirectCommand, coTRACE,0},
 	{ "LET", tCommand, coLET, 0},
 	{ "INPUT", tCommand, coINPUT, 0},
 	{ "REM", tCommand, coREM, 0},
@@ -89,6 +90,7 @@ tTokenType tTokens[]={
 	{ "ACS", tFunction, coACS},
 	{ "ASN", tFunction, coASN},
 	{ "LN", tFunction, coLN},
+	{ "ASC", tFunction, coASC},
 	{ "AT", tPrintArgument, coAT},
 	{ "TAB", tPrintArgument, coTAB},
 	{ "=", tComparison, coEqual, 0},
@@ -339,6 +341,9 @@ std::vector <tSyntaxNode> CLEARSyntax = {
 				 	{ tCommand, coCLEAR} 
 					};
 
+std::vector <tSyntaxNode> TRACESyntax = {
+				 	{ tDirectCommand, coTRACE} 
+					};
 
 std::vector <tSyntaxNode> NEWSyntax = {
 				 	{ tDirectCommand, coNEW} 
@@ -575,7 +580,8 @@ std::vector<tSyntax> tGrammar = {
 		{ coWEND, 0, WENDSyntax},
 		{ coON, 0, ONGOTOSyntax},
 		{ coON, 1, ONGOSUBSyntax},
-		{ coELSE, 0, ELSESyntax}
+		{ coELSE, 0, ELSESyntax},
+		{ coTRACE, 0, TRACESyntax}
 
 		/*,
 		{ coEDITOR, 0, tEDITORSyntax},
@@ -611,6 +617,7 @@ std::vector<int> ACSSyntax = {tValue};
 std::vector<int> ASNSyntax = {tValue};
 std::vector<int> LNSyntax = {tValue};
 std::vector<int> INSTRyntax= {tString, tString};
+std::vector<int> ASCSyntax= {tString};
 
 
 std::vector<tFunctionSyntax> tFunctionGrammar = {
@@ -637,7 +644,8 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coTAN, tValue, TANSyntax},
 	{ coATN, tValue, ATNSyntax},
 	{ coACS, tValue, ACSSyntax},
-	{ coASN, tValue, ASNSyntax}
+	{ coASN, tValue, ASNSyntax},
+	{ coASC, tValue, ASCSyntax}
 };
 
 

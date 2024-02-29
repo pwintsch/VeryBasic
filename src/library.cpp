@@ -293,8 +293,13 @@ int ContinueCmd(Command MyCommand)
     }
 }
 
+int TraceCmd(Command MyCommand) {
+    MyProcessor.TraceExecs=!MyProcessor.TraceExecs;
+    return CMD_OK;
+}
 
-int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd, PwdCmd, ChDirCmd, DirCmd, ClearCmd, ContinueCmd } ;
+
+int (*DirectCommandPtr[])(Command MyCommand) = { EmptyCmd, ListCmd, NewCmd, ExitCmd, DebugCmd, RunCmd, EvalCmd, LoadCmd, SaveCmd, NodelistCmd, EditCmd, EditorCmd, PwdCmd, ChDirCmd, DirCmd, ClearCmd, ContinueCmd, TraceCmd } ;
 
 
 
@@ -607,7 +612,7 @@ int IfCmd(Command MyCommand)
                 if (NumResult!=0) {
                     int DestinationLine=std::stoi(MyCommand.Arguments[2].Value);
                     r=MyProcessor.GotoLine(DestinationLine);
-                    MyProcessor.ResumeInstructionFlag=true;
+//                    MyProcessor.ResumeInstructionFlag=true;
                     return CMD_OK_POINTER_CHANGE;
                  } else {
                     return CMD_OK_Cond_Fail;
@@ -1038,7 +1043,7 @@ int OnCmd(Command MyCommand)
         } 
         r=MyProcessor.GotoLine(DestinationLine);
         if (r==NO_ERROR) {
-            return CMD_OK;
+            return CMD_OK_POINTER_CHANGE;
         } else {
             return r;
         }
@@ -1517,5 +1522,25 @@ int ASNFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
     return NO_ERROR;
 }
 
+int ASCFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    ReturnType=tValue;
+    // STRIP STRING OF LEADINGSPACES 
+    StrResult=ParamStrResult;   
+    if (StrResult.length()==0) {
+        NumResult=0;
+        return ERR_FUNC_PARAM_EMPTYSTRING;
+    }
+    NumResult=int(ParamStrResult.c_str()[0]);
 
-int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, STRFnct, VALFnct, TIMERFnct, INTFnct, RIGHTFnct, SGNFnct, MIDFnct, INSTRFnct, PIFnct, EXPFnct, LNFnct, COSFnct, SINFnct, TANFnct, ATNFnct, ASNFnct, ACSFnct } ;
+    return NO_ERROR;
+}  
+
+
+int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, STRFnct, VALFnct, TIMERFnct, INTFnct, RIGHTFnct, SGNFnct, MIDFnct, INSTRFnct, PIFnct, EXPFnct, LNFnct, COSFnct, SINFnct, TANFnct, ATNFnct, ASNFnct, ACSFnct, ASCFnct } ;

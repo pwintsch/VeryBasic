@@ -2,6 +2,7 @@
 #include "syntax.hpp"
 #include "error.hpp"
 #include "bobs.hpp"
+#include "console.hpp"
 #include <string>
 
 
@@ -135,7 +136,10 @@ std::string Instruction::GetDetailedString() {
     return s;
 }
 
-
+void Instruction::Trace(int CommandNo) {
+    std::string TraceStr="TRACE : " + std::to_string(ProgramLine)+ ":" + std::to_string(CommandNo)+ " " + Commands[CommandNo].GetString();
+    Terminal.WriteLn (TraceStr.c_str());
+}
 
 Instruction::~Instruction() {
     // destructor

@@ -137,6 +137,7 @@ int GetFunctionType(int iFunctionCode);
 #define coDIR DirectCmdSep+14 
 #define coCLEAR DirectCmdSep+15
 #define coCONTINUE DirectCmdSep + 16
+#define coTRACE DirectCmdSep + 17
 
 #define FuncSep 400
 
@@ -164,6 +165,7 @@ int GetFunctionType(int iFunctionCode);
 #define coATN FuncSep+21
 #define coASN FuncSep+22
 #define coACS FuncSep+23
+#define coASC FuncSep+24
 
 
 //#define coTEST FuncSep+17

@@ -6,40 +6,40 @@
 
 
 CallStack::CallStack() {
-   Stack.clear();
+   CStack.clear();
 }
 
 CallStack::~CallStack() {
-   Stack.clear();
+   CStack.clear();
 }
 
 int CallStack::Push(int LineNo, int CommandNo) {
     StackItem NewItem;
     NewItem.LineNo=LineNo;
     NewItem.CommandNo=CommandNo;
-    Stack.push_back(NewItem);
+    CStack.push_back(NewItem);
     return NO_ERROR;
 }
 
 
 int CallStack::Pop(int &LineNo, int &CommandNo) {
-    if (Stack.size()==0) {
+    if (CStack.size()==0) {
         return ERR_CALLSTACK_EMPTY;
     } else {
-        LineNo=Stack[Stack.size()-1].LineNo;
-        CommandNo=Stack[Stack.size()-1].CommandNo;
-        Stack.pop_back();
+        LineNo=CStack[CStack.size()-1].LineNo;
+        CommandNo=CStack[CStack.size()-1].CommandNo;
+        CStack.pop_back();
         return NO_ERROR;
     }
 }
 
 ForStack::ForStack() {
-   Stack.clear();
+   FStack.clear();
 }
 
 
 ForStack::~ForStack() {
-   Stack.clear();
+   FStack.clear();
 }
 
 int ForStack::Push(int LineNo, int CommandNo, std::string VariableName, float StartValue, float EndValue, float StepValue) {
@@ -50,48 +50,48 @@ int ForStack::Push(int LineNo, int CommandNo, std::string VariableName, float St
     NewItem.StartValue=StartValue;
     NewItem.EndValue=EndValue;
     NewItem.StepValue=StepValue;
-    Stack.push_back(NewItem);
+    FStack.push_back(NewItem);
     return NO_ERROR;
 }
 
 
 RepeatStack::RepeatStack() {
-   Stack.clear();
+   RStack.clear();
 }
 
 RepeatStack::~RepeatStack() {
-   Stack.clear();
+   RStack.clear();
 }
 
 int RepeatStack::Push(int LineNo, int CommandNo) {
     RepeatLoop NewItem;
     NewItem.LineNo=LineNo;
     NewItem.CommandNo=CommandNo;
-    Stack.push_back(NewItem);
+    RStack.push_back(NewItem);
     return NO_ERROR;
 }
 
 int RepeatStack::CurrentRepeatStart(int &LineNo, int &CommandNo) {
-    if (Stack.size()==0) {
+    if (RStack.size()==0) {
         return ERR_REPEATSTACK_EMPTY;
     } else {
-        LineNo=Stack[Stack.size()-1].LineNo;
-        CommandNo=Stack[Stack.size()-1].CommandNo;
+        LineNo=RStack[RStack.size()-1].LineNo;
+        CommandNo=RStack[RStack.size()-1].CommandNo;
         return NO_ERROR;
     }
 }
 
 int RepeatStack::Pop() {
-    if (Stack.size()==0) {
+    if (RStack.size()==0) {
         return ERR_REPEATSTACK_EMPTY;
     } else {
-        Stack.pop_back();
+        RStack.pop_back();
         return NO_ERROR;
     }
 }
 
 WhileStack::WhileStack() {
-   Stack.clear();
+   WStack.clear();
 }
 
 int WhileStack::Push(int LineNo, int CommandNo, CommandNode &WhileExpression) {
@@ -99,26 +99,26 @@ int WhileStack::Push(int LineNo, int CommandNo, CommandNode &WhileExpression) {
     NewItem.LineNo=LineNo;
     NewItem.CommandNo=CommandNo;
     NewItem.Expression=WhileExpression;
-    Stack.push_back(NewItem);
+    WStack.push_back(NewItem);
     return NO_ERROR;
 }
 
 int WhileStack::CurrentWhileStart(int &LineNo, int &CommandNo) {
-    if (Stack.size()==0) {
+    if (WStack.size()==0) {
         return ERR_WHILESTACK_EMPTY;
     } else {
 
-            LineNo=Stack[Stack.size()-1].LineNo;
-            CommandNo=Stack[Stack.size()-1].CommandNo;
+            LineNo=WStack[WStack.size()-1].LineNo;
+            CommandNo=WStack[WStack.size()-1].CommandNo;
         return NO_ERROR;
     }
 }
 
 int WhileStack::CurrentWhileExpression( float &FltValue) {
-    if (Stack.size()==0) {
+    if (WStack.size()==0) {
         return ERR_WHILESTACK_EMPTY;
     } else {
-        CommandNode WhileExpression=Stack[Stack.size()-1].Expression;
+        CommandNode WhileExpression=WStack[WStack.size()-1].Expression;
         int ResultType;
         float FltResult;
         std::string StrResult;
@@ -132,38 +132,44 @@ int WhileStack::CurrentWhileExpression( float &FltValue) {
 }
 
 int WhileStack::Pop() {
-    if (Stack.size()==0) {
+    if (WStack.size()==0) {
         return ERR_REPEATSTACK_EMPTY;
     } else {
-        Stack.pop_back();
+        WStack.pop_back();
         return NO_ERROR;
     }
 }
 
 
 WhileStack::~WhileStack() {
-   Stack.clear();
+   WStack.clear();
 }
 
 
 int ForStack::NextStep (std::string VariableName, float &CurrentValue, bool &Loop, int &LineNo, int &CommandNo) {
-    if (Stack.size()==0) {
+
+    while (FStack.size()>0 && FStack[FStack.size()-1].VariableName!=VariableName) {
+        FStack.pop_back();
+    }
+    if (FStack.size()==0) {
         return ERR_FORSTACK_EMPTY;
     } else {
-        if (Stack[Stack.size()-1].VariableName==VariableName) {
-            CurrentValue+=Stack[Stack.size()-1].StepValue;
-            if (Stack[Stack.size()-1].StepValue>0 &&  CurrentValue<=Stack[Stack.size()-1].EndValue) {
-                LineNo=Stack[Stack.size()-1].LineNo;
-                CommandNo=Stack[Stack.size()-1].CommandNo;
+        // if variable name doesn't match peel off stack and start again
+
+        if (FStack[FStack.size()-1].VariableName==VariableName) {
+            CurrentValue+=FStack[FStack.size()-1].StepValue;
+            if (FStack[FStack.size()-1].StepValue>0 &&  CurrentValue<=FStack[FStack.size()-1].EndValue) {
+                LineNo=FStack[FStack.size()-1].LineNo;
+                CommandNo=FStack[FStack.size()-1].CommandNo;
                 Loop=true;
                 return NO_ERROR;
-            } else if (Stack[Stack.size()-1].StepValue<0 &&  CurrentValue>=Stack[Stack.size()-1].EndValue) {
-                LineNo=Stack[Stack.size()-1].LineNo;
-                CommandNo=Stack[Stack.size()-1].CommandNo;
+            } else if (FStack[FStack.size()-1].StepValue<0 &&  CurrentValue>=FStack[FStack.size()-1].EndValue) {
+                LineNo=FStack[FStack.size()-1].LineNo;
+                CommandNo=FStack[FStack.size()-1].CommandNo;
                 Loop=true;
                 return NO_ERROR;
             } else {
-                Stack.pop_back();
+                FStack.pop_back();
                 Loop=false;
                 return NO_ERROR;
             }
@@ -179,6 +185,7 @@ Processor MyProcessor;
 
 Processor::Processor() {
     Active=true;
+    TraceExecs=false;
 }
 
 Processor::~Processor() {
@@ -271,7 +278,10 @@ int Processor::ExecuteNextInstruction(){
     Instruction MyInstruction=Program[CurrentLine];
     while (NoBreakOrError && i<MyInstruction.Commands.size()) {   
         LastLine=MyInstruction.ProgramLine;
-        CurrentCommand=i;                   
+        CurrentCommand=i;      
+        if (TraceExecs) {
+            MyInstruction.Trace(i);
+        }
         if (MyInstruction.Commands[i].Type==tUserDefined) {
             r=LetCmd(MyInstruction.Commands[i]);
         } else { 
@@ -312,6 +322,9 @@ int Processor::ResumeInstruction() {
     while (NoBreakOrError && i<MyInstruction.Commands.size() && !ConditionFailed) {   
         LastLine=MyInstruction.ProgramLine;
         CurrentCommand=i;                   
+        if (TraceExecs) {
+            MyInstruction.Trace(i);
+        }
         if (MyInstruction.Commands[i].Type==tUserDefined) {
             r=LetCmd(MyInstruction.Commands[i]);
         } else { 
@@ -321,6 +334,7 @@ int Processor::ResumeInstruction() {
             if (r==CMD_OK_Cond_Fail) {
                 ConditionFailed=true;
             } else {
+                // should not be returning here
                 return r;
             }
         }        
@@ -341,7 +355,11 @@ int Processor::Stop() {
 void Processor::Clear() {
     Variables.Clear();
     Arrays.Clear();
-    ReturnStack.Stack.clear();
+    ReturnStack.CStack.clear();
+    ForLoopStack.FStack.clear();
+    Functions.FunctionMap.clear();
+    RepeatLoopStack.RStack.clear();
+    WhileLoopStack.WStack.clear();
     CurrentLine=0;
     CurrentCommand=0;
     ResumeInstructionFlag=false;
@@ -360,9 +378,7 @@ void Processor::Reset() {
 
 int Processor::Run(bool Reset) {
     if (Reset) {
-        CurrentLine=0;
-        Variables.Clear();
-        Arrays.Clear();
+        Clear();
     }
     ProgramRunning=true;
     ResumeInstructionFlag=false;
@@ -374,10 +390,10 @@ int Processor::Run(bool Reset) {
         } else {
             CommandResult=ExecuteNextInstruction();
         }
-        if (CommandResult==CMD_OK || CommandResult==CMD_OK_POINTER_CHANGE) {
-            if (CommandResult==CMD_OK) {
-                  CurrentLine++;
-            } 
+        if (CommandResult==CMD_OK ) {
+            CurrentLine++; 
+        } else if (CommandResult==CMD_OK_POINTER_CHANGE) {
+            ResumeInstructionFlag=true;
         } else {
             return CommandResult;
         }
@@ -521,6 +537,7 @@ int Processor::NextForLoop(CommandNode &Variable, bool &Loop) {
     if (Loop) {
         CurrentLine=TmpLineIndex;
         CurrentCommand=TmpCommandIndex+1;
+        ResumeInstructionFlag=true;
     } else {
         return NO_ERROR;
     }
@@ -779,7 +796,7 @@ bool MyArray::DimensionsMatch(std::vector<int> &DimensionsToTest, int Base) {
         return false;
     }
     for (int i=0; i<Dimensions.size(); i++) {
-        if ((DimensionsToTest[i]-Base)>=0 && (DimensionsToTest[i]-Base)<Dimensions[i]) {
+        if ((DimensionsToTest[i]-Base)>=0 && (DimensionsToTest[i]-Base)<=Dimensions[i]) {
             return true;
         }
     }
@@ -800,7 +817,7 @@ void MyArray::Define (std::string pName, int pVarType, std::vector<int> &Dimensi
     this->Dimensions=Dimensions;
     TotalSize=1;
     for (int i=0; i<Dimensions.size(); i++) {
-        TotalSize*=Dimensions[i];
+        TotalSize*=Dimensions[i]+1;
     }
     switch (VariableType) {
         case cvDouble:
