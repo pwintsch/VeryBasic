@@ -776,9 +776,9 @@ int DimCmd(Command MyCommand)
     while (ArgNo<MyCommand.Arguments.size()) {
         if (MyCommand.Arguments[ArgNo].ID==coComma) {
             ArgNo++;
-        } else if (MyCommand.Arguments[0].Type!=tUserDefined) {
+        } else if (MyCommand.Arguments[ArgNo].Type!=tUserDefined) {
             return ERR_BAD_DIM_COMMAND;
-        } else if  (MyCommand.Arguments[0].SubArguments.size()==0) {
+        } else if  (MyCommand.Arguments[ArgNo].SubArguments.size()==0) {
             // Create a normal variable 
             float NumResult=0;
             std::string StrResult="";
@@ -786,13 +786,14 @@ int DimCmd(Command MyCommand)
             if (r!=NO_ERROR) {
                 return r;
             }
+            ArgNo++;
         } else {
             std::vector<int> Dimensions;
-            for (int i=0; i<MyCommand.Arguments[0].SubArguments.size(); i++) {
+            for (int i=0; i<MyCommand.Arguments[ArgNo].SubArguments.size(); i++) {
                 int ResultType=0;
                 float NumResult=0;
                 std::string StrResult="";
-                r=MyCommand.Arguments[0].SubArguments[i].Evaluate(ResultType, NumResult, StrResult);
+                r=MyCommand.Arguments[ArgNo].SubArguments[i].Evaluate(ResultType, NumResult, StrResult);
                 if (r!=NO_ERROR) {
                     return r;
                 }
@@ -802,12 +803,12 @@ int DimCmd(Command MyCommand)
                 int IntResult=(int)NumResult;
                 Dimensions.push_back(IntResult);
             }
-            r=MyProcessor.Arrays.Create(MyCommand.Arguments[0].Value, MyCommand.Arguments[0].ID, Dimensions);
+            r=MyProcessor.Arrays.Create(MyCommand.Arguments[ArgNo].Value, MyCommand.Arguments[ArgNo].ID, Dimensions);
             if (r!=NO_ERROR) {
                 return r;
-            }         
+            }
+            ArgNo++;       
         }
-        ArgNo++;
     }
     return CMD_OK;
 }
