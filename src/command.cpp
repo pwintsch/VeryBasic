@@ -712,26 +712,39 @@ int CommandNode::InitialiseWithArguments(const Token &SourceToken, std::vector<C
     SubArguments=pArguments;
     if (Type==tFunction) {
         // Get Number of parametres from Syntax and check against number of arguments 
-        int FunctionIndex=ID-FuncSep;
+/*        int FunctionIndex=ID-FuncSep;
         if (FunctionIndex<0 || FunctionIndex>=NoOfFunctions()) {
             return ERR_BAD_FUNCTION_PARAM_NO;
-        }
-        tFunctionSyntax MyFunction=GetFunctionSyntax(FunctionIndex);
-        int NoOfParam=MyFunction.ArgumentTypes.size();
-        if (SubArguments.size()!=NoOfParam) {
+        } */
+
+        std::vector<tFunctionSyntax> MyFunctionSyntax;
+        GetFunctionSytax2(ID, MyFunctionSyntax);
+        if (MyFunctionSyntax.size()>0) {
+            int FunctionIndex=0;
+            while (FunctionIndex<MyFunctionSyntax.size() && MyFunctionSyntax[FunctionIndex].ArgumentTypes.size()!=SubArguments.size()) {
+                FunctionIndex++;
+            }
+            if (FunctionIndex!=MyFunctionSyntax.size()) {
+                tFunctionSyntax MyFunction; //=GetFunctionSyntax(FunctionIndex);
+                MyFunction=MyFunctionSyntax[FunctionIndex];
+        
+                for (int i=0; i<SubArguments.size(); i++) {
+                    int ExpressionType=0;
+                    int r=SubArguments[i].CheckExpressionReturnType(ExpressionType);
+                    if (r!=NO_ERROR) {
+                        return r;
+                    }
+                    if (ExpressionType!=MyFunctionSyntax[FunctionIndex].ArgumentTypes[i] && MyFunctionSyntax[FunctionIndex].ArgumentTypes[i]!=0) {
+                        return ERR_BAD_FUNCTION_PARAM_TYPE;
+                    }
+                }
+                // after this check each SubArgument against the type in the Syntax
+            } else {
+                return ERR_BAD_FUNCTION_PARAM_NO;
+            }
+        } else {
             return ERR_BAD_FUNCTION_PARAM_NO;
         }
-        for (int i=0; i<SubArguments.size(); i++) {
-            int ExpressionType=0;
-            int r=SubArguments[i].CheckExpressionReturnType(ExpressionType);
-            if (r!=NO_ERROR) {
-                return r;
-            }
-            if (ExpressionType!=MyFunction.ArgumentTypes[i] && MyFunction.ArgumentTypes[i]!=0) {
-                return ERR_BAD_FUNCTION_PARAM_TYPE;
-            }
-        }
-        // after this check each SubArgument against the type in the Syntax
     }
     return NO_ERROR;
 }

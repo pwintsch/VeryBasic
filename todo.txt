@@ -7,15 +7,14 @@ Lots done so lets recap, the next step for my terminal basic:
     (X) ON xxx GOTO yyy command
     (X) ON xxx GOSUB yyy command
     (X) Develop ELSE functionality
-    (X) Allow declaration of multiple arrays with single DIM statement change syntax to User
-        tUserDefinedList and Adapt DIMcmd
-    ( ) Allow Rnd(number) as Syntax
+    (X) Allow declaration of multiple arrays with single DIM statement change syntax to tUserDefinedList and Adapt DIMcmd
+    (X) Allow Rnd(number) as Syntax
     ( ) System variable and constants (PI Timer)
     ( ) Clean up the SAVE command particularly with Quotes in strings
     ( ) See if parser can take a literal option for load, save and changedir so no quotes are required
     ( ) Find some/lots of test basic programs
     ( ) Think of adding BBC BASIC or SINCLAIR SUPERBASIC structured basic commands 
-        ( ) Allow multiple syntaxes for Functions (eg RND)
+        (X) Allow multiple syntaxes for Functions (eg RND)
         ( ) LABELS
         (X) REPEAT .... UNTIL xxxxx
         (X) WHILE xxx ... WEND

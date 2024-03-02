@@ -594,6 +594,7 @@ std::vector<tSyntax> tGrammar = {
 std::vector<int> ABSSyntax =  { tValue};
 std::vector<int> SQRTSyntax=  { tValue};
 std::vector<int> RNDSyntax= {};
+std::vector<int> RNDSyntax2= {tValue};
 std::vector<int> MAXSyntax= {tValue, tValue};
 std::vector<int> TESTSyntax= {tValue, tValue, tValue};
 std::vector<int> LEFTSyntax= {tString, tValue};
@@ -645,10 +646,19 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coATN, tValue, ATNSyntax},
 	{ coACS, tValue, ACSSyntax},
 	{ coASN, tValue, ASNSyntax},
-	{ coASC, tValue, ASCSyntax}
+	{ coASC, tValue, ASCSyntax},
+	{ coRND, tValue, RNDSyntax2},
 };
 
 
+void GetFunctionSytax2 (int iFunctionCode, std::vector<tFunctionSyntax> &fSyntax) {
+	fSyntax.clear();
+	for (const auto &Syntax: tFunctionGrammar) {
+		if (Syntax.iFunctionCode==iFunctionCode) {
+			fSyntax.push_back(Syntax);
+		}
+	}
+}
 
 
 int NoOfFunctions() {

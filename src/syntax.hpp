@@ -43,6 +43,7 @@ std::string GetSyntaxNodeString(int iSyntaxNode);
 bool IsStringFloat(const char *sTxt);
 bool IsStringInt(const char *sTxt);
 tFunctionSyntax GetFunctionSyntax(int iFunctionCode);
+void GetFunctionSytax2 (int iFunctionCode, std::vector<tFunctionSyntax> &fSyntax);
 int NoOfFunctions();
 int GetFunctionType(int iFunctionCode);
 

@@ -1125,10 +1125,21 @@ int ABSFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
 }
 
 int RNDFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    float Multiplier=1;
+    if (Node.SubArguments.size()>0) {
+        int ParamReturnType=0;
+        std::string ParamStrResult="";
+        float ParamResult=0;
+        int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+        if (r!=NO_ERROR) {
+            return r;
+        }
+        Multiplier=ParamResult;
+    }
     float RndValue=(float)rand()/(float)RAND_MAX;
     ReturnType=tValue;
     StrResult="";
-    NumResult=RndValue;
+    NumResult=RndValue*Multiplier;
     return NO_ERROR;
 }
 
