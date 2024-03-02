@@ -1,6 +1,6 @@
 Lots done so lets recap, the next step for my terminal basic:
     ( ) Objective run Ahl's Basic games unchanged
-    ( ) Load Bagels.bas and run unchanged
+    (X) Load Bagels.bas and run unchanged
     ( ) Bug fixing
         (X) Track down why (5 goto goto 10) crashes 
         (X) Correct STR$ StrFnct output and Syntax

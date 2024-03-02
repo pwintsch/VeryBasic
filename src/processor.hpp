@@ -206,6 +206,7 @@ public:
     int AddDefFn(std::string Name, CommandNode &Header, CommandNode &Body);
     int EvaluateDEFFN(CommandNode &Node, int &ReturnType, float &FltValue, std::string &StrValue);
     int SetVariable(CommandNode &Node, float FltValue, std::string StrValue);
+    int CheckVariable(CommandNode &Node);
     int GetVariable(CommandNode &Node, float &FltValue, int &IntValue, std::string &StrValue);
     int NewForLoop(CommandNode &Variable, float StartValue, float EndValue, float StepValue);
     int NextForLoop(CommandNode &Variable, bool &Loop);

@@ -401,6 +401,15 @@ int Processor::Run(bool Reset) {
     return NO_ERROR;
 }
 
+int Processor::CheckVariable(CommandNode &Node) {
+    int r=NO_ERROR;
+    if (!MyProcessor.Variables.Exists(Node.Value)) {
+        r=MyProcessor.Variables.Store(Node.Value, Node.ID, 0,0, "");
+    }
+    return r;
+}
+
+
 
 int Processor::SetVariable(CommandNode &Node, float FltValue, std::string StrValue) {
     int r=0;

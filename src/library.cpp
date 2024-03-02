@@ -308,7 +308,11 @@ int LetCmd(Command MyCommand) {
     int ResultType;
     float NumResult;
     std::string StrResult;  
-    int r=MyCommand.Arguments[2].Evaluate(ResultType, NumResult, StrResult);
+    int r=MyProcessor.CheckVariable(MyCommand.Arguments[0]);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    r=MyCommand.Arguments[2].Evaluate(ResultType, NumResult, StrResult);
     int IntResult=(int)NumResult;
     if (r==NO_ERROR) {
         if ((MyCommand.Arguments[0].Type!=tUserDefined) || (MyCommand.Arguments[0].ID==cvString && ResultType==tValue) || (MyCommand.Arguments[0].ID!=cvString && ResultType==tString)) {
