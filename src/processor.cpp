@@ -410,6 +410,14 @@ int Processor::CheckVariable(CommandNode &Node) {
 }
 
 
+void Processor::SetPrintRPN(bool Value) {
+    PrintRPN=Value;
+}
+
+bool Processor::GetPrintRPN() {
+    return PrintRPN;
+}
+
 
 int Processor::SetVariable(CommandNode &Node, float FltValue, std::string StrValue) {
     int r=0;

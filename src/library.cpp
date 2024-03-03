@@ -82,8 +82,10 @@ int EvalCmd(Command MyCommand)
     Terminal.WriteLn(s.c_str());
     int ResultType;
     float NumResult;
-    std::string StrResult;  
+    std::string StrResult;
+    MyProcessor.SetPrintRPN(true);  
     int r=MyCommand.Arguments[0].Evaluate(ResultType, NumResult, StrResult);
+    MyProcessor.SetPrintRPN(false);
     if (r==NO_ERROR) {
         if (ResultType==tValue) {
             Terminal.WriteFStringLn("Result: %f", NumResult);           
@@ -521,7 +523,17 @@ int PrintCmd(Command MyCommand) {
                 int IntResult=(int)NumResult;
                 if (r==NO_ERROR) {
                     if (ResultType==tValue) {
-                        Terminal.WriteFString("%f", NumResult);
+                        std::string s=std::to_string(NumResult);
+                        // remove trailing zero and . from s 
+                        while (s.length()>0 && (s[s.length()-1]=='0' || s[s.length()-1]=='.')) {
+                            if (s[s.length()-1]=='.') {
+                                s.pop_back();
+                                break;
+                            } else {
+                                s.pop_back();
+                            }
+                        }
+                        Terminal.WriteFString("%s", s.c_str());
                     } else {
                         Terminal.WriteFString("%s", StrResult.c_str());
                     } 
@@ -1354,7 +1366,7 @@ int INTFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
         return r;
     }
     ReturnType=tValue;
-    NumResult=round(ParamResult);
+    NumResult=floor(ParamResult);
     return NO_ERROR;
 }  
 

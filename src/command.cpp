@@ -8,6 +8,9 @@
 
 #include <stdio.h>
 
+
+
+
 typedef struct tVarValue {
 	int iType;
 	std::string sValue;
@@ -142,12 +145,14 @@ int CommandNode::Precedence() {
 		case coDivide:
 			return 8;
 			break;
-		case coPower:
-			return 9;
-			break;
-		case coUnaryMinus:
-		case coNOT:
+        case coUnaryMinus:
 			return 10;
+			break;
+        case coPower:
+        	return 10;
+			break;
+		case coNOT:
+			return 11;
 			break;
 	}
 	return 0;
@@ -377,7 +382,7 @@ int CommandNode::Evaluate(int &ResultType, float &NumResult, std::string &StrRes
 std::vector<CommandNode> EvalStack;
 std::vector<CommandNode> EvalQueue;
 int NodePrecedence=0;
-bool bPrintRPN=false;
+bool bPrintRPN=MyProcessor.GetPrintRPN();
 
     if (Type!=tExpression) {
         NumResult=0;
@@ -396,7 +401,7 @@ bool bPrintRPN=false;
                     break;
                 case tComparison:
                 case tOperator:
-                    if (EvalStack.size()>0 && EvalStack.back().Precedence()>element.Precedence()) {
+                    while (EvalStack.size()>0 && EvalStack.back().Precedence()>=element.Precedence() ) {
                         EvalQueue.push_back(EvalStack.back());
                         EvalStack.pop_back();
                     }
@@ -771,7 +776,7 @@ std::string CommandNode::GetDetailedString(int Padding) {
     for (int i=0; i<Padding; i++) {
         p=p+" ";
     }
-    s=p + GetSyntaxNodeString(Type) + " - " + GetTokenTextFromID(ID) + ", " + Value + " ";
+    s=p + GetSyntaxNodeString(Type) + " : " + GetTokenTextFromID(ID) + ", " + Value + " ID: " + std::to_string(ID);
     if (SubArguments.size()>0) {
         s=s+"has " + std::to_string(SubArguments.size()) +" sub-arguments: \n\r";
         for (int i=0; i<SubArguments.size(); i++) {

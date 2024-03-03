@@ -172,6 +172,7 @@ private:
     bool SearchNextDataStatement=true;
     int NoOfInstructionsExecuted=0;
     bool BreakEnabled=true;
+    bool PrintRPN=false;
 
 public:
     bool TraceExecs=false;
@@ -190,6 +191,8 @@ public:
     RepeatStack RepeatLoopStack;
     WhileStack WhileLoopStack;
     bool Active=true;
+    void SetPrintRPN(bool Value);
+    bool GetPrintRPN();
     int Addline(Instruction MyInstruction);
     int ChangeLine(Instruction MyInstruction);
     int RemoveLine(int LineNo);
