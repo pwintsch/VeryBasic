@@ -1588,4 +1588,22 @@ int ASCFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &S
 }  
 
 
-int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, STRFnct, VALFnct, TIMERFnct, INTFnct, RIGHTFnct, SGNFnct, MIDFnct, INSTRFnct, PIFnct, EXPFnct, LNFnct, COSFnct, SINFnct, TANFnct, ATNFnct, ASNFnct, ACSFnct, ASCFnct } ;
+int CHRFnct(CommandNode &Node,int  &ReturnType, float &NumResult, std::string &StrResult) {
+    int ParamReturnType=0;
+    std::string ParamStrResult="";
+    float ParamResult=0;
+    int r=Node.SubArguments[0].Evaluate(ParamReturnType, ParamResult, ParamStrResult);
+    if (r!=NO_ERROR) {
+        return r;
+    }
+    int IntResult=(int)ParamResult;
+    char c=(char)IntResult;
+    ReturnType=tString;
+    StrResult="";
+    StrResult.append(1,c);
+    return NO_ERROR;
+}
+
+
+
+int (*FunctionPtr[])(CommandNode &Node, int &ReturnType, float &NumResult, std::string &StrResult) = { ABSFnct, RNDFnct, MAXFnct, SQRTFnct, LEFTFnct, INKEYFnct, LENFnct, STRFnct, VALFnct, TIMERFnct, INTFnct, RIGHTFnct, SGNFnct, MIDFnct, INSTRFnct, PIFnct, EXPFnct, LNFnct, COSFnct, SINFnct, TANFnct, ATNFnct, ASNFnct, ACSFnct, ASCFnct, CHRFnct } ;

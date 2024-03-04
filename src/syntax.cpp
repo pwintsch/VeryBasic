@@ -91,6 +91,7 @@ tTokenType tTokens[]={
 	{ "ASN", tFunction, coASN},
 	{ "LN", tFunction, coLN},
 	{ "ASC", tFunction, coASC},
+	{ "CHR$", tFunction, coCHR},
 	{ "AT", tPrintArgument, coAT},
 	{ "TAB", tPrintArgument, coTAB},
 	{ "=", tComparison, coEqual, 0},
@@ -619,6 +620,7 @@ std::vector<int> ASNSyntax = {tValue};
 std::vector<int> LNSyntax = {tValue};
 std::vector<int> INSTRyntax= {tString, tString};
 std::vector<int> ASCSyntax= {tString};
+std::vector<int> CHRSyntax =  {tValue};
 
 
 std::vector<tFunctionSyntax> tFunctionGrammar = {
@@ -648,6 +650,7 @@ std::vector<tFunctionSyntax> tFunctionGrammar = {
 	{ coASN, tValue, ASNSyntax},
 	{ coASC, tValue, ASCSyntax},
 	{ coRND, tValue, RNDSyntax2},
+	{ coCHR, tValue, CHRSyntax}
 };
 
 

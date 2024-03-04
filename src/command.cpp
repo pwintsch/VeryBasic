@@ -1331,9 +1331,17 @@ int Command::FindSyntaxRule(std::vector<CommandNode> &LexResults) {
                 SyntaxIndex++;
             } else if (SyntaxRules[i].Syntax[SyntaxIndex].iTType==tValueList) {
                 bool ExpectValue=true;
+                bool Negate=false;
                 while (!RuleSearchError && TokenIndex<Nodes.size()) {
-                    if ((Nodes[TokenIndex].Type==tValue || Nodes[TokenIndex].Type==tString) && ExpectValue) {
+                    if (Nodes[TokenIndex].ID==coMinus && ExpectValue) {
+                        Negate=true;
+                        TokenIndex++;
+                    } else if ((Nodes[TokenIndex].Type==tValue || Nodes[TokenIndex].Type==tString) && ExpectValue) {
                         CommandNode Argument;
+                        if (Negate) {
+                            (Nodes[TokenIndex].Value).insert(0, "-");
+                            Negate=false;
+                        }
                         Argument.InitialiseFromCommandNode(Nodes[TokenIndex]);
                         Arguments.push_back(Argument);
                         TokenIndex++;

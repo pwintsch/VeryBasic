@@ -167,6 +167,7 @@ int GetFunctionType(int iFunctionCode);
 #define coASN FuncSep+22
 #define coACS FuncSep+23
 #define coASC FuncSep+24
+#define coCHR FuncSep+25
 
 
 //#define coTEST FuncSep+17
